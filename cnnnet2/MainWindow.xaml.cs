@@ -23,6 +23,8 @@ namespace cnnnet2
         public MainWindow()
         {
             InitializeComponent();
+
+            var cnnnet = new CnnNet(20, 0.1, 5);
         }
     }
 }
