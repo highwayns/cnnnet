@@ -21,7 +21,11 @@ namespace CnnSimple1
     /// </summary>
     public partial class PlaceHolder : UserControl, INotifyPropertyChanged
     {
+        #region Fields
+
         private double _desirability;
+
+        #endregion
 
         #region Properties
 
@@ -43,7 +47,7 @@ namespace CnnSimple1
 
         public static readonly DependencyProperty StateProperty =
             DependencyProperty.Register("State", typeof(SolidColorBrush),
-            typeof(PlaceHolder), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
+            typeof(PlaceHolder), new PropertyMetadata(new SolidColorBrush(Colors.White)));
 
         public double Desirability
         {
@@ -55,6 +59,11 @@ namespace CnnSimple1
             {
                 _desirability = value;
                 NotifyPropertyChanged("Desirability");
+
+                if (Neuron == null)
+                {
+                    State = new SolidColorBrush(new Color() { R = (byte)(255 * _desirability), A = 255, ScA = 1 });
+                }
             }
         }
 
