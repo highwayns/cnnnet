@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cnnnet2
+namespace CnnNet3
 {
     public class CnnNet
     {
@@ -60,12 +60,18 @@ namespace cnnnet2
                 Console.WriteLine();
             }
 
+            Console.WriteLine();
             Console.WriteLine("_tableNeuronDesirability");
             for (int i = 0; i < _tableWide; i++)
             {
                 for (int j = 0; j < _tableWide; j++)
                 {
-                    Console.Write("{0:#.##} ", _tableNeuronDesirability[i, j]);
+                    if (_tableNeurons[i, j] != 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    Console.Write("{0:00.00} ", _tableNeuronDesirability[i, j]);
+                    Console.ResetColor();
                 }
                 Console.WriteLine();
             }
@@ -82,7 +88,7 @@ namespace cnnnet2
             {
                 for (int j = y_min; j < y_max; j++)
                 {
-                    var distance = Math.Sqrt( (x - i)^2 + (y - j)^2);
+                    var distance = Math.Sqrt(Math.Pow(x - i, 2) + Math.Pow(y - j, 2));
 
                     _tableNeuronDesirability[i, j] += (_neuronInfluenceRange - distance) * (1.0 / _neuronInfluenceRange);
                 }

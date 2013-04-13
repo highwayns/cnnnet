@@ -10,6 +10,7 @@ namespace CnnNet3
     {
         static void Main(string[] args)
         {
+            var cnnnet = new CnnNet(10, 0.1, 10);
         }
     }
 }
