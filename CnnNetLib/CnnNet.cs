@@ -45,8 +45,8 @@ namespace CnnNetLib
             _neuronDensity = neuronDensity;
             _neuronInfluenceRange = neuronInfluenceRange;
 
-            _tableNeurons = new int[_tableWide, _tableWide];
-            _tableNeuronDesirability = new double[_tableWide, _tableWide];
+            _tableNeurons = new int[_tableHeight, _tableWide];
+            _tableNeuronDesirability = new double[_tableHeight, _tableWide];
 
             var random = new Random();
             int neuronId = 1;
@@ -108,7 +108,8 @@ namespace CnnNetLib
                 {
                     var distance = Math.Sqrt(Math.Pow(x_center - x, 2) + Math.Pow(y_center - y, 2));
 
-                    _tableNeuronDesirability[y, x] += (_neuronInfluenceRange - distance) * (1.0 / _neuronInfluenceRange);
+                    _tableNeuronDesirability[y, x] =
+                        Math.Min(1, _tableNeuronDesirability[y, x] + Math.Max(_neuronInfluenceRange - distance, 0) * (1.0 / _neuronInfluenceRange));
                 }
             }
         }

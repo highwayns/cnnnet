@@ -27,7 +27,7 @@ namespace CnnNet4
 
         private Texture2D _neuron;
         private Texture2D _background;
-        private int[] _backgroundData;
+        private byte[] _backgroundData;
 
         private CnnNet _cnnNet;
 
@@ -61,7 +61,7 @@ namespace CnnNet4
 
             base.Initialize();
 
-            _cnnNet = new CnnNet(WIDTH, HEIGHT, 0.001, 10);
+            _cnnNet = new CnnNet(WIDTH, HEIGHT, 0.001, 20);
         }
 
         /// <summary>
@@ -75,10 +75,9 @@ namespace CnnNet4
 
             // TODO: use this.Content to load your game content here
             _neuron = Content.Load<Texture2D>("neuron");
-
             _background = new Texture2D(GraphicsDevice, WIDTH, HEIGHT);
-            _backgroundData = Enumerable.Repeat<int>(-1, _background.Width * _background.Height).ToArray();
-            _background.SetData<int>(_backgroundData);
+            _backgroundData = Enumerable.Repeat<byte>(255, _background.Width * _background.Height * 4).ToArray();
+            _background.SetData<byte>(_backgroundData);
         }
 
         /// <summary>
@@ -112,13 +111,46 @@ namespace CnnNet4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Textures[0] = null;
 
-            // TODO: Add your drawing code here
+            // Drawing code here
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             spriteBatch.Begin();
+            UpdateDesirability();
+
+            //_background = new Texture2D(GraphicsDevice, WIDTH, HEIGHT);
+            //_background.SetData<byte>(Enumerable.Repeat<byte>(150, WIDTH * HEIGHT * 4).ToArray());
 
             spriteBatch.Draw(_background, new Rectangle(0, 0, WIDTH, HEIGHT), Color.White);
+            UpdateNeurons();
+            spriteBatch.End();
 
+            base.Draw(gameTime);
+        }
+
+        private void UpdateDesirability()
+        {
+            double[,] desirability = _cnnNet.GetTableNeuronDesirability();
+
+            for (int y = 0; y < HEIGHT; y++)
+            {
+                for (int x = 0; x < WIDTH; x++)
+                {
+                    int index = y * WIDTH * 4 + x * 4;
+
+                    _backgroundData[index + 0] = 0;
+                    _backgroundData[index + 1] = (byte)(desirability[y, x] * 255);
+                    _backgroundData[index + 2] = 0;
+                    _backgroundData[index + 3] = 255;
+                }
+            }
+
+            _background.SetData<byte>(_backgroundData);
+        }
+
+        private void UpdateNeurons()
+        {
             int[,] tableNeurons = _cnnNet.GetTableNeurons();
 
             for (int y = 0; y < HEIGHT; y++)
@@ -131,10 +163,6 @@ namespace CnnNet4
                     }
                 }
             }
-
-            spriteBatch.End();
-
-            base.Draw(gameTime);
         }
 
         #endregion
