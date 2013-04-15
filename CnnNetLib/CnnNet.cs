@@ -13,28 +13,84 @@ namespace CnnNetLib
         private readonly int _tableWide;
         private readonly int _tableHeight;
 
+        private int[,] _tableNeurons;
+        private double[,] _tableNeuronDesirability;
+        private int[] _activeNeurons;
+
+        private int _neuronCount;
+        private Random _random;
+
+        private readonly ParallelOptions _parallelOptions;
+
         private readonly double _neuronDensity;
         private readonly int _neuronInfluenceRange;
         private readonly double _maxNeuronInfluence;
+        private readonly double _desirabilityDecayAmount;
+        private readonly double _percentActiveNourons;
 
-        private int[,] _tableNeurons;
-        private double[,] _tableNeuronDesirability;
+        #endregion
+
+        #region Properties
+
+        public int[,] TableNeurons
+        {
+            get
+            {
+                return _tableNeurons;
+            }
+        }
+
+        public int[] ActiveNeurons
+        {
+            get
+            {
+                return _activeNeurons;
+            }
+        }
+
+        public double[,] TableNeuronDesirability
+        {
+            get
+            {
+                return _tableNeuronDesirability;
+            }
+        }
 
         #endregion
 
         #region Methods
 
-        public int[,] GetTableNeurons()
+        public void ProcessNext()
         {
-            return _tableNeurons;
+            _activeNeurons = GetActiveNeurons();
+
+            //Parallel.For(0, _tableHeight, _parallelOptions, y =>
+            for (int y = 0; y < _tableHeight; y++)
+            {
+                for (int x = 0; x < _tableWide; x++)
+                {
+                    if (_activeNeurons.Contains(_tableNeurons[y, x]))
+                    {
+                        AddDesirability(y, x);
+                    }
+                    DecayDesirability(y, x);
+                }
+            }
+            //});
         }
 
-        public double[,] GetTableNeuronDesirability()
+        private int[] GetActiveNeurons()
         {
-            return _tableNeuronDesirability;
+            var retCount = (int)(_neuronCount * _percentActiveNourons);
+            int[] ret = new int[retCount];
+            for (int i = 0; i < retCount; i++)
+            {
+                ret[i] = _random.Next(_neuronCount);
+            }
+            return ret;
         }
 
-        private void AddDesirability(int x_center, int y_center)
+        private void AddDesirability(int y_center, int x_center)
         {
             int x_min = Math.Max(x_center - _neuronInfluenceRange, 0);
             int x_max = Math.Min(x_center + _neuronInfluenceRange, _tableWide);
@@ -53,26 +109,17 @@ namespace CnnNetLib
             }
         }
 
-        public void ProcessNext()
+        private void DecayDesirability(int y, int x)
         {
-            for (int y = 0; y < _tableHeight; y++)
-            {
-                for (int x = 0; x < _tableWide; x++)
-                {
-                    if (_tableNeurons[y, x] != 0)
-                    {
-
-                    }
-
-                }
-            }
+            _tableNeuronDesirability[y, x] = Math.Max(0, _tableNeuronDesirability[y, x] - _desirabilityDecayAmount);
         }
 
         #endregion
 
         #region Instance
 
-        public CnnNet(int width, int height, double neuronDensity, int neuronInfluenceRange, double maxNeuronInfluence)
+        public CnnNet(int width, int height, double neuronDensity, int neuronInfluenceRange, 
+            double maxNeuronInfluence, double desirabilityDecayAmount, double percentActiveNourons)
         {
             _tableWide = width;
             _tableHeight = height;
@@ -80,24 +127,32 @@ namespace CnnNetLib
             _neuronDensity = neuronDensity;
             _neuronInfluenceRange = neuronInfluenceRange;
             _maxNeuronInfluence = maxNeuronInfluence;
+            _desirabilityDecayAmount = desirabilityDecayAmount;
+            _percentActiveNourons = percentActiveNourons;
 
             _tableNeurons = new int[_tableHeight, _tableWide];
             _tableNeuronDesirability = new double[_tableHeight, _tableWide];
+            _parallelOptions = new ParallelOptions()
+            {
+                MaxDegreeOfParallelism = 3
+            };
 
-            var random = new Random();
+            _random = new Random();
             int neuronId = 1;
 
+            // generate random neurons
             for (int y = 0; y < _tableHeight; y++)
             {
                 for (int x = 0; x < _tableWide; x++)
                 {
-                    if (random.NextDouble() <= _neuronDensity)
+                    if (_random.NextDouble() <= _neuronDensity)
                     {
                         _tableNeurons[y, x] = neuronId++;
-                        AddDesirability(x, y);
                     }
                 }
             }
+
+            _neuronCount = neuronId;
         }
 
         #endregion

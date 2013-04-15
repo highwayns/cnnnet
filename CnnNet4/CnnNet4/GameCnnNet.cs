@@ -25,25 +25,12 @@ namespace CnnNet4
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        private Texture2D _neuron;
+        private Texture2D _neuronIdle;
+        private Texture2D _neuronActive;
         private Texture2D _background;
         private byte[] _backgroundData;
 
         private CnnNet _cnnNet;
-
-        #endregion
-
-        #region Instance
-
-        public GameCnnNet()
-        {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = WIDTH;
-            graphics.PreferredBackBufferHeight = HEIGHT;
-            graphics.ApplyChanges();
-            
-            Content.RootDirectory = "Content";
-        }
 
         #endregion
 
@@ -61,7 +48,7 @@ namespace CnnNet4
 
             base.Initialize();
 
-            _cnnNet = new CnnNet(WIDTH, HEIGHT, 0.001, 80, 0.05);
+            _cnnNet = new CnnNet(WIDTH, HEIGHT, 0.001, 80, 0.05, 0.05, 0.1);
         }
 
         /// <summary>
@@ -74,7 +61,9 @@ namespace CnnNet4
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _neuron = Content.Load<Texture2D>("neuron");
+            _neuronIdle = Content.Load<Texture2D>("neuronIdle");
+            _neuronActive = Content.Load<Texture2D>("neuronActive");
+
             _background = new Texture2D(GraphicsDevice, WIDTH, HEIGHT);
             _backgroundData = Enumerable.Repeat<byte>(255, _background.Width * _background.Height * 4).ToArray();
             _background.SetData<byte>(_backgroundData);
@@ -97,10 +86,14 @@ namespace CnnNet4
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().GetPressedKeys().Contains(Keys.Escape))
+            {
                 this.Exit();
+            }
 
             // TODO: Add your update logic here
+            //_cnnNet.ProcessNext();
 
             base.Update(gameTime);
         }
@@ -113,6 +106,8 @@ namespace CnnNet4
         {
             GraphicsDevice.Clear(Color.White);
             GraphicsDevice.Textures[0] = null;
+
+            _cnnNet.ProcessNext();
 
             // Drawing code here
             spriteBatch.Begin();
@@ -127,7 +122,7 @@ namespace CnnNet4
 
         private void UpdateDesirability()
         {
-            double[,] desirability = _cnnNet.GetTableNeuronDesirability();
+            double[,] desirability = _cnnNet.TableNeuronDesirability;
 
             for (int y = 0; y < HEIGHT; y++)
             {
@@ -148,7 +143,8 @@ namespace CnnNet4
 
         private void UpdateNeurons()
         {
-            int[,] tableNeurons = _cnnNet.GetTableNeurons();
+            int[,] tableNeurons = _cnnNet.TableNeurons;
+            int[] activeNeurons = _cnnNet.ActiveNeurons ?? new int[0];
 
             for (int y = 0; y < HEIGHT; y++)
             {
@@ -156,10 +152,31 @@ namespace CnnNet4
                 {
                     if (tableNeurons[y, x] != 0)
                     {
-                        spriteBatch.Draw(_neuron, new Vector2(x, y), Color.White);
+                        if (activeNeurons.Contains(tableNeurons[y, x]))
+                        {
+                            spriteBatch.Draw(_neuronActive, new Vector2(x, y), Color.White);
+                        }
+                        else
+                        {
+                            spriteBatch.Draw(_neuronIdle, new Vector2(x, y), Color.White);
+                        }
                     }
                 }
             }
+        }
+
+        #endregion
+
+        #region Instance
+
+        public GameCnnNet()
+        {
+            graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = WIDTH;
+            graphics.PreferredBackBufferHeight = HEIGHT;
+            graphics.ApplyChanges();
+
+            Content.RootDirectory = "Content";
         }
 
         #endregion
