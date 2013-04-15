@@ -61,7 +61,7 @@ namespace CnnNet4
 
             base.Initialize();
 
-            _cnnNet = new CnnNet(WIDTH, HEIGHT, 0.001, 20);
+            _cnnNet = new CnnNet(WIDTH, HEIGHT, 0.001, 80, 0.05);
         }
 
         /// <summary>
@@ -115,15 +115,11 @@ namespace CnnNet4
             GraphicsDevice.Textures[0] = null;
 
             // Drawing code here
-            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             spriteBatch.Begin();
+
             UpdateDesirability();
-
-            //_background = new Texture2D(GraphicsDevice, WIDTH, HEIGHT);
-            //_background.SetData<byte>(Enumerable.Repeat<byte>(150, WIDTH * HEIGHT * 4).ToArray());
-
-            spriteBatch.Draw(_background, new Rectangle(0, 0, WIDTH, HEIGHT), Color.White);
             UpdateNeurons();
+
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -147,6 +143,7 @@ namespace CnnNet4
             }
 
             _background.SetData<byte>(_backgroundData);
+            spriteBatch.Draw(_background, new Rectangle(0, 0, WIDTH, HEIGHT), Color.White);
         }
 
         private void UpdateNeurons()
