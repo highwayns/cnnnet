@@ -28,9 +28,12 @@ namespace CnnNet4
         private Texture2D _neuronIdle;
         private Texture2D _neuronActive;
         private Texture2D _background;
+        private SpriteFont _frameSpriteFont;
+
         private byte[] _backgroundData;
 
         private CnnNet _cnnNet;
+        private int _frameNumber;
 
         #endregion
 
@@ -63,6 +66,7 @@ namespace CnnNet4
             // TODO: use this.Content to load your game content here
             _neuronIdle = Content.Load<Texture2D>("neuronIdle");
             _neuronActive = Content.Load<Texture2D>("neuronActive");
+            _frameSpriteFont = Content.Load<SpriteFont>("FrameSpriteFont");
 
             _background = new Texture2D(GraphicsDevice, WIDTH, HEIGHT);
             _backgroundData = Enumerable.Repeat<byte>(255, _background.Width * _background.Height * 4).ToArray();
@@ -111,6 +115,8 @@ namespace CnnNet4
 
             // Drawing code here
             spriteBatch.Begin();
+
+            spriteBatch.DrawString(_frameSpriteFont, string.Format("Frame: {0}", _frameNumber), new Vector2(20, 20), Color.White);
 
             UpdateDesirability();
             UpdateNeurons();
