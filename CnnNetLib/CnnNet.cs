@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CnnNetLib
 {
@@ -59,8 +60,8 @@ namespace CnnNetLib
         {
             _activeNeurons = GetActiveNeurons();
 
-            //Parallel.For(0, _tableHeight, _parallelOptions, y =>
-            for (int y = 0; y < _tableHeight; y++)
+            Parallel.For(0, _tableHeight, y =>
+            //for (int y = 0; y < _tableHeight; y++)
             {
                 for (int x = 0; x < _tableWide; x++)
                 {
@@ -68,10 +69,17 @@ namespace CnnNetLib
                     {
                         AddDesirability(y, x);
                     }
+                }
+            });
+
+            //for (int y = 0; y < _tableHeight; y++)
+            Parallel.For(0, _tableHeight, y =>
+            {
+                for (int x = 0; x < _tableWide; x++)
+                {
                     DecayDesirability(y, x);
                 }
-            }
-            //});
+            });
         }
 
         private int[] GetActiveNeurons()

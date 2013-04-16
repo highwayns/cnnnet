@@ -29,6 +29,10 @@ namespace CnnNet4
         private CnnNet _cnnNet;
         private int _frameNumber;
 
+        private double[,] _tableNeuronDesirability;
+        private int[,] _tableNeurons;
+        private int[] _activeNeurons;
+
         #endregion
 
         #region Methods
@@ -45,8 +49,7 @@ namespace CnnNet4
 
             base.Initialize();
 
-            _cnnNet = new CnnNet(Width, Height, 0.001, 80, 0.05, 0.05, 0.1);
-            //_cnnNet.ProcessNext();
+            _cnnNet = new CnnNet(Width, Height, 0.001, 20, 0.2, 0.005, 0.1);
         }
 
         /// <summary>
@@ -92,6 +95,7 @@ namespace CnnNet4
             }
 
             // Add your update logic here
+            
 
             base.Update(gameTime);
         }
@@ -102,27 +106,31 @@ namespace CnnNet4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            _frameNumber++;
             GraphicsDevice.Clear(Color.White);
             GraphicsDevice.Textures[0] = null;
+
+            _cnnNet.ProcessNext();
+            _tableNeuronDesirability = _cnnNet.TableNeuronDesirability;
+            _tableNeurons = _cnnNet.TableNeurons;
+            _activeNeurons = _cnnNet.ActiveNeurons;
+
+            var tableNeuronDesirability = _tableNeuronDesirability;
+            var tableNeurons = _tableNeurons;
+            var activeNeurons = _activeNeurons;
 
             // Drawing code here
             _spriteBatch.Begin();
 
-            _spriteBatch.DrawString(_frameSpriteFont, string.Format("Frame: {0}", _frameNumber), new Vector2(20, 20), Color.White);
-
-            UpdateDesirability();
-            UpdateNeurons();
+            UpdateDesirability(tableNeuronDesirability);
+            UpdateNeurons(tableNeurons, activeNeurons);
 
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-        private void UpdateDesirability()
+        private void UpdateDesirability(double[,] tableNeuronDesirability)
         {
-            double[,] desirability = _cnnNet.TableNeuronDesirability;
-
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
@@ -130,7 +138,7 @@ namespace CnnNet4
                     int index = y * Width * 4 + x * 4;
 
                     _backgroundData[index + 0] = 0;
-                    _backgroundData[index + 1] = (byte)(desirability[y, x] * 255);
+                    _backgroundData[index + 1] = (byte)(tableNeuronDesirability[y, x] * 255);
                     _backgroundData[index + 2] = 0;
                     _backgroundData[index + 3] = 255;
                 }
@@ -140,10 +148,9 @@ namespace CnnNet4
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
         }
 
-        private void UpdateNeurons()
+        private void UpdateNeurons(int[,] tableNeurons, int[] activeNeurons)
         {
-            int[,] tableNeurons = _cnnNet.TableNeurons;
-            int[] activeNeurons = _cnnNet.ActiveNeurons ?? new int[0];
+            activeNeurons = activeNeurons ?? new int[0];
 
             for (int y = 0; y < Height; y++)
             {
