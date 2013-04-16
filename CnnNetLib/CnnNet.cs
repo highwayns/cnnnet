@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CnnNetLib
 {
@@ -13,14 +10,12 @@ namespace CnnNetLib
         private readonly int _tableWide;
         private readonly int _tableHeight;
 
-        private int[,] _tableNeurons;
-        private double[,] _tableNeuronDesirability;
+        private readonly int[,] _tableNeurons;
+        private readonly double[,] _tableNeuronDesirability;
+        private readonly int _neuronCount;
+        private readonly Random _random;
+
         private int[] _activeNeurons;
-
-        private int _neuronCount;
-        private Random _random;
-
-        private readonly ParallelOptions _parallelOptions;
 
         private readonly double _neuronDensity;
         private readonly int _neuronInfluenceRange;
@@ -82,7 +77,7 @@ namespace CnnNetLib
         private int[] GetActiveNeurons()
         {
             var retCount = (int)(_neuronCount * _percentActiveNourons);
-            int[] ret = new int[retCount];
+            var ret = new int[retCount];
             for (int i = 0; i < retCount; i++)
             {
                 ret[i] = _random.Next(_neuronCount);
@@ -90,18 +85,18 @@ namespace CnnNetLib
             return ret;
         }
 
-        private void AddDesirability(int y_center, int x_center)
+        private void AddDesirability(int yCenter, int xCenter)
         {
-            int x_min = Math.Max(x_center - _neuronInfluenceRange, 0);
-            int x_max = Math.Min(x_center + _neuronInfluenceRange, _tableWide);
-            int y_min = Math.Max(y_center - _neuronInfluenceRange, 0);
-            int y_max = Math.Min(y_center + _neuronInfluenceRange, _tableHeight);
+            int xMin = Math.Max(xCenter - _neuronInfluenceRange, 0);
+            int xMax = Math.Min(xCenter + _neuronInfluenceRange, _tableWide);
+            int yMin = Math.Max(yCenter - _neuronInfluenceRange, 0);
+            int yMax = Math.Min(yCenter + _neuronInfluenceRange, _tableHeight);
 
-            for (int y = y_min; y < y_max; y++)
+            for (int y = yMin; y < yMax; y++)
             {
-                for (int x = x_min; x < x_max; x++)
+                for (int x = xMin; x < xMax; x++)
                 {
-                    var distance = Math.Sqrt(Math.Pow(x_center - x, 2) + Math.Pow(y_center - y, 2));
+                    var distance = Math.Sqrt(Math.Pow(xCenter - x, 2) + Math.Pow(yCenter - y, 2));
 
                     _tableNeuronDesirability[y, x] =
                         Math.Min(1, _tableNeuronDesirability[y, x] + Math.Max(_neuronInfluenceRange - distance, 0) * (1.0 / _neuronInfluenceRange) * _maxNeuronInfluence);
@@ -132,11 +127,6 @@ namespace CnnNetLib
 
             _tableNeurons = new int[_tableHeight, _tableWide];
             _tableNeuronDesirability = new double[_tableHeight, _tableWide];
-            _parallelOptions = new ParallelOptions()
-            {
-                MaxDegreeOfParallelism = 3
-            };
-
             _random = new Random();
             int neuronId = 1;
 

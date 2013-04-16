@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using CnnNetLib;
 
 namespace CnnNet4
@@ -15,15 +9,15 @@ namespace CnnNet4
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class GameCnnNet : Microsoft.Xna.Framework.Game
+    public class GameCnnNet : Game
     {
         #region Fields
 
-        private const int WIDTH = 800;
-        private const int HEIGHT = 600;
+        private const int Width = 800;
+        private const int Height = 600;
 
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
 
         private Texture2D _neuronIdle;
         private Texture2D _neuronActive;
@@ -47,11 +41,12 @@ namespace CnnNet4
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // Add your initialization logic here
 
             base.Initialize();
 
-            _cnnNet = new CnnNet(WIDTH, HEIGHT, 0.001, 80, 0.05, 0.05, 0.1);
+            _cnnNet = new CnnNet(Width, Height, 0.001, 80, 0.05, 0.05, 0.1);
+            //_cnnNet.ProcessNext();
         }
 
         /// <summary>
@@ -61,16 +56,16 @@ namespace CnnNet4
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // use this.Content to load your game content here
             _neuronIdle = Content.Load<Texture2D>("neuronIdle");
             _neuronActive = Content.Load<Texture2D>("neuronActive");
             _frameSpriteFont = Content.Load<SpriteFont>("FrameSpriteFont");
 
-            _background = new Texture2D(GraphicsDevice, WIDTH, HEIGHT);
+            _background = new Texture2D(GraphicsDevice, Width, Height);
             _backgroundData = Enumerable.Repeat<byte>(255, _background.Width * _background.Height * 4).ToArray();
-            _background.SetData<byte>(_backgroundData);
+            _background.SetData(_backgroundData);
         }
 
         /// <summary>
@@ -79,7 +74,7 @@ namespace CnnNet4
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // Unload any non ContentManager content here
         }
 
         /// <summary>
@@ -93,11 +88,10 @@ namespace CnnNet4
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().GetPressedKeys().Contains(Keys.Escape))
             {
-                this.Exit();
+                Exit();
             }
 
-            // TODO: Add your update logic here
-            //_cnnNet.ProcessNext();
+            // Add your update logic here
 
             base.Update(gameTime);
         }
@@ -108,20 +102,19 @@ namespace CnnNet4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            _frameNumber++;
             GraphicsDevice.Clear(Color.White);
             GraphicsDevice.Textures[0] = null;
 
-            _cnnNet.ProcessNext();
-
             // Drawing code here
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
 
-            spriteBatch.DrawString(_frameSpriteFont, string.Format("Frame: {0}", _frameNumber), new Vector2(20, 20), Color.White);
+            _spriteBatch.DrawString(_frameSpriteFont, string.Format("Frame: {0}", _frameNumber), new Vector2(20, 20), Color.White);
 
             UpdateDesirability();
             UpdateNeurons();
 
-            spriteBatch.End();
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -130,11 +123,11 @@ namespace CnnNet4
         {
             double[,] desirability = _cnnNet.TableNeuronDesirability;
 
-            for (int y = 0; y < HEIGHT; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < WIDTH; x++)
+                for (int x = 0; x < Width; x++)
                 {
-                    int index = y * WIDTH * 4 + x * 4;
+                    int index = y * Width * 4 + x * 4;
 
                     _backgroundData[index + 0] = 0;
                     _backgroundData[index + 1] = (byte)(desirability[y, x] * 255);
@@ -143,8 +136,8 @@ namespace CnnNet4
                 }
             }
 
-            _background.SetData<byte>(_backgroundData);
-            spriteBatch.Draw(_background, new Rectangle(0, 0, WIDTH, HEIGHT), Color.White);
+            _background.SetData(_backgroundData);
+            _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
         }
 
         private void UpdateNeurons()
@@ -152,20 +145,15 @@ namespace CnnNet4
             int[,] tableNeurons = _cnnNet.TableNeurons;
             int[] activeNeurons = _cnnNet.ActiveNeurons ?? new int[0];
 
-            for (int y = 0; y < HEIGHT; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < WIDTH; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     if (tableNeurons[y, x] != 0)
                     {
-                        if (activeNeurons.Contains(tableNeurons[y, x]))
-                        {
-                            spriteBatch.Draw(_neuronActive, new Vector2(x, y), Color.White);
-                        }
-                        else
-                        {
-                            spriteBatch.Draw(_neuronIdle, new Vector2(x, y), Color.White);
-                        }
+                        _spriteBatch.Draw(activeNeurons.Contains(tableNeurons[y, x])
+                                              ? _neuronActive
+                                              : _neuronIdle, new Vector2(x, y), Color.White);
                     }
                 }
             }
@@ -177,10 +165,13 @@ namespace CnnNet4
 
         public GameCnnNet()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = WIDTH;
-            graphics.PreferredBackBufferHeight = HEIGHT;
-            graphics.ApplyChanges();
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = Width, 
+                PreferredBackBufferHeight = Height
+            };
+
+            _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
         }

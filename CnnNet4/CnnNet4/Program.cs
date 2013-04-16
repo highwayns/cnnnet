@@ -10,7 +10,7 @@ namespace CnnNet4
         /// </summary>
         static void Main(string[] args)
         {
-            using (GameCnnNet game = new GameCnnNet())
+            using (var game = new GameCnnNet())
             {
                 game.Run();
             }
