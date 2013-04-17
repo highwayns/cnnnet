@@ -47,13 +47,16 @@ namespace CnnNet4
             IsFixedTimeStep = false;
 
             const double neuronDensity = 0.001;
-            const int neuronInfluenceRange = 50;
-            const double maxNeuronInfluence = 0.1;
+            const int neuronInfluenceRange = 80;
+            const double maxNeuronInfluence = 0.05;
             const double desirabilityDecayAmount = 0.05;
             const double percentActiveNeurons = 0.1;
+            const int neuronDesirabilityPlainRange = 5;
+            const int minDistanceBetweenNeurons = 5;
 
             _cnnNet = new CnnNet(Width, Height, neuronDensity, neuronInfluenceRange,
-                maxNeuronInfluence, desirabilityDecayAmount, percentActiveNeurons);
+                maxNeuronInfluence, desirabilityDecayAmount, percentActiveNeurons,
+                neuronDesirabilityPlainRange, minDistanceBetweenNeurons);
         }
 
         /// <summary>
