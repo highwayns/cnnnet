@@ -51,7 +51,7 @@ namespace CnnNet4
             const double neuronDensity = 0.001;
             const int neuronInfluenceRange = 80;
             const double maxNeuronInfluence = 0.05;
-            const double desirabilityDecayAmount = 0.05;
+            const double desirabilityDecayAmount = 0.005;
             const double percentActiveNeurons = 0.1;
             const int neuronDesirabilityPlainRange = 10;
             const int minDistanceBetweenNeurons = 10;
@@ -63,7 +63,8 @@ namespace CnnNet4
                                  neuronDesirabilityPlainRange, minDistanceBetweenNeurons,
                                  inputNeuronCount, inputNeuronsMoveToHigherDesirability);
 
-            _cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
+            //_cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
+            _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, 2);
         }
 
         /// <summary>
