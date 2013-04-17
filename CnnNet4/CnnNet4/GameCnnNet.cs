@@ -57,11 +57,13 @@ namespace CnnNet4
             const int minDistanceBetweenNeurons = 10;
             const int inputNeuronCount = 10;
             const bool inputNeuronsMoveToHigherDesirability = false;
+            const int maxNeuronMoveDistance = 200;
 
             _cnnNet = new CnnNet(Width, Height, neuronDensity, neuronInfluenceRange,
                                  maxNeuronInfluence, desirabilityDecayAmount,
                                  neuronDesirabilityPlainRange, minDistanceBetweenNeurons,
-                                 inputNeuronCount, inputNeuronsMoveToHigherDesirability);
+                                 inputNeuronCount, inputNeuronsMoveToHigherDesirability,
+                                 maxNeuronMoveDistance);
 
             //_cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
             _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, 2);
