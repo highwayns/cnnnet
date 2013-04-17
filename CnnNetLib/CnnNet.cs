@@ -12,6 +12,7 @@ namespace CnnNetLib
         private readonly int _tableHeight;
 
         private int[,] _tableNeurons;
+        private int[] _inputNeuronIds;
         private readonly double[,] _tableNeuronDesirability;
         private readonly int _neuronCount;
         private readonly Random _random;
@@ -25,6 +26,8 @@ namespace CnnNetLib
         private readonly double _percentActiveNourons;
         private readonly int _neuronDesirabilityPlainRange;
         private readonly int _minDistanceBetweenNeurons;
+        private readonly int _inputNeuronCount;
+        private readonly bool _inputNeuronsMoveToHigherDesirability;
 
         #endregion
 
@@ -54,6 +57,14 @@ namespace CnnNetLib
             }
         }
 
+        public int[] InputNeuronIds
+        {
+            get
+            {
+                return _inputNeuronIds;
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -62,11 +73,11 @@ namespace CnnNetLib
         {
             _activeNeurons = GetActiveNeurons();
 
-            UpdateDesirability();
-            MoveToHigherDesirability();
+            ProcessUpdateDesirability();
+            ProcessMoveToHigherDesirability();
         }
 
-        private void UpdateDesirability()
+        private void ProcessUpdateDesirability()
         {
             for (int y = 0; y < _tableHeight; y++)
             {
@@ -89,7 +100,7 @@ namespace CnnNetLib
             }
         }
 
-        private void MoveToHigherDesirability()
+        private void ProcessMoveToHigherDesirability()
         {
             var auxTableNeurons = new int[_tableNeurons.GetLength(0), _tableNeurons.GetLength(1)];
 
@@ -99,7 +110,15 @@ namespace CnnNetLib
                 {
                     if (_tableNeurons[y, x] != 0)
                     {
-                        MoveNeuronInDesirabilityPlain(y, x, auxTableNeurons);
+                        if (_inputNeuronsMoveToHigherDesirability
+                            || _inputNeuronIds.All(inputNeuronId => inputNeuronId != _tableNeurons[y, x]))
+                        {
+                            MoveNeuronInDesirabilityPlain(y, x, auxTableNeurons);
+                        }
+                        else
+                        {
+                            auxTableNeurons[y, x] = _tableNeurons[y, x];
+                        }
                     }
                 }
             }
@@ -210,7 +229,8 @@ namespace CnnNetLib
 
         public CnnNet(int width, int height, double neuronDensity, int neuronInfluenceRange, 
             double maxNeuronInfluence, double desirabilityDecayAmount, double percentActiveNourons,
-            int neuronDesirabilityPlainRange, int minDistanceBetweenNeurons)
+            int neuronDesirabilityPlainRange, int minDistanceBetweenNeurons,
+            int inputNeuronCount, bool inputNeuronsMoveToHigherDesirability)
         {
             _tableWide = width;
             _tableHeight = height;
@@ -222,13 +242,18 @@ namespace CnnNetLib
             _percentActiveNourons = percentActiveNourons;
             _neuronDesirabilityPlainRange = neuronDesirabilityPlainRange;
             _minDistanceBetweenNeurons = minDistanceBetweenNeurons;
+            _inputNeuronCount = inputNeuronCount;
+            _inputNeuronsMoveToHigherDesirability = inputNeuronsMoveToHigherDesirability;
 
             _tableNeurons = new int[_tableHeight, _tableWide];
             _tableNeuronDesirability = new double[_tableHeight, _tableWide];
+            _inputNeuronIds = new int[_inputNeuronCount];
             _random = new Random();
-            int neuronId = 1;
 
-            // generate random neurons
+            #region Generate random neurons
+
+            // generate all neurons
+            int neuronId = 1;
             for (int y = 0; y < _tableHeight; y++)
             {
                 for (int x = 0; x < _tableWide; x++)
@@ -241,6 +266,18 @@ namespace CnnNetLib
             }
 
             _neuronCount = neuronId;
+
+            // determine input neurons
+            for (int i = 0; i < _inputNeuronCount; i++)
+            {
+                int inputNeuronId;
+                while (_inputNeuronIds.Contains(inputNeuronId = _random.Next(1, _neuronCount + 1)))
+                {
+                }
+                _inputNeuronIds[i] = inputNeuronId;
+            }
+
+            #endregion
         }
 
         #endregion

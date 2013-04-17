@@ -21,6 +21,8 @@ namespace CnnNet4
 
         private Texture2D _neuronIdle;
         private Texture2D _neuronActive;
+        private Texture2D _neuronInputIdle;
+        private Texture2D _neuronInputActive;
         private Texture2D _background;
 
         private byte[] _backgroundData;
@@ -51,12 +53,15 @@ namespace CnnNet4
             const double maxNeuronInfluence = 0.05;
             const double desirabilityDecayAmount = 0.05;
             const double percentActiveNeurons = 0.1;
-            const int neuronDesirabilityPlainRange = 5;
-            const int minDistanceBetweenNeurons = 5;
+            const int neuronDesirabilityPlainRange = 10;
+            const int minDistanceBetweenNeurons = 10;
+            const int inputNeuronCount = 10;
+            const bool inputNeuronsMoveToHigherDesirability = false;
 
             _cnnNet = new CnnNet(Width, Height, neuronDensity, neuronInfluenceRange,
-                maxNeuronInfluence, desirabilityDecayAmount, percentActiveNeurons,
-                neuronDesirabilityPlainRange, minDistanceBetweenNeurons);
+                                 maxNeuronInfluence, desirabilityDecayAmount, percentActiveNeurons,
+                                 neuronDesirabilityPlainRange, minDistanceBetweenNeurons,
+                                 inputNeuronCount, inputNeuronsMoveToHigherDesirability);
         }
 
         /// <summary>
@@ -71,6 +76,8 @@ namespace CnnNet4
             // use this.Content to load your game content here
             _neuronIdle = Content.Load<Texture2D>("neuronIdle");
             _neuronActive = Content.Load<Texture2D>("neuronActive");
+            _neuronInputIdle = Content.Load<Texture2D>("neuronInputIdle");
+            _neuronInputActive = Content.Load<Texture2D>("neuronInputActive");
 
             _background = new Texture2D(GraphicsDevice, Width, Height);
             _backgroundData = Enumerable.Repeat<byte>(255, _background.Width * _background.Height * 4).ToArray();
@@ -117,12 +124,13 @@ namespace CnnNet4
             var tableNeuronDesirability = _cnnNet.TableNeuronDesirability ?? new double[0,0];
             var tableNeurons = _cnnNet.TableNeurons ?? new int[0,0];
             var activeNeurons = _cnnNet.ActiveNeurons ?? new int[0];
+            var inputNeuronIds = _cnnNet.InputNeuronIds ?? new int[0];
 
             // Drawing code here
             _spriteBatch.Begin();
 
             UpdateDesirability(tableNeuronDesirability);
-            UpdateNeurons(tableNeurons, activeNeurons);
+            UpdateNeurons(tableNeurons, activeNeurons, inputNeuronIds);
 
             _spriteBatch.End();
 
@@ -148,7 +156,7 @@ namespace CnnNet4
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
         }
 
-        private void UpdateNeurons(int[,] tableNeurons, int[] activeNeurons)
+        private void UpdateNeurons(int[,] tableNeurons, int[] activeNeurons, int[] inputNeurons)
         {
             for (int y = 0; y < Height; y++)
             {
@@ -157,8 +165,9 @@ namespace CnnNet4
                     if (tableNeurons[y, x] != 0)
                     {
                         _spriteBatch.Draw(activeNeurons.Contains(tableNeurons[y, x])
-                                              ? _neuronActive
-                                              : _neuronIdle, new Vector2(x, y), Color.White);
+                                              ? inputNeurons.Contains(tableNeurons[y, x]) ? _neuronInputActive : _neuronActive
+                                              : inputNeurons.Contains(tableNeurons[y, x]) ? _neuronInputIdle : _neuronIdle,
+                                          new Vector2(x, y), Color.White);
                     }
                 }
             }

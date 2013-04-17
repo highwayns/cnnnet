@@ -51,10 +51,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrameSpriteFont.spritefont">
-      <Name>FrameSpriteFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+    <Compile Include="neuronInputActive.png">
+      <Name>neuronInputActive</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="neuronInputIdle.png">
+      <Name>neuronInputIdle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
