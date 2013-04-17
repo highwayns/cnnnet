@@ -59,9 +59,11 @@ namespace CnnNet4
             const bool inputNeuronsMoveToHigherDesirability = false;
 
             _cnnNet = new CnnNet(Width, Height, neuronDensity, neuronInfluenceRange,
-                                 maxNeuronInfluence, desirabilityDecayAmount, percentActiveNeurons,
+                                 maxNeuronInfluence, desirabilityDecayAmount,
                                  neuronDesirabilityPlainRange, minDistanceBetweenNeurons,
                                  inputNeuronCount, inputNeuronsMoveToHigherDesirability);
+
+            _cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
         }
 
         /// <summary>

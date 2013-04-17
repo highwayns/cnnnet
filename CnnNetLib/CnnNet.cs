@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CnnNetLib
 {
@@ -12,23 +11,22 @@ namespace CnnNetLib
         private readonly int _tableHeight;
 
         private int[,] _tableNeurons;
-        private int[] _inputNeuronIds;
+        private readonly int[] _inputNeuronIds;
         private readonly double[,] _tableNeuronDesirability;
-        private readonly int _neuronCount;
+        
         private readonly Random _random;
 
         private int[] _activeNeurons;
 
-        private readonly double _neuronDensity;
         private readonly int _neuronInfluenceRange;
         private readonly double _maxNeuronInfluence;
         private readonly double _desirabilityDecayAmount;
-        private readonly double _percentActiveNourons;
+        private readonly double _neuronDensity;
         private readonly int _neuronDesirabilityPlainRange;
         private readonly int _minDistanceBetweenNeurons;
         private readonly int _inputNeuronCount;
         private readonly bool _inputNeuronsMoveToHigherDesirability;
-
+        
         #endregion
 
         #region Properties
@@ -65,13 +63,25 @@ namespace CnnNetLib
             }
         }
 
+        public int NeuronCount
+        {
+            get;
+            private set;
+        }
+
+        public IActiveNeuronGenerator ActiveNeuronGenerator
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         #region Methods
 
         public void Process()
         {
-            _activeNeurons = GetActiveNeurons();
+            _activeNeurons = ActiveNeuronGenerator.GetActiveNeuronIds();
 
             ProcessUpdateDesirability();
             ProcessMoveToHigherDesirability();
@@ -188,17 +198,6 @@ namespace CnnNetLib
             return distanceToNearestNeuron;
         }
 
-        private int[] GetActiveNeurons()
-        {
-            var retCount = (int)(_neuronCount * _percentActiveNourons);
-            var ret = new int[retCount];
-            for (int i = 0; i < retCount; i++)
-            {
-                ret[i] = _random.Next(_neuronCount);
-            }
-            return ret;
-        }
-
         private void AddDesirability(int yCenter, int xCenter)
         {
             int xMin = Math.Max(xCenter - _neuronInfluenceRange, 0);
@@ -228,18 +227,17 @@ namespace CnnNetLib
         #region Instance
 
         public CnnNet(int width, int height, double neuronDensity, int neuronInfluenceRange, 
-            double maxNeuronInfluence, double desirabilityDecayAmount, double percentActiveNourons,
-            int neuronDesirabilityPlainRange, int minDistanceBetweenNeurons,
+            double maxNeuronInfluence, double desirabilityDecayAmount, int neuronDesirabilityPlainRange,
+            int minDistanceBetweenNeurons,
             int inputNeuronCount, bool inputNeuronsMoveToHigherDesirability)
         {
             _tableWide = width;
             _tableHeight = height;
 
-            _neuronDensity = neuronDensity;
             _neuronInfluenceRange = neuronInfluenceRange;
             _maxNeuronInfluence = maxNeuronInfluence;
             _desirabilityDecayAmount = desirabilityDecayAmount;
-            _percentActiveNourons = percentActiveNourons;
+            _neuronDensity = neuronDensity;
             _neuronDesirabilityPlainRange = neuronDesirabilityPlainRange;
             _minDistanceBetweenNeurons = minDistanceBetweenNeurons;
             _inputNeuronCount = inputNeuronCount;
@@ -265,13 +263,13 @@ namespace CnnNetLib
                 }
             }
 
-            _neuronCount = neuronId;
+            NeuronCount = neuronId;
 
             // determine input neurons
             for (int i = 0; i < _inputNeuronCount; i++)
             {
                 int inputNeuronId;
-                while (_inputNeuronIds.Contains(inputNeuronId = _random.Next(1, _neuronCount + 1)))
+                while (_inputNeuronIds.Contains(inputNeuronId = _random.Next(1, NeuronCount + 1)))
                 {
                 }
                 _inputNeuronIds[i] = inputNeuronId;
