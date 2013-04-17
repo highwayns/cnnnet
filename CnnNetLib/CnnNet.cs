@@ -11,8 +11,9 @@ namespace CnnNetLib
         private readonly int _tableHeight;
 
         private int[,] _tableNeurons;
-        private readonly int[] _inputNeuronIds;
         private readonly double[,] _tableNeuronDesirability;
+        private readonly int[] _inputNeuronIds;
+        private readonly double[] _neuronMovedDistance;
         
         private readonly Random _random;
 
@@ -26,7 +27,8 @@ namespace CnnNetLib
         private readonly int _minDistanceBetweenNeurons;
         private readonly int _inputNeuronCount;
         private readonly bool _inputNeuronsMoveToHigherDesirability;
-        
+        private readonly int _maxNeuronMoveDistance;
+
         #endregion
 
         #region Properties
@@ -157,13 +159,16 @@ namespace CnnNetLib
                         continue;
                     }
 
+                    double distance;
                     if (_tableNeuronDesirability[y, x] > maxDesirability
                         && _tableNeurons[y, x] == 0
-                        && DistanceToNearestNeuron(y, x) > _minDistanceBetweenNeurons)
+                        && _neuronMovedDistance[_tableNeurons[y, x]] < _maxNeuronMoveDistance
+                        && (distance = GetDistanceToNearestNeuron(y, x)) > _minDistanceBetweenNeurons)
                     {
                         maxDesirabX = x;
                         maxDesirabY = y;
                         maxDesirability = _tableNeuronDesirability[y, x];
+                        _neuronMovedDistance[_tableNeurons[y, x]] += distance;
                     }
                 }
             }
@@ -171,7 +176,7 @@ namespace CnnNetLib
             auxTableNeurons[maxDesirabY, maxDesirabX] = _tableNeurons[neuronY, neuronX];
         }
 
-        private double DistanceToNearestNeuron(int neuronY, int neuronX)
+        private double GetDistanceToNearestNeuron(int neuronY, int neuronX)
         {
             double distanceToNearestNeuron = double.MaxValue;
 
@@ -186,7 +191,7 @@ namespace CnnNetLib
                 {
                     if (_tableNeurons[y, x] != 0)
                     {
-                        var distance = Math.Sqrt(Math.Pow(neuronX - x, 2) + Math.Pow(neuronY - y, 2));
+                        var distance = GetDistance(neuronX, neuronY, x, y);
                         if (distanceToNearestNeuron > distance)
                         {
                             distanceToNearestNeuron = distance;
@@ -209,7 +214,7 @@ namespace CnnNetLib
             {
                 for (int x = xMin; x < xMax; x++)
                 {
-                    var distance = Math.Sqrt(Math.Pow(xCenter - x, 2) + Math.Pow(yCenter - y, 2));
+                    var distance = GetDistance(xCenter, yCenter, x, y);
 
                     _tableNeuronDesirability[y, x] =
                         Math.Min(1, _tableNeuronDesirability[y, x] + Math.Max(_neuronInfluenceRange - distance, 0)*(1.0/_neuronInfluenceRange)*_maxNeuronInfluence);
@@ -222,14 +227,19 @@ namespace CnnNetLib
             _tableNeuronDesirability[y, x] = Math.Max(0, _tableNeuronDesirability[y, x] - _desirabilityDecayAmount);
         }
 
+        private double GetDistance(int x1, int y1, int x2, int y2)
+        {
+            return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
+        }
+
         #endregion
 
         #region Instance
 
         public CnnNet(int width, int height, double neuronDensity, int neuronInfluenceRange, 
             double maxNeuronInfluence, double desirabilityDecayAmount, int neuronDesirabilityPlainRange,
-            int minDistanceBetweenNeurons,
-            int inputNeuronCount, bool inputNeuronsMoveToHigherDesirability)
+            int minDistanceBetweenNeurons, int inputNeuronCount, 
+            bool inputNeuronsMoveToHigherDesirability, int maxNeuronMoveDistance)
         {
             _tableWide = width;
             _tableHeight = height;
@@ -242,6 +252,7 @@ namespace CnnNetLib
             _minDistanceBetweenNeurons = minDistanceBetweenNeurons;
             _inputNeuronCount = inputNeuronCount;
             _inputNeuronsMoveToHigherDesirability = inputNeuronsMoveToHigherDesirability;
+            _maxNeuronMoveDistance = maxNeuronMoveDistance;
 
             _tableNeurons = new int[_tableHeight, _tableWide];
             _tableNeuronDesirability = new double[_tableHeight, _tableWide];
@@ -276,6 +287,8 @@ namespace CnnNetLib
             }
 
             #endregion
+
+            _neuronMovedDistance = new double[NeuronCount];
         }
 
         #endregion
