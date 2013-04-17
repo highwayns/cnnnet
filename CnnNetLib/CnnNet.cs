@@ -159,16 +159,15 @@ namespace CnnNetLib
                         continue;
                     }
 
-                    double distance;
                     if (_tableNeuronDesirability[y, x] > maxDesirability
                         && _tableNeurons[y, x] == 0
                         && _neuronIdsMovedDistance[_tableNeurons[neuronY, neuronX] - 1] < _maxNeuronMoveDistance
-                        && (distance = GetDistanceToNearestNeuron(neuronX, neuronY, x, y)) >= _minDistanceBetweenNeurons)
+                        && GetDistanceToNearestNeuron(x, y, auxTableNeurons) >= _minDistanceBetweenNeurons)
                     {
                         maxDesirabX = x;
                         maxDesirabY = y;
                         maxDesirability = _tableNeuronDesirability[y, x];
-                        _neuronIdsMovedDistance[_tableNeurons[neuronY, neuronX] - 1] += distance;
+                        _neuronIdsMovedDistance[_tableNeurons[neuronY, neuronX] - 1] += GetDistance(neuronX, neuronY, x, y);
                     }
                 }
             }
@@ -176,7 +175,7 @@ namespace CnnNetLib
             auxTableNeurons[maxDesirabY, maxDesirabX] = _tableNeurons[neuronY, neuronX];
         }
 
-        private double GetDistanceToNearestNeuron(int neuronX, int neuronY, int referenceX, int referenceY)
+        private double GetDistanceToNearestNeuron(int referenceX, int referenceY, int[,] auxTableNeurons)
         {
             double distanceToNearestNeuron = _neuronDesirabilityPlainRange + 1;
 
@@ -189,9 +188,7 @@ namespace CnnNetLib
             {
                 for (int x = xMin; x < xMax; x++)
                 {
-                    if (_tableNeurons[y, x] != 0
-                        && y != neuronY
-                        && x != neuronX)
+                    if (auxTableNeurons[y, x] != 0)
                     {
                         var distance = GetDistance(referenceX, referenceY, x, y);
                         if (distanceToNearestNeuron > distance)
