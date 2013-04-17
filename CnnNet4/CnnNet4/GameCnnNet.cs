@@ -1,11 +1,8 @@
-using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CnnNetLib;
-using System;
-using System.Diagnostics;
 
 namespace CnnNet4
 {
@@ -46,10 +43,17 @@ namespace CnnNet4
 
             base.Initialize();
 
-            this.IsMouseVisible = true;
-            this.IsFixedTimeStep = false;
+            IsMouseVisible = true;
+            IsFixedTimeStep = false;
 
-            _cnnNet = new CnnNet(Width, Height, 0.001, 20, 0.2, 0.005, 0.1);
+            const double neuronDensity = 0.001;
+            const int neuronInfluenceRange = 50;
+            const double maxNeuronInfluence = 0.1;
+            const double desirabilityDecayAmount = 0.05;
+            const double percentActiveNeurons = 0.1;
+
+            _cnnNet = new CnnNet(Width, Height, neuronDensity, neuronInfluenceRange,
+                maxNeuronInfluence, desirabilityDecayAmount, percentActiveNeurons);
         }
 
         /// <summary>
@@ -86,7 +90,6 @@ namespace CnnNet4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            Trace.WriteLine("UPDATE Start");
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().GetPressedKeys().Contains(Keys.Escape))
@@ -95,10 +98,9 @@ namespace CnnNet4
             }
 
             // Add your update logic here
-            _cnnNet.ProcessNext();
+            _cnnNet.Process();
 
             base.Update(gameTime);
-            Trace.WriteLine("UPDATE End");
         }
 
         /// <summary>
@@ -107,7 +109,6 @@ namespace CnnNet4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            Trace.WriteLine("DRAW Start");
             GraphicsDevice.Clear(Color.White);
 
             var tableNeuronDesirability = _cnnNet.TableNeuronDesirability ?? new double[0,0];
@@ -123,7 +124,6 @@ namespace CnnNet4
             _spriteBatch.End();
 
             base.Draw(gameTime);
-            Trace.WriteLine("DRAW End");
         }
 
         private void UpdateDesirability(double[,] tableNeuronDesirability)
@@ -140,8 +140,6 @@ namespace CnnNet4
                     _backgroundData[index + 3] = 255;
                 }
             }
-
-            RenderTarget2D a;
 
             _background.SetData(_backgroundData);
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
