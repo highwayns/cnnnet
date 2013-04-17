@@ -1,8 +1,11 @@
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CnnNetLib;
+using System;
+using System.Diagnostics;
 
 namespace CnnNet4
 {
@@ -22,16 +25,10 @@ namespace CnnNet4
         private Texture2D _neuronIdle;
         private Texture2D _neuronActive;
         private Texture2D _background;
-        private SpriteFont _frameSpriteFont;
 
         private byte[] _backgroundData;
 
         private CnnNet _cnnNet;
-        private int _frameNumber;
-
-        private double[,] _tableNeuronDesirability;
-        private int[,] _tableNeurons;
-        private int[] _activeNeurons;
 
         #endregion
 
@@ -49,6 +46,9 @@ namespace CnnNet4
 
             base.Initialize();
 
+            this.IsMouseVisible = true;
+            this.IsFixedTimeStep = false;
+
             _cnnNet = new CnnNet(Width, Height, 0.001, 20, 0.2, 0.005, 0.1);
         }
 
@@ -64,7 +64,6 @@ namespace CnnNet4
             // use this.Content to load your game content here
             _neuronIdle = Content.Load<Texture2D>("neuronIdle");
             _neuronActive = Content.Load<Texture2D>("neuronActive");
-            _frameSpriteFont = Content.Load<SpriteFont>("FrameSpriteFont");
 
             _background = new Texture2D(GraphicsDevice, Width, Height);
             _backgroundData = Enumerable.Repeat<byte>(255, _background.Width * _background.Height * 4).ToArray();
@@ -87,6 +86,7 @@ namespace CnnNet4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Trace.WriteLine("UPDATE Start");
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().GetPressedKeys().Contains(Keys.Escape))
@@ -95,9 +95,10 @@ namespace CnnNet4
             }
 
             // Add your update logic here
-            
+            _cnnNet.ProcessNext();
 
             base.Update(gameTime);
+            Trace.WriteLine("UPDATE End");
         }
 
         /// <summary>
@@ -106,17 +107,12 @@ namespace CnnNet4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            Trace.WriteLine("DRAW Start");
             GraphicsDevice.Clear(Color.White);
-            GraphicsDevice.Textures[0] = null;
 
-            _cnnNet.ProcessNext();
-            _tableNeuronDesirability = _cnnNet.TableNeuronDesirability;
-            _tableNeurons = _cnnNet.TableNeurons;
-            _activeNeurons = _cnnNet.ActiveNeurons;
-
-            var tableNeuronDesirability = _tableNeuronDesirability;
-            var tableNeurons = _tableNeurons;
-            var activeNeurons = _activeNeurons;
+            var tableNeuronDesirability = _cnnNet.TableNeuronDesirability ?? new double[0,0];
+            var tableNeurons = _cnnNet.TableNeurons ?? new int[0,0];
+            var activeNeurons = _cnnNet.ActiveNeurons ?? new int[0];
 
             // Drawing code here
             _spriteBatch.Begin();
@@ -127,6 +123,7 @@ namespace CnnNet4
             _spriteBatch.End();
 
             base.Draw(gameTime);
+            Trace.WriteLine("DRAW End");
         }
 
         private void UpdateDesirability(double[,] tableNeuronDesirability)
@@ -135,14 +132,16 @@ namespace CnnNet4
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    int index = y * Width * 4 + x * 4;
+                    int index = y*Width*4 + x*4;
 
                     _backgroundData[index + 0] = 0;
-                    _backgroundData[index + 1] = (byte)(tableNeuronDesirability[y, x] * 255);
+                    _backgroundData[index + 1] = (byte) (tableNeuronDesirability[y, x]*255);
                     _backgroundData[index + 2] = 0;
                     _backgroundData[index + 3] = 255;
                 }
             }
+
+            RenderTarget2D a;
 
             _background.SetData(_backgroundData);
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
@@ -150,8 +149,6 @@ namespace CnnNet4
 
         private void UpdateNeurons(int[,] tableNeurons, int[] activeNeurons)
         {
-            activeNeurons = activeNeurons ?? new int[0];
-
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
