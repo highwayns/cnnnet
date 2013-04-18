@@ -185,20 +185,28 @@ namespace CnnNetLib
                     if (_tableNeuronDesirability[y, x] > maxDesirability
                         && _tableNeurons[y, x] == 0
                         && _neuronIdsMovedDistance[_tableNeurons[neuronY, neuronX] - 1] < _maxNeuronMoveDistance
-                        && GetDistanceToNearestNeuron(x, y, auxTableNeurons) >= _minDistanceBetweenNeurons)
+                        && GetDistanceToNearestNeuron(y, x, auxTableNeurons) >= _minDistanceBetweenNeurons)
                     {
                         maxDesirabX = x;
                         maxDesirabY = y;
                         maxDesirability = _tableNeuronDesirability[y, x];
-                        _neuronIdsMovedDistance[_tableNeurons[neuronY, neuronX] - 1] += GetDistance(neuronX, neuronY, x, y);
                     }
                 }
             }
 
             auxTableNeurons[maxDesirabY, maxDesirabX] = _tableNeurons[neuronY, neuronX];
+            /*
+             * _neuronIdsMovedDistance[_tableNeurons[neuronY, neuronX] - 1]
+             * -1 Explanation
+             * 
+             * _tableNeurons - 0 means empty place, everything else is a neuron id
+             * _neuronIdsMovedDistance - how much every neuron moved until now
+             *      In order to use all values (including index 0) we substract 1 from the neuron id
+             */
+            _neuronIdsMovedDistance[_tableNeurons[neuronY, neuronX] - 1] += GetDistance(neuronX, neuronY, maxDesirabX, maxDesirabY);
         }
 
-        private double GetDistanceToNearestNeuron(int referenceX, int referenceY, int[,] auxTableNeurons)
+        private double GetDistanceToNearestNeuron(int referenceY, int referenceX, int[,] auxTableNeurons)
         {
             double distanceToNearestNeuron = _neuronDesirabilityPlainRange + 1;
 
