@@ -77,6 +77,7 @@
             this.buttonStart.TabIndex = 1;
             this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.OnButtonStartClick);
             // 
             // buttonStop
             // 
@@ -86,6 +87,7 @@
             this.buttonStop.TabIndex = 2;
             this.buttonStop.Text = "Stop";
             this.buttonStop.UseVisualStyleBackColor = true;
+            this.buttonStop.Click += new System.EventHandler(this.OnButtonStopClick);
             // 
             // radioButtonRunInfinity
             // 

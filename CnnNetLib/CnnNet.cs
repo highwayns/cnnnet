@@ -7,15 +7,15 @@ namespace CnnNetLib
     {
         #region Fields
 
-        private int _tableWide;
-        private int _tableHeight;
+        private readonly int _tableWide;
+        private readonly int _tableHeight;
 
         private int[,] _tableNeurons;
-        private double[,] _tableNeuronDesirability;
-        private int[] _inputNeuronIds;
-        private double[] _neuronIdsMovedDistance;
+        private readonly double[,] _tableNeuronDesirability;
+        private readonly int[] _inputNeuronIds;
+        private readonly double[] _neuronIdsMovedDistance;
         
-        private Random _random;
+        private readonly Random _random;
 
         private int[] _activeNeurons;
 
@@ -28,6 +28,9 @@ namespace CnnNetLib
         private int _inputNeuronCount;
         private bool _inputNeuronsMoveToHigherDesirability;
         private int _maxNeuronMoveDistance;
+
+        private bool _isProcessing;
+        private readonly object _isProcessingSyncObject;
 
         #endregion
 
@@ -83,11 +86,25 @@ namespace CnnNetLib
 
         public void Process()
         {
+            lock (_isProcessingSyncObject)
+            {
+                if (_isProcessing)
+                {
+                    return;
+                }
+                _isProcessing = true;
+            }
+
             _activeNeurons = ActiveNeuronGenerator.GetActiveNeuronIds();
 
             ProcessUpdateDesirability();
             ProcessEnforceMinDistanceBetweenNeurons();
             ProcessMoveToHigherDesirability();
+
+            lock (_isProcessingSyncObject)
+            {
+                _isProcessing = false;
+            }
         }
 
         private void ProcessEnforceMinDistanceBetweenNeurons()
@@ -143,8 +160,6 @@ namespace CnnNetLib
 
             _tableNeurons = auxTableNeurons;
         }
-
-        
 
         private void MoveNeuronInDesirabilityPlain(int neuronY, int neuronX, int[,] auxTableNeurons)
         {
@@ -241,15 +256,18 @@ namespace CnnNetLib
 
         private void SetNetworkParameters(NetworkParameters networkParameters)
         {
-            _neuronInfluenceRange = networkParameters.NeuronInfluenceRange;
-            _maxNeuronInfluence = networkParameters.MaxNeuronInfluence;
-            _desirabilityDecayAmount = networkParameters.DesirabilityDecayAmount;
-            _neuronDensity = networkParameters.NeuronDensity;
-            _neuronDesirabilityPlainRange = networkParameters.NeuronDesirabilityPlainRange;
-            _minDistanceBetweenNeurons = networkParameters.MinDistanceBetweenNeurons;
-            _inputNeuronCount = networkParameters.InputNeuronCount;
-            _inputNeuronsMoveToHigherDesirability = networkParameters.InputNeuronsMoveToHigherDesirability;
-            _maxNeuronMoveDistance = networkParameters.MaxNeuronMoveDistance;
+            lock (_isProcessingSyncObject)
+            {
+                _neuronInfluenceRange = networkParameters.NeuronInfluenceRange;
+                _maxNeuronInfluence = networkParameters.MaxNeuronInfluence;
+                _desirabilityDecayAmount = networkParameters.DesirabilityDecayAmount;
+                _neuronDensity = networkParameters.NeuronDensity;
+                _neuronDesirabilityPlainRange = networkParameters.NeuronDesirabilityPlainRange;
+                _minDistanceBetweenNeurons = networkParameters.MinDistanceBetweenNeurons;
+                _inputNeuronCount = networkParameters.InputNeuronCount;
+                _inputNeuronsMoveToHigherDesirability = networkParameters.InputNeuronsMoveToHigherDesirability;
+                _maxNeuronMoveDistance = networkParameters.MaxNeuronMoveDistance;
+            }
         }
 
         #endregion
@@ -260,6 +278,8 @@ namespace CnnNetLib
         {
             _tableWide = width;
             _tableHeight = height;
+
+            _isProcessingSyncObject = new object();
 
             SetNetworkParameters(networkParameters);
 

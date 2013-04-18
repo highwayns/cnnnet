@@ -29,7 +29,7 @@ namespace CnnNet4
 
         private byte[] _backgroundData;
 
-        private CnnNet _cnnNet;
+        private readonly CnnNet _cnnNet;
 
         #endregion
 
@@ -52,10 +52,7 @@ namespace CnnNet4
 
             _formNetworkControl.Show();
 
-            _cnnNet = new CnnNet(Width, Height, _formNetworkControl.GetNetworkParameters());
-
-            //_cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
-            _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, 2);
+            
         }
 
         /// <summary>
@@ -102,7 +99,6 @@ namespace CnnNet4
             }
 
             // Add your update logic here
-            _cnnNet.Process();
 
             base.Update(gameTime);
         }
@@ -184,6 +180,13 @@ namespace CnnNet4
             Content.RootDirectory = "Content";
 
             _formNetworkControl = new FormNetworkControl();
+
+            _cnnNet = new CnnNet(Width, Height, _formNetworkControl.GetNetworkParameters());
+
+            //_cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
+            _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, 2);
+
+            _formNetworkControl.CnnNet = _cnnNet;
         }
 
         #endregion
