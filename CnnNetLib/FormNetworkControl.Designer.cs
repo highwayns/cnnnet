@@ -482,7 +482,6 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormNetworkControl";
-            this.ShowInTaskbar = false;
             this.Text = "Controls";
             ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).EndInit();
             this.groupBox1.ResumeLayout(false);

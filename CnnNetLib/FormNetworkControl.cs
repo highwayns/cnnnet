@@ -137,12 +137,14 @@ namespace CnnNetLib
         private void OnButtonApplyParametersClick(object sender, EventArgs e)
         {
             _cnnNet.SetNetworkParameters(GetNetworkParameters());
+            _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, Math.Min(_cnnNet.InputNeuronIds.Length, 2));
         }
 
         private void OnButtonResetClick(object sender, EventArgs e)
         {
             _stepNumber = 1;
             _cnnNet.GenerateNetwork();
+            _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, Math.Min(_cnnNet.InputNeuronIds.Length, 2));
         }
 
         private void OnButtonNextStepByStepClick(object sender, EventArgs e)

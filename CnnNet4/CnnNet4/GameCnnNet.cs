@@ -183,9 +183,6 @@ namespace CnnNet4
 
             _cnnNet = new CnnNet(Width, Height, _formNetworkControl.GetNetworkParameters());
 
-            //_cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
-            _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, 2);
-
             _formNetworkControl.CnnNet = _cnnNet;
         }
 
