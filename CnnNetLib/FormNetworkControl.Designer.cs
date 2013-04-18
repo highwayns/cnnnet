@@ -57,6 +57,8 @@
             this.npNeuronInfluenceRange = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.npNeuronDensity = new System.Windows.Forms.NumericUpDown();
+            this.radioButtonStepByStep = new System.Windows.Forms.RadioButton();
+            this.buttonNextStepByStep = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronMoveDistance)).BeginInit();
@@ -102,7 +104,6 @@
             this.radioButtonRunInfinity.TabStop = true;
             this.radioButtonRunInfinity.Text = "Infinity";
             this.radioButtonRunInfinity.UseVisualStyleBackColor = true;
-            this.radioButtonRunInfinity.CheckedChanged += new System.EventHandler(this.OnRadioButtonRunInfinityCheckedChanged);
             // 
             // buttonReset
             // 
@@ -117,7 +118,7 @@
             // radioButtonSteps
             // 
             this.radioButtonSteps.AutoSize = true;
-            this.radioButtonSteps.Location = new System.Drawing.Point(12, 84);
+            this.radioButtonSteps.Location = new System.Drawing.Point(12, 91);
             this.radioButtonSteps.Name = "radioButtonSteps";
             this.radioButtonSteps.Size = new System.Drawing.Size(52, 17);
             this.radioButtonSteps.TabIndex = 5;
@@ -129,7 +130,7 @@
             // nudSteps
             // 
             this.nudSteps.Enabled = false;
-            this.nudSteps.Location = new System.Drawing.Point(70, 84);
+            this.nudSteps.Location = new System.Drawing.Point(105, 92);
             this.nudSteps.Name = "nudSteps";
             this.nudSteps.Size = new System.Drawing.Size(52, 20);
             this.nudSteps.TabIndex = 6;
@@ -174,7 +175,7 @@
             this.groupBox1.Controls.Add(this.npNeuronInfluenceRange);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.npNeuronDensity);
-            this.groupBox1.Location = new System.Drawing.Point(12, 110);
+            this.groupBox1.Location = new System.Drawing.Point(290, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(247, 309);
             this.groupBox1.TabIndex = 9;
@@ -438,12 +439,36 @@
             0,
             196608});
             // 
+            // radioButtonStepByStep
+            // 
+            this.radioButtonStepByStep.AutoSize = true;
+            this.radioButtonStepByStep.Location = new System.Drawing.Point(12, 121);
+            this.radioButtonStepByStep.Name = "radioButtonStepByStep";
+            this.radioButtonStepByStep.Size = new System.Drawing.Size(87, 17);
+            this.radioButtonStepByStep.TabIndex = 10;
+            this.radioButtonStepByStep.TabStop = true;
+            this.radioButtonStepByStep.Text = "Step By Step";
+            this.radioButtonStepByStep.UseVisualStyleBackColor = true;
+            this.radioButtonStepByStep.CheckedChanged += new System.EventHandler(this.OnRadioButtonStepByStepCheckedChanged);
+            // 
+            // buttonNextStepByStep
+            // 
+            this.buttonNextStepByStep.Location = new System.Drawing.Point(105, 118);
+            this.buttonNextStepByStep.Name = "buttonNextStepByStep";
+            this.buttonNextStepByStep.Size = new System.Drawing.Size(75, 23);
+            this.buttonNextStepByStep.TabIndex = 11;
+            this.buttonNextStepByStep.Text = "Next";
+            this.buttonNextStepByStep.UseVisualStyleBackColor = true;
+            this.buttonNextStepByStep.Click += new System.EventHandler(this.OnButtonNextStepByStepClick);
+            // 
             // FormNetworkControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(269, 427);
+            this.ClientSize = new System.Drawing.Size(549, 330);
             this.ControlBox = false;
+            this.Controls.Add(this.buttonNextStepByStep);
+            this.Controls.Add(this.radioButtonStepByStep);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBoxStepNumber);
             this.Controls.Add(this.label1);
@@ -507,5 +532,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown npMaxNeuronMoveDistance;
         private System.Windows.Forms.Button buttonApplyParameters;
+        private System.Windows.Forms.RadioButton radioButtonStepByStep;
+        private System.Windows.Forms.Button buttonNextStepByStep;
     }
 }

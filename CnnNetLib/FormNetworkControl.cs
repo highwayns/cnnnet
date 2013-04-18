@@ -145,14 +145,19 @@ namespace CnnNetLib
             _cnnNet.GenerateNetwork();
         }
 
-        private void OnRadioButtonRunInfinityCheckedChanged(object sender, EventArgs e)
+        private void OnButtonNextStepByStepClick(object sender, EventArgs e)
         {
-            nudSteps.Enabled = false;
+            _cnnNet.Process();
         }
 
         private void OnRadioButtonStepsCheckedChanged(object sender, EventArgs e)
         {
-            nudSteps.Enabled = true;
+            nudSteps.Enabled = radioButtonSteps.Checked;
+        }
+
+        private void OnRadioButtonStepByStepCheckedChanged(object sender, EventArgs e)
+        {
+            buttonNextStepByStep.Enabled = radioButtonStepByStep.Checked;
         }
 
         #endregion
