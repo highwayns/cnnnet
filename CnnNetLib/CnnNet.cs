@@ -7,27 +7,27 @@ namespace CnnNetLib
     {
         #region Fields
 
-        private readonly int _tableWide;
-        private readonly int _tableHeight;
+        private int _tableWide;
+        private int _tableHeight;
 
         private int[,] _tableNeurons;
-        private readonly double[,] _tableNeuronDesirability;
-        private readonly int[] _inputNeuronIds;
-        private readonly double[] _neuronIdsMovedDistance;
+        private double[,] _tableNeuronDesirability;
+        private int[] _inputNeuronIds;
+        private double[] _neuronIdsMovedDistance;
         
-        private readonly Random _random;
+        private Random _random;
 
         private int[] _activeNeurons;
 
-        private readonly int _neuronInfluenceRange;
-        private readonly double _maxNeuronInfluence;
-        private readonly double _desirabilityDecayAmount;
-        private readonly double _neuronDensity;
-        private readonly int _neuronDesirabilityPlainRange;
-        private readonly int _minDistanceBetweenNeurons;
-        private readonly int _inputNeuronCount;
-        private readonly bool _inputNeuronsMoveToHigherDesirability;
-        private readonly int _maxNeuronMoveDistance;
+        private int _neuronInfluenceRange;
+        private double _maxNeuronInfluence;
+        private double _desirabilityDecayAmount;
+        private double _neuronDensity;
+        private int _neuronDesirabilityPlainRange;
+        private int _minDistanceBetweenNeurons;
+        private int _inputNeuronCount;
+        private bool _inputNeuronsMoveToHigherDesirability;
+        private int _maxNeuronMoveDistance;
 
         #endregion
 
@@ -86,7 +86,13 @@ namespace CnnNetLib
             _activeNeurons = ActiveNeuronGenerator.GetActiveNeuronIds();
 
             ProcessUpdateDesirability();
+            ProcessEnforceMinDistanceBetweenNeurons();
             ProcessMoveToHigherDesirability();
+        }
+
+        private void ProcessEnforceMinDistanceBetweenNeurons()
+        {
+            
         }
 
         private void ProcessUpdateDesirability()
@@ -137,6 +143,8 @@ namespace CnnNetLib
 
             _tableNeurons = auxTableNeurons;
         }
+
+        
 
         private void MoveNeuronInDesirabilityPlain(int neuronY, int neuronX, int[,] auxTableNeurons)
         {
@@ -231,27 +239,29 @@ namespace CnnNetLib
             return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
         }
 
+        private void SetNetworkParameters(NetworkParameters networkParameters)
+        {
+            _neuronInfluenceRange = networkParameters.NeuronInfluenceRange;
+            _maxNeuronInfluence = networkParameters.MaxNeuronInfluence;
+            _desirabilityDecayAmount = networkParameters.DesirabilityDecayAmount;
+            _neuronDensity = networkParameters.NeuronDensity;
+            _neuronDesirabilityPlainRange = networkParameters.NeuronDesirabilityPlainRange;
+            _minDistanceBetweenNeurons = networkParameters.MinDistanceBetweenNeurons;
+            _inputNeuronCount = networkParameters.InputNeuronCount;
+            _inputNeuronsMoveToHigherDesirability = networkParameters.InputNeuronsMoveToHigherDesirability;
+            _maxNeuronMoveDistance = networkParameters.MaxNeuronMoveDistance;
+        }
+
         #endregion
 
         #region Instance
 
-        public CnnNet(int width, int height, double neuronDensity, int neuronInfluenceRange, 
-            double maxNeuronInfluence, double desirabilityDecayAmount, int neuronDesirabilityPlainRange,
-            int minDistanceBetweenNeurons, int inputNeuronCount, 
-            bool inputNeuronsMoveToHigherDesirability, int maxNeuronMoveDistance)
+        public CnnNet(int width, int height, NetworkParameters networkParameters)
         {
             _tableWide = width;
             _tableHeight = height;
 
-            _neuronInfluenceRange = neuronInfluenceRange;
-            _maxNeuronInfluence = maxNeuronInfluence;
-            _desirabilityDecayAmount = desirabilityDecayAmount;
-            _neuronDensity = neuronDensity;
-            _neuronDesirabilityPlainRange = neuronDesirabilityPlainRange;
-            _minDistanceBetweenNeurons = minDistanceBetweenNeurons;
-            _inputNeuronCount = inputNeuronCount;
-            _inputNeuronsMoveToHigherDesirability = inputNeuronsMoveToHigherDesirability;
-            _maxNeuronMoveDistance = maxNeuronMoveDistance;
+            SetNetworkParameters(networkParameters);
 
             _tableNeurons = new int[_tableHeight, _tableWide];
             _tableNeuronDesirability = new double[_tableHeight, _tableWide];

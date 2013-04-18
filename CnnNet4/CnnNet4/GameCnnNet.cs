@@ -13,6 +13,8 @@ namespace CnnNet4
     {
         #region Fields
 
+        private readonly FormNetworkControl _formNetworkControl;
+
         private const int Width = 800;
         private const int Height = 600;
 
@@ -48,22 +50,9 @@ namespace CnnNet4
             IsMouseVisible = true;
             IsFixedTimeStep = false;
 
-            const double neuronDensity = 0.001;
-            const int neuronInfluenceRange = 80;
-            const double maxNeuronInfluence = 0.05;
-            const double desirabilityDecayAmount = 0.005;
-            const double percentActiveNeurons = 0.1;
-            const int neuronDesirabilityPlainRange = 10;
-            const int minDistanceBetweenNeurons = 10;
-            const int inputNeuronCount = 10;
-            const bool inputNeuronsMoveToHigherDesirability = false;
-            const int maxNeuronMoveDistance = 200;
+            _formNetworkControl.Show();
 
-            _cnnNet = new CnnNet(Width, Height, neuronDensity, neuronInfluenceRange,
-                                 maxNeuronInfluence, desirabilityDecayAmount,
-                                 neuronDesirabilityPlainRange, minDistanceBetweenNeurons,
-                                 inputNeuronCount, inputNeuronsMoveToHigherDesirability,
-                                 maxNeuronMoveDistance);
+            _cnnNet = new CnnNet(Width, Height, _formNetworkControl.GetNetworkParameters());
 
             //_cnnNet.ActiveNeuronGenerator = new RandomActiveNeuronGenerator(_cnnNet.NeuronCount, percentActiveNeurons);
             _cnnNet.ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_cnnNet.InputNeuronIds, 2);
@@ -193,6 +182,8 @@ namespace CnnNet4
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
+
+            _formNetworkControl = new FormNetworkControl();
         }
 
         #endregion
