@@ -7,15 +7,15 @@ namespace CnnNetLib
     {
         #region Fields
 
-        private readonly int _tableWide;
-        private readonly int _tableHeight;
+        private int _tableWide;
+        private int _tableHeight;
 
         private int[,] _tableNeurons;
-        private readonly double[,] _tableNeuronDesirability;
-        private readonly int[] _inputNeuronIds;
-        private readonly double[] _neuronIdsMovedDistance;
+        private double[,] _tableNeuronDesirability;
+        private int[] _inputNeuronIds;
+        private double[] _neuronIdsMovedDistance;
         
-        private readonly Random _random;
+        private Random _random;
 
         private int[] _activeNeurons;
 
@@ -30,7 +30,7 @@ namespace CnnNetLib
         private int _maxNeuronMoveDistance;
 
         private bool _isProcessing;
-        private readonly object _isProcessingSyncObject;
+        private object _isProcessingSyncObject;
 
         #endregion
 
@@ -254,7 +254,7 @@ namespace CnnNetLib
             return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
         }
 
-        private void SetNetworkParameters(NetworkParameters networkParameters)
+        public void SetNetworkParameters(NetworkParameters networkParameters)
         {
             lock (_isProcessingSyncObject)
             {
@@ -270,19 +270,8 @@ namespace CnnNetLib
             }
         }
 
-        #endregion
-
-        #region Instance
-
-        public CnnNet(int width, int height, NetworkParameters networkParameters)
+        public void GenerateNetwork()
         {
-            _tableWide = width;
-            _tableHeight = height;
-
-            _isProcessingSyncObject = new object();
-
-            SetNetworkParameters(networkParameters);
-
             _tableNeurons = new int[_tableHeight, _tableWide];
             _tableNeuronDesirability = new double[_tableHeight, _tableWide];
             _inputNeuronIds = new int[_inputNeuronCount];
@@ -318,6 +307,22 @@ namespace CnnNetLib
             #endregion
 
             _neuronIdsMovedDistance = new double[NeuronCount];
+        }
+
+        #endregion
+
+        #region Instance
+
+        public CnnNet(int width, int height, NetworkParameters networkParameters)
+        {
+            _tableWide = width;
+            _tableHeight = height;
+
+            _isProcessingSyncObject = new object();
+
+            SetNetworkParameters(networkParameters);
+
+            GenerateNetwork();
         }
 
         #endregion

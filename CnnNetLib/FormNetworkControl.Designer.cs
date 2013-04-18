@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxStepNumber = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonApplyParameters = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.npMaxNeuronMoveDistance = new System.Windows.Forms.NumericUpDown();
             this.npInputNeuronsMoveToHigherDesirability = new System.Windows.Forms.CheckBox();
@@ -109,6 +110,7 @@
             this.buttonReset.TabIndex = 4;
             this.buttonReset.Text = "Reset";
             this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.OnButtonResetClick);
             // 
             // radioButtonSteps
             // 
@@ -148,6 +150,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonApplyParameters);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.npMaxNeuronMoveDistance);
             this.groupBox1.Controls.Add(this.npInputNeuronsMoveToHigherDesirability);
@@ -169,10 +172,20 @@
             this.groupBox1.Controls.Add(this.npNeuronDensity);
             this.groupBox1.Location = new System.Drawing.Point(12, 110);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(247, 279);
+            this.groupBox1.Size = new System.Drawing.Size(247, 309);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
+            // 
+            // buttonApplyParameters
+            // 
+            this.buttonApplyParameters.Location = new System.Drawing.Point(157, 276);
+            this.buttonApplyParameters.Name = "buttonApplyParameters";
+            this.buttonApplyParameters.Size = new System.Drawing.Size(75, 23);
+            this.buttonApplyParameters.TabIndex = 19;
+            this.buttonApplyParameters.Text = "Apply";
+            this.buttonApplyParameters.UseVisualStyleBackColor = true;
+            this.buttonApplyParameters.Click += new System.EventHandler(this.OnButtonApplyParametersClick);
             // 
             // label10
             // 
@@ -425,7 +438,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(269, 401);
+            this.ClientSize = new System.Drawing.Size(269, 427);
             this.ControlBox = false;
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBoxStepNumber);
@@ -489,5 +502,6 @@
         private System.Windows.Forms.CheckBox npInputNeuronsMoveToHigherDesirability;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown npMaxNeuronMoveDistance;
+        private System.Windows.Forms.Button buttonApplyParameters;
     }
 }

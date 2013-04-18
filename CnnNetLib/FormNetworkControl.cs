@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Globalization;
+using System.Windows.Forms;
 using System.Threading;
 
 namespace CnnNetLib
@@ -13,7 +14,11 @@ namespace CnnNetLib
         private Thread _threadProcess;
         private bool _threadProcessStopInitiated;
 
+        private int _stepNumber;
+
         #endregion
+
+        #region Properties
 
         public CnnNet CnnNet
         {
@@ -26,6 +31,8 @@ namespace CnnNetLib
                 _cnnNet = value;
             }
         }
+
+        #endregion
 
         #region Methods
 
@@ -54,20 +61,6 @@ namespace CnnNetLib
             };
         }
 
-        private void OnButtonStartClick(object sender, System.EventArgs e)
-        {
-            CreateThread();
-            _threadProcess.Start();
-        }
-
-        private void OnButtonStopClick(object sender, System.EventArgs e)
-        {
-            lock (_threadSyncObject)
-            {
-                _threadProcessStopInitiated = true;
-            }
-        }
-
         private void ProcessNetwork()
         {
             while (true)
@@ -82,7 +75,35 @@ namespace CnnNetLib
                 }
 
                 _cnnNet.Process();
+
+                _stepNumber++;
+
+                this.InvokeEx(f => textBoxStepNumber.Text = _stepNumber.ToString(CultureInfo.InvariantCulture));
             }
+        }
+
+        private void OnButtonStartClick(object sender, System.EventArgs e)
+        {
+            CreateThread();
+            _threadProcess.Start();
+        }
+
+        private void OnButtonStopClick(object sender, System.EventArgs e)
+        {
+            lock (_threadSyncObject)
+            {
+                _threadProcessStopInitiated = true;
+            }
+        }
+
+        private void OnButtonApplyParametersClick(object sender, System.EventArgs e)
+        {
+            _cnnNet.SetNetworkParameters(GetNetworkParameters());
+        }
+
+        private void OnButtonResetClick(object sender, System.EventArgs e)
+        {
+            _cnnNet.GenerateNetwork();
         }
 
         #endregion
