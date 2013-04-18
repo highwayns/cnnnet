@@ -33,7 +33,7 @@
             this.radioButtonRunInfinity = new System.Windows.Forms.RadioButton();
             this.buttonReset = new System.Windows.Forms.Button();
             this.radioButtonSteps = new System.Windows.Forms.RadioButton();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.nudSteps = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxStepNumber = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -57,7 +57,7 @@
             this.npNeuronInfluenceRange = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.npNeuronDensity = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronMoveDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.npInputNeuronCount)).BeginInit();
@@ -82,6 +82,7 @@
             // 
             // buttonStop
             // 
+            this.buttonStop.Enabled = false;
             this.buttonStop.Location = new System.Drawing.Point(93, 32);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(75, 23);
@@ -101,6 +102,7 @@
             this.radioButtonRunInfinity.TabStop = true;
             this.radioButtonRunInfinity.Text = "Infinity";
             this.radioButtonRunInfinity.UseVisualStyleBackColor = true;
+            this.radioButtonRunInfinity.CheckedChanged += new System.EventHandler(this.OnRadioButtonRunInfinityCheckedChanged);
             // 
             // buttonReset
             // 
@@ -122,14 +124,16 @@
             this.radioButtonSteps.TabStop = true;
             this.radioButtonSteps.Text = "Steps";
             this.radioButtonSteps.UseVisualStyleBackColor = true;
+            this.radioButtonSteps.CheckedChanged += new System.EventHandler(this.OnRadioButtonStepsCheckedChanged);
             // 
-            // numericUpDown1
+            // nudSteps
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(70, 84);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDown1.TabIndex = 6;
-            this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudSteps.Enabled = false;
+            this.nudSteps.Location = new System.Drawing.Point(70, 84);
+            this.nudSteps.Name = "nudSteps";
+            this.nudSteps.Size = new System.Drawing.Size(52, 20);
+            this.nudSteps.TabIndex = 6;
+            this.nudSteps.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label1
             // 
@@ -443,7 +447,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBoxStepNumber);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.nudSteps);
             this.Controls.Add(this.radioButtonSteps);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.radioButtonRunInfinity);
@@ -455,7 +459,7 @@
             this.Name = "FormNetworkControl";
             this.ShowInTaskbar = false;
             this.Text = "Controls";
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronMoveDistance)).EndInit();
@@ -479,7 +483,7 @@
         private System.Windows.Forms.RadioButton radioButtonRunInfinity;
         private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.RadioButton radioButtonSteps;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown nudSteps;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxStepNumber;
         private System.Windows.Forms.GroupBox groupBox1;

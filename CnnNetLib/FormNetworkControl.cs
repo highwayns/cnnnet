@@ -1,6 +1,7 @@
-﻿using System.Globalization;
-using System.Windows.Forms;
+﻿using System;
+using System.Globalization;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace CnnNetLib
 {
@@ -14,7 +15,9 @@ namespace CnnNetLib
         private Thread _threadProcess;
         private bool _threadProcessStopInitiated;
 
-        private int _stepNumber;
+        private int _stepNumber = 1;
+
+        private int _lastStepNumber = int.MaxValue;
 
         #endregion
 
@@ -63,7 +66,7 @@ namespace CnnNetLib
 
         private void ProcessNetwork()
         {
-            while (true)
+            for (; _stepNumber < _lastStepNumber; _stepNumber++)
             {
                 lock (_threadSyncObject)
                 {
@@ -76,34 +79,80 @@ namespace CnnNetLib
 
                 _cnnNet.Process();
 
-                _stepNumber++;
-
                 this.InvokeEx(f => textBoxStepNumber.Text = _stepNumber.ToString(CultureInfo.InvariantCulture));
             }
+
+            this.InvokeEx(f => OnProcessEnd());
         }
 
-        private void OnButtonStartClick(object sender, System.EventArgs e)
+        private void OnProcessStart()
         {
+            if (radioButtonRunInfinity.Checked)
+            {
+                _lastStepNumber = int.MaxValue;
+            }
+            else if(radioButtonSteps.Checked)
+            {
+                _lastStepNumber = _stepNumber + (int) nudSteps.Value;
+            }
+
+            buttonStart.Enabled = false;
+            buttonStop.Enabled = true;
+            buttonReset.Enabled = false;
+            nudSteps.Enabled = false;
+        }
+
+        private void OnProcessEnding()
+        {
+            buttonStart.Enabled = false;
+            buttonStop.Enabled = false;
+            buttonReset.Enabled = false;
+            nudSteps.Enabled = false;
+        }
+
+        private void OnProcessEnd()
+        {
+            buttonStart.Enabled = true;
+            buttonStop.Enabled = false;
+            buttonReset.Enabled = true;
+            nudSteps.Enabled = radioButtonSteps.Checked;
+        }
+
+        private void OnButtonStartClick(object sender, EventArgs e)
+        {
+            OnProcessStart();
             CreateThread();
             _threadProcess.Start();
         }
 
-        private void OnButtonStopClick(object sender, System.EventArgs e)
+        private void OnButtonStopClick(object sender, EventArgs e)
         {
             lock (_threadSyncObject)
             {
+                OnProcessEnding();
                 _threadProcessStopInitiated = true;
             }
         }
 
-        private void OnButtonApplyParametersClick(object sender, System.EventArgs e)
+        private void OnButtonApplyParametersClick(object sender, EventArgs e)
         {
             _cnnNet.SetNetworkParameters(GetNetworkParameters());
         }
 
-        private void OnButtonResetClick(object sender, System.EventArgs e)
+        private void OnButtonResetClick(object sender, EventArgs e)
         {
+            _stepNumber = 1;
             _cnnNet.GenerateNetwork();
+        }
+
+        private void OnRadioButtonRunInfinityCheckedChanged(object sender, EventArgs e)
+        {
+            nudSteps.Enabled = false;
+        }
+
+        private void OnRadioButtonStepsCheckedChanged(object sender, EventArgs e)
+        {
+            nudSteps.Enabled = true;
         }
 
         #endregion

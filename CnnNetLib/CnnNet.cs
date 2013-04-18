@@ -7,8 +7,8 @@ namespace CnnNetLib
     {
         #region Fields
 
-        private int _tableWide;
-        private int _tableHeight;
+        private readonly int _tableWide;
+        private readonly int _tableHeight;
 
         private int[,] _tableNeurons;
         private double[,] _tableNeuronDesirability;
@@ -30,7 +30,7 @@ namespace CnnNetLib
         private int _maxNeuronMoveDistance;
 
         private bool _isProcessing;
-        private object _isProcessingSyncObject;
+        private readonly object _isProcessingSyncObject;
 
         #endregion
 
