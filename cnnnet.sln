@@ -1,13 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cnnnet", "cnnnet\cnnnet.csproj", "{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnnNet", "CnnNet\CnnNet\CnnNet.csproj", "{8B82A841-7110-4AC4-96AE-BD9372B0A415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnnNet3", "CnnNet3\CnnNet3.csproj", "{07DB5939-BB85-4C85-ABC4-BD9305B22C24}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnnNet4", "CnnNet4\CnnNet4\CnnNet4.csproj", "{8B82A841-7110-4AC4-96AE-BD9372B0A415}"
-EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "CnnNet4Content", "CnnNet4\CnnNet4Content\CnnNet4Content.contentproj", "{22360016-8B8C-4D3B-86E5-5FE4D3C69EC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnnNetContent", "CnnNet\CnnNetContent\CnnNetContent.contentproj", "{22360016-8B8C-4D3B-86E5-5FE4D3C69EC3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnnNetLib", "CnnNetLib\CnnNetLib.csproj", "{3742119C-F218-4CE2-B32F-166AEE9881A7}"
 EndProject
@@ -21,22 +17,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DCE1221D-C96C-4F5A-85C6-AFB3FF2964FC}.Release|x86.ActiveCfg = Release|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{07DB5939-BB85-4C85-ABC4-BD9305B22C24}.Release|x86.ActiveCfg = Release|Any CPU
 		{8B82A841-7110-4AC4-96AE-BD9372B0A415}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{8B82A841-7110-4AC4-96AE-BD9372B0A415}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{8B82A841-7110-4AC4-96AE-BD9372B0A415}.Debug|Mixed Platforms.Build.0 = Debug|x86
