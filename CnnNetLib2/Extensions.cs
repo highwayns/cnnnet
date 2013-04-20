@@ -7,20 +7,9 @@ namespace CnnNetLib2
 {
     public static class Extensions
     {
-        //public IEnumerable<T> GetUniqueItems<T>(Func<bool, T> comparer, Func<T> instancer, int count)
-        //{
-        //    var ret = new List<T>();
-
-        //    for (int neuronId = 0; neuronId < count; neuronId++)
-        //    {
-        //        while (ret.Contains()
-        //        {
-                    
-        //        }
-        //        ret.Add(instancer());
-        //    }
-
-        //    return ret;
-        //}
+        public static double GetDistance(int x1, int y1, int x2, int y2)
+        {
+            return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
+        }
     }
 }

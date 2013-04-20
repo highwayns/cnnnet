@@ -108,6 +108,8 @@ namespace CnnNet2
             GraphicsDevice.Clear(Color.White);
             GraphicsDevice.Textures[0] = null;
 
+            _cnnNet.Process();
+
             var neuronDesirabilityMap = _cnnNet.NeuronDesirabilityMap ?? new double[0, 0];
             var tableNeurons = _cnnNet.Neurons ?? new Neuron[0];
             var activeNeurons = _cnnNet.ActiveNeurons ?? new Neuron[0];

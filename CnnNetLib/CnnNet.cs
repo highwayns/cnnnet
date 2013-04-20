@@ -7,7 +7,7 @@ namespace CnnNetLib
     {
         #region Fields
 
-        private readonly int _tableWide;
+        private readonly int _tableWidth;
         private readonly int _tableHeight;
 
         private int[,] _tableNeurons;
@@ -116,7 +116,7 @@ namespace CnnNetLib
         {
             for (int y = 0; y < _tableHeight; y++)
             {
-                for (int x = 0; x < _tableWide; x++)
+                for (int x = 0; x < _tableWidth; x++)
                 {
                     if (_tableNeurons[y, x] != 0
                         && _activeNeurons.Any(activeNeuron => _tableNeurons[y, x] == activeNeuron))
@@ -128,7 +128,7 @@ namespace CnnNetLib
 
             for (int y = 0; y < _tableHeight; y++)
             {
-                for (int x = 0; x < _tableWide; x++)
+                for (int x = 0; x < _tableWidth; x++)
                 {
                     DecayDesirability(y, x);
                 }
@@ -141,7 +141,7 @@ namespace CnnNetLib
 
             for (int y = 0; y < _tableHeight; y++)
             {
-                for (int x = 0; x < _tableWide; x++)
+                for (int x = 0; x < _tableWidth; x++)
                 {
                     if (_tableNeurons[y, x] != 0)
                     {
@@ -164,7 +164,7 @@ namespace CnnNetLib
         private void MoveNeuronInDesirabilityPlain(int neuronY, int neuronX, int[,] auxTableNeurons)
         {
             int minCoordX = Math.Max(neuronX - _neuronDesirabilityPlainRange, 0);
-            int maxCoordX = Math.Min(neuronX + _neuronDesirabilityPlainRange, _tableWide - 1);
+            int maxCoordX = Math.Min(neuronX + _neuronDesirabilityPlainRange, _tableWidth - 1);
 
             int minCoordY = Math.Max(neuronY - _neuronDesirabilityPlainRange, 0);
             int maxCoordY = Math.Min(neuronY + _neuronDesirabilityPlainRange, _tableHeight - 1);
@@ -211,7 +211,7 @@ namespace CnnNetLib
             double distanceToNearestNeuron = _neuronDesirabilityPlainRange + 1;
 
             int xMin = Math.Max(referenceX - _minDistanceBetweenNeurons, 0);
-            int xMax = Math.Min(referenceX + _minDistanceBetweenNeurons, _tableWide - 1);
+            int xMax = Math.Min(referenceX + _minDistanceBetweenNeurons, _tableWidth - 1);
             int yMin = Math.Max(referenceY - _minDistanceBetweenNeurons, 0);
             int yMax = Math.Min(referenceY + _minDistanceBetweenNeurons, _tableHeight - 1);
 
@@ -236,7 +236,7 @@ namespace CnnNetLib
         private void AddDesirability(int yCenter, int xCenter)
         {
             int xMin = Math.Max(xCenter - _neuronInfluenceRange, 0);
-            int xMax = Math.Min(xCenter + _neuronInfluenceRange, _tableWide - 1);
+            int xMax = Math.Min(xCenter + _neuronInfluenceRange, _tableWidth - 1);
             int yMin = Math.Max(yCenter - _neuronInfluenceRange, 0);
             int yMax = Math.Min(yCenter + _neuronInfluenceRange, _tableHeight - 1);
 
@@ -280,8 +280,8 @@ namespace CnnNetLib
 
         public void GenerateNetwork()
         {
-            _tableNeurons = new int[_tableHeight, _tableWide];
-            _tableNeuronDesirability = new double[_tableHeight, _tableWide];
+            _tableNeurons = new int[_tableHeight, _tableWidth];
+            _tableNeuronDesirability = new double[_tableHeight, _tableWidth];
             _inputNeuronIds = new int[_inputNeuronCount];
             _random = new Random();
 
@@ -291,7 +291,7 @@ namespace CnnNetLib
             int neuronId = 1;
             for (int y = 0; y < _tableHeight; y++)
             {
-                for (int x = 0; x < _tableWide; x++)
+                for (int x = 0; x < _tableWidth; x++)
                 {
                     if (_random.NextDouble() <= _neuronDensity)
                     {
@@ -323,7 +323,7 @@ namespace CnnNetLib
 
         public CnnNet(int width, int height, NetworkParameters networkParameters)
         {
-            _tableWide = width;
+            _tableWidth = width;
             _tableHeight = height;
 
             _isProcessingSyncObject = new object();
