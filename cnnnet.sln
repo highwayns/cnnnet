@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnnNetContent", "CnnNet\Cnn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnnNetLib", "CnnNetLib\CnnNetLib.csproj", "{3742119C-F218-4CE2-B32F-166AEE9881A7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v1", "v1", "{08245089-FB4B-450C-9FDD-25449AF0CE51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,5 +48,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3742119C-F218-4CE2-B32F-166AEE9881A7} = {08245089-FB4B-450C-9FDD-25449AF0CE51}
+		{8B82A841-7110-4AC4-96AE-BD9372B0A415} = {08245089-FB4B-450C-9FDD-25449AF0CE51}
+		{22360016-8B8C-4D3B-86E5-5FE4D3C69EC3} = {08245089-FB4B-450C-9FDD-25449AF0CE51}
 	EndGlobalSection
 EndGlobal
