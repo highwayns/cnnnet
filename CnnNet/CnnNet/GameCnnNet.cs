@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using CnnNetLib;
+using CnnNetLib2;
 
 namespace CnnNet4
 {

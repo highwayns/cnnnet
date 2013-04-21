@@ -1,4 +1,4 @@
-﻿namespace CnnNetLib
+﻿namespace CnnNetLib2
 {
     public class NetworkParameters
     {

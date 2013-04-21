@@ -49,7 +49,7 @@ namespace CnnNetLib2
                 MaxNeuronInfluence = (double)npMaxNeuronInfluence.Value,
                 MaxNeuronMoveDistance = (int)npMaxNeuronMoveDistance.Value,
                 MinDistanceBetweenNeurons = (int)npMinDistanceBetweenNeurons.Value,
-                NeuronDensity = (double)npNeuronDensity.Value,
+                NeuronCount = (int)npNeuronCount.Value,
                 NeuronDesirabilityPlainRange = (int)npNeuronDesirabilityPlainRange.Value,
                 NeuronInfluenceRange = (int)npNeuronInfluenceRange.Value,
                 PercentActiveNeurons = (double)npPercentActiveNeurons.Value

@@ -56,7 +56,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.npNeuronInfluenceRange = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.npNeuronDensity = new System.Windows.Forms.NumericUpDown();
+            this.npNeuronCount = new System.Windows.Forms.NumericUpDown();
             this.radioButtonStepByStep = new System.Windows.Forms.RadioButton();
             this.buttonNextStepByStep = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).BeginInit();
@@ -69,7 +69,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.npDesirabilityDecayAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronInfluence)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronInfluenceRange)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.npNeuronDensity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.npNeuronCount)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonStart
@@ -174,7 +174,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.npNeuronInfluenceRange);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.npNeuronDensity);
+            this.groupBox1.Controls.Add(this.npNeuronCount);
             this.groupBox1.Location = new System.Drawing.Point(290, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(247, 309);
@@ -234,7 +234,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 203);
+            this.label9.Location = new System.Drawing.Point(6, 47);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(100, 13);
             this.label9.TabIndex = 15;
@@ -242,7 +242,7 @@
             // 
             // npInputNeuronCount
             // 
-            this.npInputNeuronCount.Location = new System.Drawing.Point(173, 201);
+            this.npInputNeuronCount.Location = new System.Drawing.Point(173, 45);
             this.npInputNeuronCount.Name = "npInputNeuronCount";
             this.npInputNeuronCount.Size = new System.Drawing.Size(59, 20);
             this.npInputNeuronCount.TabIndex = 14;
@@ -257,7 +257,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 177);
+            this.label8.Location = new System.Drawing.Point(6, 203);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(157, 13);
             this.label8.TabIndex = 13;
@@ -265,7 +265,7 @@
             // 
             // npMinDistanceBetweenNeurons
             // 
-            this.npMinDistanceBetweenNeurons.Location = new System.Drawing.Point(173, 175);
+            this.npMinDistanceBetweenNeurons.Location = new System.Drawing.Point(173, 201);
             this.npMinDistanceBetweenNeurons.Name = "npMinDistanceBetweenNeurons";
             this.npMinDistanceBetweenNeurons.Size = new System.Drawing.Size(59, 20);
             this.npMinDistanceBetweenNeurons.TabIndex = 12;
@@ -280,7 +280,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 151);
+            this.label7.Location = new System.Drawing.Point(6, 177);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(156, 13);
             this.label7.TabIndex = 11;
@@ -288,7 +288,7 @@
             // 
             // npNeuronDesirabilityPlainRange
             // 
-            this.npNeuronDesirabilityPlainRange.Location = new System.Drawing.Point(173, 149);
+            this.npNeuronDesirabilityPlainRange.Location = new System.Drawing.Point(173, 175);
             this.npNeuronDesirabilityPlainRange.Name = "npNeuronDesirabilityPlainRange";
             this.npNeuronDesirabilityPlainRange.Size = new System.Drawing.Size(59, 20);
             this.npNeuronDesirabilityPlainRange.TabIndex = 10;
@@ -303,7 +303,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 125);
+            this.label6.Location = new System.Drawing.Point(6, 151);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(120, 13);
             this.label6.TabIndex = 9;
@@ -317,7 +317,7 @@
             0,
             0,
             65536});
-            this.npPercentActiveNeurons.Location = new System.Drawing.Point(173, 123);
+            this.npPercentActiveNeurons.Location = new System.Drawing.Point(173, 149);
             this.npPercentActiveNeurons.Name = "npPercentActiveNeurons";
             this.npPercentActiveNeurons.Size = new System.Drawing.Size(59, 20);
             this.npPercentActiveNeurons.TabIndex = 8;
@@ -332,7 +332,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 99);
+            this.label5.Location = new System.Drawing.Point(6, 125);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(130, 13);
             this.label5.TabIndex = 7;
@@ -346,7 +346,7 @@
             0,
             0,
             196608});
-            this.npDesirabilityDecayAmount.Location = new System.Drawing.Point(173, 97);
+            this.npDesirabilityDecayAmount.Location = new System.Drawing.Point(173, 123);
             this.npDesirabilityDecayAmount.Name = "npDesirabilityDecayAmount";
             this.npDesirabilityDecayAmount.Size = new System.Drawing.Size(59, 20);
             this.npDesirabilityDecayAmount.TabIndex = 6;
@@ -361,7 +361,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 73);
+            this.label4.Location = new System.Drawing.Point(6, 99);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(112, 13);
             this.label4.TabIndex = 5;
@@ -375,7 +375,7 @@
             0,
             0,
             131072});
-            this.npMaxNeuronInfluence.Location = new System.Drawing.Point(173, 71);
+            this.npMaxNeuronInfluence.Location = new System.Drawing.Point(173, 97);
             this.npMaxNeuronInfluence.Name = "npMaxNeuronInfluence";
             this.npMaxNeuronInfluence.Size = new System.Drawing.Size(59, 20);
             this.npMaxNeuronInfluence.TabIndex = 4;
@@ -390,7 +390,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 47);
+            this.label3.Location = new System.Drawing.Point(6, 73);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(124, 13);
             this.label3.TabIndex = 3;
@@ -398,7 +398,7 @@
             // 
             // npNeuronInfluenceRange
             // 
-            this.npNeuronInfluenceRange.Location = new System.Drawing.Point(173, 45);
+            this.npNeuronInfluenceRange.Location = new System.Drawing.Point(173, 71);
             this.npNeuronInfluenceRange.Name = "npNeuronInfluenceRange";
             this.npNeuronInfluenceRange.Size = new System.Drawing.Size(59, 20);
             this.npNeuronInfluenceRange.TabIndex = 2;
@@ -415,29 +415,28 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 21);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 13);
+            this.label2.Size = new System.Drawing.Size(73, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Neuron Density";
+            this.label2.Text = "Neuron Count";
             // 
-            // npNeuronDensity
+            // npNeuronCount
             // 
-            this.npNeuronDensity.DecimalPlaces = 3;
-            this.npNeuronDensity.Increment = new decimal(new int[] {
-            1,
+            this.npNeuronCount.Location = new System.Drawing.Point(173, 19);
+            this.npNeuronCount.Maximum = new decimal(new int[] {
+            999,
             0,
             0,
-            196608});
-            this.npNeuronDensity.Location = new System.Drawing.Point(173, 19);
-            this.npNeuronDensity.Name = "npNeuronDensity";
-            this.npNeuronDensity.Size = new System.Drawing.Size(59, 20);
-            this.npNeuronDensity.TabIndex = 0;
-            this.npNeuronDensity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.npNeuronDensity.ThousandsSeparator = true;
-            this.npNeuronDensity.Value = new decimal(new int[] {
-            1,
+            0});
+            this.npNeuronCount.Name = "npNeuronCount";
+            this.npNeuronCount.Size = new System.Drawing.Size(59, 20);
+            this.npNeuronCount.TabIndex = 0;
+            this.npNeuronCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.npNeuronCount.ThousandsSeparator = true;
+            this.npNeuronCount.Value = new decimal(new int[] {
+            100,
             0,
             0,
-            196608});
+            0});
             // 
             // radioButtonStepByStep
             // 
@@ -494,7 +493,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.npDesirabilityDecayAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronInfluence)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronInfluenceRange)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.npNeuronDensity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.npNeuronCount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -512,7 +511,7 @@
         private System.Windows.Forms.TextBox textBoxStepNumber;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown npNeuronDensity;
+        private System.Windows.Forms.NumericUpDown npNeuronCount;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown npNeuronInfluenceRange;
         private System.Windows.Forms.Label label4;

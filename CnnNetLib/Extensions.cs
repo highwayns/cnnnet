@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace CnnNetLib
+namespace CnnNetLib2
 {
     public static class Extensions
     {

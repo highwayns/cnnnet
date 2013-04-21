@@ -143,7 +143,7 @@ namespace CnnNetLib2
             }
         }
 
-        private void GenerateNetwork()
+        public void GenerateNetwork()
         {
             var neurons = new List<Neuron>();
             for (int i = 0; i < NeuronCount; i++)
