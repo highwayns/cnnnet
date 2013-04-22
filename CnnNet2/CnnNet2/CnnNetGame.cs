@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CnnNetLib2;
+using System;
 
 namespace CnnNet2
 {
@@ -146,13 +147,47 @@ namespace CnnNet2
 
         private void UpdateNeurons(IEnumerable<Neuron> neurons, Neuron[] activeNeurons, Neuron[] inputNeurons)
         {
+            Texture2D circle = CreateCircle(_cnnNet.NeuronInfluenceRange);
+
             foreach (Neuron neuron in neurons)
             {
                 _spriteBatch.Draw(activeNeurons.Contains(neuron)
                                       ? inputNeurons.Contains(neuron) ? _neuronInputActive : _neuronActive
                                       : inputNeurons.Contains(neuron) ? _neuronInputIdle : _neuronIdle,
                                   new Vector2(neuron.PosX, neuron.PosY), Color.White);
+
+                if (activeNeurons.Contains(neuron))
+                {
+                    _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronInfluenceRange, neuron.PosY - _cnnNet.NeuronInfluenceRange), Color.Red);
+                }
             }
+        }
+
+        public Texture2D CreateCircle(int radius)
+        {
+            int outerRadius = radius * 2 + 2; // So circle doesn't go out of bounds
+            Texture2D texture = new Texture2D(GraphicsDevice, outerRadius, outerRadius);
+
+            Color[] data = new Color[outerRadius * outerRadius];
+
+            // Colour the entire texture transparent first.
+            for (int i = 0; i < data.Length; i++)
+                data[i] = Color.Transparent;
+
+            // Work out the minimum step necessary using trigonometry + sine approximation.
+            double angleStep = 1f / radius;
+
+            for (double angle = 0; angle < Math.PI * 2; angle += angleStep)
+            {
+                // Use the parametric definition of a circle: http://en.wikipedia.org/wiki/Circle#Cartesian_coordinates
+                int x = (int)Math.Round(radius + radius * Math.Cos(angle));
+                int y = (int)Math.Round(radius + radius * Math.Sin(angle));
+
+                data[y * outerRadius + x + 1] = Color.White;
+            }
+
+            texture.SetData(data);
+            return texture;
         }
 
         #endregion
