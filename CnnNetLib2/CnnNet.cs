@@ -88,7 +88,7 @@ namespace CnnNetLib2
 
             ProcessDetermineActiveNeurons();
 
-            foreach (var neuron in _activeNeurons)
+            foreach (var neuron in _neurons)
             {
                 neuron.Process();
             }
@@ -144,6 +144,8 @@ namespace CnnNetLib2
 
         public void GenerateNetwork()
         {
+            #region Generate Random Neurons
+
             var neurons = new List<Neuron>();
             for (int i = 0; i < NeuronCount; i++)
             {
@@ -160,6 +162,30 @@ namespace CnnNetLib2
             }
 
             _neurons = neurons.ToArray();
+
+            #endregion
+
+            #region Generate Input Neurons
+
+            var inputNeurons = new List<Neuron>();
+            for (int i = 0; i < InputNeuronCount; i++)
+            {
+                Neuron neuron;
+                do
+                {
+                    neuron = neurons[_random.Next(_neurons.Length)];
+                } 
+                while (inputNeurons.Any(inpNeuron => inpNeuron == neuron));
+                inputNeurons.Add(neuron);
+            }
+            _inputNeurons = inputNeurons.ToArray();
+
+            #endregion
+
+            ActiveNeuronGenerator =
+                new SequentialActiveInputNeuronGenerator
+                    (InputNeurons.Select(inpNeuron => inpNeuron.Id).ToArray(),
+                     Math.Min(InputNeurons.Length, 2));
         }
 
         #endregion
@@ -178,8 +204,6 @@ namespace CnnNetLib2
             SetNetworkParameters(networkParameters);
 
             GenerateNetwork();
-
-            ActiveNeuronGenerator = new RandomActiveNeuronGenerator(NeuronCount, 0.1);
         }
 
         #endregion

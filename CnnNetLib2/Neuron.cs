@@ -105,7 +105,7 @@ namespace CnnNetLib2
                 && neuron.PosX <= xMax
                 && yMin <= neuron.PosY
                 && neuron.PosY <= yMax).
-                Select(neuron => Extensions.GetDistance(referenceX, referenceY, neuron.PosX, neuron.PosY));
+                Select(neuron => Extensions.GetDistance(referenceX, referenceY, neuron.PosX, neuron.PosY)).ToArray();
 
             return distances.Any()
                        ? distances.Min()
