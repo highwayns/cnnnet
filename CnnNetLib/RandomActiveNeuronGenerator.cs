@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CnnNetLib2
+namespace CnnNetLib
 {
     public class RandomActiveNeuronGenerator : IActiveNeuronGenerator
     {

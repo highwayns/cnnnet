@@ -1,13 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using CnnNetLib2;
 
 namespace CnnNet2
@@ -15,14 +10,16 @@ namespace CnnNet2
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class CnnNetGame : Microsoft.Xna.Framework.Game
+    public class CnnNetGame : Game
     {
         #region Fields
+
+        private readonly FormNetworkControl _formNetworkControl;
 
         private const int Width = 800;
         private const int Height = 600;
 
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Texture2D _neuronIdle;
@@ -46,12 +43,13 @@ namespace CnnNet2
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            // Add your initialization logic here
             base.Initialize();
 
             IsMouseVisible = true;
             IsFixedTimeStep = false;
+
+            _formNetworkControl.Show();
         }
 
         /// <summary>
@@ -91,8 +89,11 @@ namespace CnnNet2
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().GetPressedKeys().Contains(Keys.Escape))
+            {
+                Exit();
+            }
 
             // TODO: Add your update logic here
 
@@ -107,8 +108,6 @@ namespace CnnNet2
         {
             GraphicsDevice.Clear(Color.White);
             GraphicsDevice.Textures[0] = null;
-
-            _cnnNet.Process();
 
             var neuronDesirabilityMap = _cnnNet.NeuronDesirabilityMap ?? new double[0, 0];
             var tableNeurons = _cnnNet.Neurons ?? new Neuron[0];
@@ -145,14 +144,14 @@ namespace CnnNet2
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
         }
 
-        private void UpdateNeurons(Neuron[] tableNeurons, Neuron[] activeNeurons, Neuron[] inputNeurons)
+        private void UpdateNeurons(IEnumerable<Neuron> neurons, Neuron[] activeNeurons, Neuron[] inputNeurons)
         {
-            for (int i = 0; i < tableNeurons.Length; i++)
+            foreach (Neuron neuron in neurons)
             {
-                _spriteBatch.Draw(activeNeurons.Contains(tableNeurons[i])
-                                      ? inputNeurons.Contains(tableNeurons[i]) ? _neuronInputActive : _neuronActive
-                                      : inputNeurons.Contains(tableNeurons[i]) ? _neuronInputIdle : _neuronIdle,
-                                  new Vector2(tableNeurons[i].PosX, tableNeurons[i].PosY), Color.White);
+                _spriteBatch.Draw(activeNeurons.Contains(neuron)
+                                      ? inputNeurons.Contains(neuron) ? _neuronInputActive : _neuronActive
+                                      : inputNeurons.Contains(neuron) ? _neuronInputIdle : _neuronIdle,
+                                  new Vector2(neuron.PosX, neuron.PosY), Color.White);
             }
         }
 
@@ -162,10 +161,20 @@ namespace CnnNet2
 
         public CnnNetGame()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = Width,
+                PreferredBackBufferHeight = Height
+            };
+            _graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
 
-            _cnnNet = new CnnNet(Width, Height, new NetworkParameters());
+            _formNetworkControl = new FormNetworkControl();
+
+            _cnnNet = new CnnNet(Width, Height, _formNetworkControl.GetNetworkParameters());
+
+            _formNetworkControl.CnnNet = _cnnNet;
         }
 
         #endregion

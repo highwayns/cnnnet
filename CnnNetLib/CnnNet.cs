@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace CnnNetLib2
+namespace CnnNetLib
 {
     public class CnnNet
     {

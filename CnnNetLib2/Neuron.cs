@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CnnNetLib2
 {
@@ -10,7 +8,7 @@ namespace CnnNetLib2
         #region Fields
 
         public int Id;
-        private CnnNet _cnnNet;
+        private readonly CnnNet _cnnNet;
 
         public int PosX;
         public int PosY;
@@ -102,13 +100,16 @@ namespace CnnNetLib2
             int yMin = Math.Max(referenceY - _cnnNet.MinDistanceBetweenNeurons, 0);
             int yMax = Math.Min(referenceY + _cnnNet.MinDistanceBetweenNeurons, _cnnNet.Height - 1);
 
-            return _cnnNet.Neurons.Where(neuron =>
+            var distances = _cnnNet.Neurons.Where(neuron =>
                 xMin <= neuron.PosX
                 && neuron.PosX <= xMax
                 && yMin <= neuron.PosY
                 && neuron.PosY <= yMax).
-                Select(neuron => Extensions.GetDistance(referenceX, referenceY, neuron.PosX, neuron.PosY)).
-                Min();
+                Select(neuron => Extensions.GetDistance(referenceX, referenceY, neuron.PosX, neuron.PosY));
+
+            return distances.Any()
+                       ? distances.Min()
+                       : distanceToNearestNeuron;
         }
 
         private Neuron GetNeuronAt(int y, int x)

@@ -1,4 +1,4 @@
-﻿namespace CnnNetLib2
+﻿namespace CnnNetLib
 {
     partial class FormNetworkControl
     {
