@@ -11,6 +11,6 @@
         public int MinDistanceBetweenNeurons = 10;
         public int InputNeuronCount = 10;
         public bool InputNeuronsMoveToHigherDesirability = false;
-        public int MaxNeuronMoveDistance = 999;
+        public int MaxNeuronMoveDistance = 10;
     }
 }

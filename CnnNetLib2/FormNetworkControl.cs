@@ -172,6 +172,19 @@ namespace CnnNetLib2
             CreateThread();
 
             _threadSyncObject = new object();
+
+            var templateNetworkParameters = new NetworkParameters();
+
+            npDesirabilityDecayAmount.Value = (decimal)templateNetworkParameters.DesirabilityDecayAmount;
+            npInputNeuronCount.Value = templateNetworkParameters.InputNeuronCount;
+            npInputNeuronsMoveToHigherDesirability.Checked = templateNetworkParameters.InputNeuronsMoveToHigherDesirability;
+            npMaxNeuronInfluence.Value = (decimal)templateNetworkParameters.MaxNeuronInfluence;
+            npMaxNeuronMoveDistance.Value = templateNetworkParameters.MaxNeuronMoveDistance;
+            npMinDistanceBetweenNeurons.Value = templateNetworkParameters.MinDistanceBetweenNeurons;
+            npNeuronCount.Value = templateNetworkParameters.NeuronCount;
+            npNeuronDesirabilityPlainRange.Value = templateNetworkParameters.NeuronDesirabilityPlainRange;
+            npNeuronInfluenceRange.Value = templateNetworkParameters.NeuronInfluenceRange;
+            npPercentActiveNeurons.Value = (decimal)templateNetworkParameters.PercentActiveNeurons;
         }
 
         #endregion

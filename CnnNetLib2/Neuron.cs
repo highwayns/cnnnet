@@ -38,9 +38,9 @@ namespace CnnNetLib2
         private void AddDesirability()
         {
             int xMin = Math.Max(PosX - _cnnNet.NeuronInfluenceRange, 0);
-            int xMax = Math.Min(PosX + _cnnNet.NeuronInfluenceRange, _cnnNet.Width - 1);
+            int xMax = Math.Min(PosX + _cnnNet.NeuronInfluenceRange, _cnnNet.Width);
             int yMin = Math.Max(PosY - _cnnNet.NeuronInfluenceRange, 0);
-            int yMax = Math.Min(PosY + _cnnNet.NeuronInfluenceRange, _cnnNet.Height - 1);
+            int yMax = Math.Min(PosY + _cnnNet.NeuronInfluenceRange, _cnnNet.Height);
 
             for (int y = yMin; y < yMax; y++)
             {
@@ -48,8 +48,10 @@ namespace CnnNetLib2
                 {
                     var distance = Extensions.GetDistance(PosX, PosY, x, y);
 
+                    var influenceByRange = Math.Max(_cnnNet.NeuronInfluenceRange - distance, 0);
+
                     _cnnNet.NeuronDesirabilityMap[y, x] =
-                        Math.Min(1, _cnnNet.NeuronDesirabilityMap[y, x] + Math.Max(_cnnNet.NeuronInfluenceRange - distance, 0) * (1.0 / _cnnNet.NeuronInfluenceRange) * _cnnNet.MaxNeuronInfluence);
+                        Math.Min(1, _cnnNet.NeuronDesirabilityMap[y, x] + influenceByRange / _cnnNet.NeuronInfluenceRange * _cnnNet.MaxNeuronInfluence);
                 }
             }
         }

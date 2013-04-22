@@ -144,6 +144,8 @@ namespace CnnNetLib2
 
         public void GenerateNetwork()
         {
+            NeuronDesirabilityMap = new double[Height, Width];
+
             #region Generate Random Neurons
 
             var neurons = new List<Neuron>();
@@ -198,7 +200,6 @@ namespace CnnNetLib2
             Width = width;
             Height = height;
 
-            NeuronDesirabilityMap = new double[Height, Width];
             _isProcessingSyncObject = new object();
 
             SetNetworkParameters(networkParameters);
