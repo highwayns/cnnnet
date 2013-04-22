@@ -26,7 +26,13 @@ namespace CnnNetLib2
                 AddDesirability();
             }
 
-            ProcessMoveToHigherDesirability();
+            if ((_cnnNet.InputNeuronsMoveToHigherDesirability
+                 || _cnnNet.InputNeurons.All(inpNeuron => inpNeuron != this))
+                &&
+                _movedDistance < _cnnNet.MaxNeuronMoveDistance)
+            {
+                ProcessMoveToHigherDesirability();
+            }
         }
 
         private void AddDesirability()
@@ -58,6 +64,7 @@ namespace CnnNetLib2
 
             int maxDesirabX = PosX;
             int maxDesirabY = PosY;
+            double maxDesirabMovedDistance = 0;
             double maxDesirability = _cnnNet.NeuronDesirabilityMap[PosY, PosX];
 
             for (int y = minCoordY; y < maxCoordY; y++)
@@ -71,18 +78,23 @@ namespace CnnNetLib2
 
                     if (_cnnNet.NeuronDesirabilityMap[y, x] > maxDesirability
                         && GetNeuronAt(y, x) == null
-                        && _movedDistance < _cnnNet.MaxNeuronMoveDistance
+                        && _movedDistance + Extensions.GetDistance(PosX, PosY, x, y) < _cnnNet.MaxNeuronMoveDistance
                         && GetDistanceToNearestNeuron(y, x) >= _cnnNet.MinDistanceBetweenNeurons)
                     {
                         maxDesirabX = x;
                         maxDesirabY = y;
                         maxDesirability = _cnnNet.NeuronDesirabilityMap[y, x];
+                        maxDesirabMovedDistance = Extensions.GetDistance(PosX, PosY, x, y);
                     }
                 }
             }
 
-            MoveTo(maxDesirabY, maxDesirabX);
-            _movedDistance += Extensions.GetDistance(PosX, PosY, maxDesirabX, maxDesirabY);
+            if (PosX != maxDesirabX
+                && PosY != maxDesirabY)
+            {
+                MoveTo(maxDesirabY, maxDesirabX);
+                _movedDistance += maxDesirabMovedDistance;
+            }
         }
 
         private void MoveTo(int newPosY, int newPosX)
