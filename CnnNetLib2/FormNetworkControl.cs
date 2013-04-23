@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -47,13 +46,12 @@ namespace CnnNetLib2
                 DesirabilityDecayAmount = (double)npDesirabilityDecayAmount.Value,
                 InputNeuronCount = (int)npInputNeuronCount.Value,
                 InputNeuronsMoveToHigherDesirability = npInputNeuronsMoveToHigherDesirability.Checked,
-                MaxNeuronInfluence = (double)npMaxNeuronInfluence.Value,
+                NeuronDesirabilityMaxInfluence = (double)npMaxNeuronInfluence.Value,
                 MaxNeuronMoveDistance = (int)npMaxNeuronMoveDistance.Value,
                 MinDistanceBetweenNeurons = (int)npMinDistanceBetweenNeurons.Value,
                 NeuronCount = (int)npNeuronCount.Value,
-                NeuronDesirabilityPlainRange = (int)npNeuronDesirabilityPlainRange.Value,
-                NeuronInfluenceRange = (int)npNeuronInfluenceRange.Value,
-                PercentActiveNeurons = (double)npPercentActiveNeurons.Value
+                NeuronHigherDesirabilitySearchPlainRange = (int)npNeuronDesirabilityPlainRange.Value,
+                NeuronInfluenceRange = (int)npNeuronInfluenceRange.Value
             };
         }
 
@@ -178,13 +176,12 @@ namespace CnnNetLib2
             npDesirabilityDecayAmount.Value = (decimal)templateNetworkParameters.DesirabilityDecayAmount;
             npInputNeuronCount.Value = templateNetworkParameters.InputNeuronCount;
             npInputNeuronsMoveToHigherDesirability.Checked = templateNetworkParameters.InputNeuronsMoveToHigherDesirability;
-            npMaxNeuronInfluence.Value = (decimal)templateNetworkParameters.MaxNeuronInfluence;
+            npMaxNeuronInfluence.Value = (decimal)templateNetworkParameters.NeuronDesirabilityMaxInfluence;
             npMaxNeuronMoveDistance.Value = templateNetworkParameters.MaxNeuronMoveDistance;
             npMinDistanceBetweenNeurons.Value = templateNetworkParameters.MinDistanceBetweenNeurons;
             npNeuronCount.Value = templateNetworkParameters.NeuronCount;
-            npNeuronDesirabilityPlainRange.Value = templateNetworkParameters.NeuronDesirabilityPlainRange;
+            npNeuronDesirabilityPlainRange.Value = templateNetworkParameters.NeuronHigherDesirabilitySearchPlainRange;
             npNeuronInfluenceRange.Value = templateNetworkParameters.NeuronInfluenceRange;
-            npPercentActiveNeurons.Value = (decimal)templateNetworkParameters.PercentActiveNeurons;
         }
 
         #endregion

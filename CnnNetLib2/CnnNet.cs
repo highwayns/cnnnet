@@ -132,9 +132,9 @@ namespace CnnNetLib2
             {
                 NeuronCount = networkParameters.NeuronCount;
                 NeuronInfluenceRange = networkParameters.NeuronInfluenceRange;
-                MaxNeuronInfluence = networkParameters.MaxNeuronInfluence;
+                MaxNeuronInfluence = networkParameters.NeuronDesirabilityMaxInfluence;
                 DesirabilityDecayAmount = networkParameters.DesirabilityDecayAmount;
-                NeuronDesirabilityPlainRange = networkParameters.NeuronDesirabilityPlainRange;
+                NeuronDesirabilityPlainRange = networkParameters.NeuronHigherDesirabilitySearchPlainRange;
                 MinDistanceBetweenNeurons = networkParameters.MinDistanceBetweenNeurons;
                 InputNeuronCount = networkParameters.InputNeuronCount;
                 InputNeuronsMoveToHigherDesirability = networkParameters.InputNeuronsMoveToHigherDesirability;
