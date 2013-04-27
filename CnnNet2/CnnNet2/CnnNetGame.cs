@@ -156,10 +156,11 @@ namespace CnnNet2
                                       : inputNeurons.Contains(neuron) ? _neuronInputIdle : _neuronIdle,
                                   new Vector2(neuron.PosX, neuron.PosY), Color.White);
 
-                if (activeNeurons.Contains(neuron))
+                if (neuron.HasReachedFinalPosition)
                 {
                     _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronInfluenceRange, neuron.PosY - _cnnNet.NeuronInfluenceRange), Color.Red);
                 }
+
             }
         }
 

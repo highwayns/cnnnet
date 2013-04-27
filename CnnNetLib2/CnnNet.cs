@@ -30,6 +30,7 @@ namespace CnnNetLib2
         public int InputNeuronCount;
         public bool InputNeuronsMoveToHigherDesirability;
         public int MaxNeuronMoveDistance;
+        public int NeuronIterationCountBeforeFinalPosition;
 
         #endregion
 
@@ -139,6 +140,7 @@ namespace CnnNetLib2
                 InputNeuronCount = networkParameters.InputNeuronCount;
                 InputNeuronsMoveToHigherDesirability = networkParameters.InputNeuronsMoveToHigherDesirability;
                 MaxNeuronMoveDistance = networkParameters.MaxNeuronMoveDistance;
+                NeuronIterationCountBeforeFinalPosition = networkParameters.NeuronIterationCountBeforeFinalPosition;
             }
         }
 
@@ -178,6 +180,7 @@ namespace CnnNetLib2
                     neuron = neurons[_random.Next(_neurons.Length)];
                 } 
                 while (inputNeurons.Any(inpNeuron => inpNeuron == neuron));
+                neuron.HasReachedFinalPosition = true;
                 inputNeurons.Add(neuron);
             }
             _inputNeurons = inputNeurons.ToArray();

@@ -12,8 +12,10 @@ namespace CnnNetLib2
 
         public int PosX;
         public int PosY;
+        public bool HasReachedFinalPosition;
 
         private double _movedDistance;
+        private int _neuronIterationsLeftBeforeFinalPosition;
 
         #endregion
 
@@ -21,17 +23,38 @@ namespace CnnNetLib2
 
         public void Process()
         {
-            if (_cnnNet.ActiveNeurons.Any(an => an == this))
+            if (HasReachedFinalPosition)
             {
-                AddDesirability();
-            }
+                #region Increase region desirability if neuron fires
 
-            if ((_cnnNet.InputNeuronsMoveToHigherDesirability
-                 || _cnnNet.InputNeurons.All(inpNeuron => inpNeuron != this))
-                &&
-                _movedDistance < _cnnNet.MaxNeuronMoveDistance)
+                if (_cnnNet.ActiveNeurons.Any(an => an == this))
+                {
+                    AddDesirability();
+                }
+
+                #endregion
+            }
+            else
             {
-                ProcessMoveToHigherDesirability();
+                #region Neuron searches for better position
+
+                if ((_cnnNet.InputNeuronsMoveToHigherDesirability
+                     || _cnnNet.InputNeurons.All(inpNeuron => inpNeuron != this))
+                    &&
+                    _movedDistance < _cnnNet.MaxNeuronMoveDistance)
+                {
+                    _neuronIterationsLeftBeforeFinalPosition =
+                        ProcessMoveToHigherDesirability()
+                        ? _cnnNet.NeuronIterationCountBeforeFinalPosition
+                        : _neuronIterationsLeftBeforeFinalPosition - 1;
+
+                    if (_neuronIterationsLeftBeforeFinalPosition == 0)
+                    {
+                        HasReachedFinalPosition = true;
+                    }
+                }
+
+                #endregion
             }
         }
 
@@ -56,8 +79,10 @@ namespace CnnNetLib2
             }
         }
 
-        private void ProcessMoveToHigherDesirability()
+        private bool ProcessMoveToHigherDesirability()
         {
+            bool ret = false;
+
             int minCoordX = Math.Max(PosX - _cnnNet.NeuronDesirabilityPlainRange, 0);
             int maxCoordX = Math.Min(PosX + _cnnNet.NeuronDesirabilityPlainRange, _cnnNet.Width - 1);
 
@@ -96,7 +121,11 @@ namespace CnnNetLib2
             {
                 MoveTo(maxDesirabY, maxDesirabX);
                 _movedDistance += maxDesirabMovedDistance;
+
+                ret = true;
             }
+
+            return ret;
         }
 
         private void MoveTo(int newPosY, int newPosX)
@@ -139,6 +168,7 @@ namespace CnnNetLib2
         {
             Id = id;
             _cnnNet = cnnNet;
+            _neuronIterationsLeftBeforeFinalPosition = _cnnNet.NeuronIterationCountBeforeFinalPosition;
         }
 
         #endregion
