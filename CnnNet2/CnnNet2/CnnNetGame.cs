@@ -17,6 +17,10 @@ namespace CnnNet2
 
         private readonly FormNetworkControl _formNetworkControl;
 
+        private const int ColorIndexRed = 0;
+        private const int ColorIndexGreen = 1;
+        private const int ColorIndexBlue = 2;
+
         private const int Width = 800;
         private const int Height = 600;
 
@@ -69,7 +73,7 @@ namespace CnnNet2
             _neuronInputActive = Content.Load<Texture2D>("neuronInputActive");
 
             _background = new Texture2D(GraphicsDevice, Width, Height);
-            _backgroundData = Enumerable.Repeat<byte>(255, _background.Width * _background.Height * 4).ToArray();
+            _backgroundData = Enumerable.Repeat<byte>(0, _background.Width * _background.Height * 4).ToArray();
             _background.SetData(_backgroundData);
         }
 
@@ -107,7 +111,7 @@ namespace CnnNet2
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.Black);
             GraphicsDevice.Textures[0] = null;
 
             var neuronDesirabilityMap = _cnnNet.NeuronDesirabilityMap ?? new double[0, 0];
@@ -115,11 +119,28 @@ namespace CnnNet2
             var activeNeurons = _cnnNet.ActiveNeurons ?? new Neuron[0];
             var inputNeurons = _cnnNet.InputNeurons ?? new Neuron[0];
 
+            _backgroundData = Enumerable.Repeat<byte>(0, _background.Width * _background.Height * 4).ToArray();
+
             // Drawing code here
             _spriteBatch.Begin();
 
-            UpdateDesirability(neuronDesirabilityMap);
+            #region Background
+
+            if (_formNetworkControl.dsNeuronDesirabilityMap.Checked)
+            {
+                UpdateDesirability(neuronDesirabilityMap);
+            }
+
+            #endregion
+
+            _background.SetData(_backgroundData);
+            _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
+
+            #region Neurons
+
             UpdateNeurons(tableNeurons, activeNeurons, inputNeurons);
+
+            #endregion
 
             _spriteBatch.End();
 
@@ -134,15 +155,9 @@ namespace CnnNet2
                 {
                     int index = y * Width * 4 + x * 4;
 
-                    _backgroundData[index + 0] = 0;
-                    _backgroundData[index + 1] = (byte)(tableNeuronDesirability[y, x] * 255);
-                    _backgroundData[index + 2] = 0;
-                    _backgroundData[index + 3] = 255;
+                    _backgroundData[index + ColorIndexGreen] = (byte)(tableNeuronDesirability[y, x] * 255);
                 }
             }
-
-            _background.SetData(_backgroundData);
-            _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
         }
 
         private void UpdateNeurons(IEnumerable<Neuron> neurons, Neuron[] activeNeurons, Neuron[] inputNeurons)
@@ -156,7 +171,8 @@ namespace CnnNet2
                                       : inputNeurons.Contains(neuron) ? _neuronInputIdle : _neuronIdle,
                                   new Vector2(neuron.PosX, neuron.PosY), Color.White);
 
-                if (neuron.HasReachedFinalPosition)
+                if (neuron.HasReachedFinalPosition
+                    && _formNetworkControl.dsDisplayNeuronDesirabilityRange.Checked)
                 {
                     _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronDesirabilityInfluenceRange, neuron.PosY - _cnnNet.NeuronDesirabilityInfluenceRange), Color.Red);
                 }

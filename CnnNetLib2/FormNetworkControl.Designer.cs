@@ -57,6 +57,9 @@
             this.npNeuronCount = new System.Windows.Forms.NumericUpDown();
             this.radioButtonStepByStep = new System.Windows.Forms.RadioButton();
             this.buttonNextStepByStep = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.dsDisplayNeuronDesirabilityRange = new System.Windows.Forms.CheckBox();
+            this.dsNeuronDesirabilityMap = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronMoveDistance)).BeginInit();
@@ -67,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronInfluence)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronInfluenceRange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronCount)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonStart
@@ -175,7 +179,7 @@
             this.groupBox1.Size = new System.Drawing.Size(247, 282);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Parameters";
+            this.groupBox1.Text = "Network Settings";
             // 
             // buttonApplyParameters
             // 
@@ -426,12 +430,44 @@
             this.buttonNextStepByStep.UseVisualStyleBackColor = true;
             this.buttonNextStepByStep.Click += new System.EventHandler(this.OnButtonNextStepByStepClick);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.dsNeuronDesirabilityMap);
+            this.groupBox2.Controls.Add(this.dsDisplayNeuronDesirabilityRange);
+            this.groupBox2.Location = new System.Drawing.Point(12, 147);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(272, 147);
+            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Display Settings";
+            // 
+            // dsDisplayNeuronDesirabilityRange
+            // 
+            this.dsDisplayNeuronDesirabilityRange.AutoSize = true;
+            this.dsDisplayNeuronDesirabilityRange.Location = new System.Drawing.Point(6, 42);
+            this.dsDisplayNeuronDesirabilityRange.Name = "dsDisplayNeuronDesirabilityRange";
+            this.dsDisplayNeuronDesirabilityRange.Size = new System.Drawing.Size(149, 17);
+            this.dsDisplayNeuronDesirabilityRange.TabIndex = 17;
+            this.dsDisplayNeuronDesirabilityRange.Text = "Neuron Desirability Range";
+            this.dsDisplayNeuronDesirabilityRange.UseVisualStyleBackColor = true;
+            // 
+            // dsNeuronDesirabilityMap
+            // 
+            this.dsNeuronDesirabilityMap.AutoSize = true;
+            this.dsNeuronDesirabilityMap.Location = new System.Drawing.Point(6, 19);
+            this.dsNeuronDesirabilityMap.Name = "dsNeuronDesirabilityMap";
+            this.dsNeuronDesirabilityMap.Size = new System.Drawing.Size(138, 17);
+            this.dsNeuronDesirabilityMap.TabIndex = 18;
+            this.dsNeuronDesirabilityMap.Text = "Neuron Desirability Map";
+            this.dsNeuronDesirabilityMap.UseVisualStyleBackColor = true;
+            // 
             // FormNetworkControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 303);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonNextStepByStep);
             this.Controls.Add(this.radioButtonStepByStep);
             this.Controls.Add(this.groupBox1);
@@ -459,6 +495,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronInfluence)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronInfluenceRange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronCount)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -495,5 +533,8 @@
         private System.Windows.Forms.Button buttonApplyParameters;
         private System.Windows.Forms.RadioButton radioButtonStepByStep;
         private System.Windows.Forms.Button buttonNextStepByStep;
+        private System.Windows.Forms.GroupBox groupBox2;
+        public System.Windows.Forms.CheckBox dsDisplayNeuronDesirabilityRange;
+        public System.Windows.Forms.CheckBox dsNeuronDesirabilityMap;
     }
 }
