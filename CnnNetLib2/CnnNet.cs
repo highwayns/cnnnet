@@ -21,21 +21,15 @@ namespace CnnNetLib2
 
         public double[,] NeuronDesirabilityMap;
 
-        public int NeuronCount;
-        public int NeuronDesirabilityInfluenceRange;
-        public double MaxNeuronInfluence;
-        public double DesirabilityDecayAmount;
-        public int NeuronDesirabilityPlainRange;
-        public int MinDistanceBetweenNeurons;
-        public int InputNeuronCount;
-        public bool InputNeuronsMoveToHigherDesirability;
-        public int MaxNeuronMoveDistance;
-        public int NeuronIterationCountBeforeFinalPosition;
-        public int NeuronDendricTreeRange;
-
         #endregion
 
         #region Properties
+
+        public NetworkParameters NetworkParameters
+        {
+            get;
+            private set;
+        }
 
         public IActiveNeuronGenerator ActiveNeuronGenerator
         {
@@ -123,7 +117,7 @@ namespace CnnNetLib2
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    NeuronDesirabilityMap[y, x] = Math.Max(0, NeuronDesirabilityMap[y, x] - DesirabilityDecayAmount);
+                    NeuronDesirabilityMap[y, x] = Math.Max(0, NeuronDesirabilityMap[y, x] - NetworkParameters.DesirabilityDecayAmount);
                 }
             }
         }
@@ -132,17 +126,7 @@ namespace CnnNetLib2
         {
             lock (_isProcessingSyncObject)
             {
-                NeuronCount = networkParameters.NeuronCount;
-                NeuronDesirabilityInfluenceRange = networkParameters.NeuronDesirabilityInfluenceRange;
-                MaxNeuronInfluence = networkParameters.NeuronDesirabilityMaxInfluence;
-                DesirabilityDecayAmount = networkParameters.DesirabilityDecayAmount;
-                NeuronDesirabilityPlainRange = networkParameters.NeuronHigherDesirabilitySearchPlainRange;
-                MinDistanceBetweenNeurons = networkParameters.MinDistanceBetweenNeurons;
-                InputNeuronCount = networkParameters.InputNeuronCount;
-                InputNeuronsMoveToHigherDesirability = networkParameters.InputNeuronsMoveToHigherDesirability;
-                MaxNeuronMoveDistance = networkParameters.MaxNeuronMoveDistance;
-                NeuronIterationCountBeforeFinalPosition = networkParameters.NeuronIterationCountBeforeFinalPosition;
-                NeuronDendricTreeRange = networkParameters.NeuronDendricTreeRange;
+                NetworkParameters = networkParameters;
             }
         }
 
@@ -153,7 +137,7 @@ namespace CnnNetLib2
             #region Generate Random Neurons
 
             var neurons = new List<Neuron>();
-            for (int i = 0; i < NeuronCount; i++)
+            for (int i = 0; i < NetworkParameters.NeuronCount; i++)
             {
                 var neuron = new Neuron(i, this);
 
@@ -174,7 +158,7 @@ namespace CnnNetLib2
             #region Generate Input Neurons
 
             var inputNeurons = new List<Neuron>();
-            for (int i = 0; i < InputNeuronCount; i++)
+            for (int i = 0; i < NetworkParameters.InputNeuronCount; i++)
             {
                 Neuron neuron;
                 do

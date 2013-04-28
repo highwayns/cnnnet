@@ -51,14 +51,14 @@ namespace CnnNetLib2
             {
                 #region Neuron searches for better position
 
-                if ((_cnnNet.InputNeuronsMoveToHigherDesirability
+                if ((_cnnNet.NetworkParameters.InputNeuronsMoveToHigherDesirability
                      || _cnnNet.InputNeurons.All(inpNeuron => inpNeuron != this))
                     &&
-                    _movedDistance < _cnnNet.MaxNeuronMoveDistance)
+                    _movedDistance < _cnnNet.NetworkParameters.MaxNeuronMoveDistance)
                 {
                     _neuronIterationsLeftBeforeFinalPosition =
                         ProcessMoveToHigherDesirability()
-                        ? _cnnNet.NeuronIterationCountBeforeFinalPosition
+                        ? _cnnNet.NetworkParameters.NeuronIterationCountBeforeFinalPosition
                         : _neuronIterationsLeftBeforeFinalPosition - 1;
 
                     if (_neuronIterationsLeftBeforeFinalPosition == 0)
@@ -73,10 +73,10 @@ namespace CnnNetLib2
 
         private void AddDesirability()
         {
-            int xMin = Math.Max(PosX - _cnnNet.NeuronDesirabilityInfluenceRange, 0);
-            int xMax = Math.Min(PosX + _cnnNet.NeuronDesirabilityInfluenceRange, _cnnNet.Width);
-            int yMin = Math.Max(PosY - _cnnNet.NeuronDesirabilityInfluenceRange, 0);
-            int yMax = Math.Min(PosY + _cnnNet.NeuronDesirabilityInfluenceRange, _cnnNet.Height);
+            int xMin = Math.Max(PosX - _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, 0);
+            int xMax = Math.Min(PosX + _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, _cnnNet.Width);
+            int yMin = Math.Max(PosY - _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, 0);
+            int yMax = Math.Min(PosY + _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, _cnnNet.Height);
 
             for (int y = yMin; y < yMax; y++)
             {
@@ -84,10 +84,10 @@ namespace CnnNetLib2
                 {
                     var distance = Extensions.GetDistance(PosX, PosY, x, y);
 
-                    var influenceByRange = Math.Max(_cnnNet.NeuronDesirabilityInfluenceRange - distance, 0);
+                    var influenceByRange = Math.Max(_cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange - distance, 0);
 
                     _cnnNet.NeuronDesirabilityMap[y, x] =
-                        Math.Min(1, _cnnNet.NeuronDesirabilityMap[y, x] + influenceByRange / _cnnNet.NeuronDesirabilityInfluenceRange * _cnnNet.MaxNeuronInfluence);
+                        Math.Min(1, _cnnNet.NeuronDesirabilityMap[y, x] + influenceByRange / _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange * _cnnNet.NetworkParameters.NeuronDesirabilityMaxInfluence);
                 }
             }
         }
@@ -96,11 +96,11 @@ namespace CnnNetLib2
         {
             bool ret = false;
 
-            int minCoordX = Math.Max(PosX - _cnnNet.NeuronDesirabilityPlainRange, 0);
-            int maxCoordX = Math.Min(PosX + _cnnNet.NeuronDesirabilityPlainRange, _cnnNet.Width - 1);
+            int minCoordX = Math.Max(PosX - _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, 0);
+            int maxCoordX = Math.Min(PosX + _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, _cnnNet.Width - 1);
 
-            int minCoordY = Math.Max(PosY - _cnnNet.NeuronDesirabilityPlainRange, 0);
-            int maxCoordY = Math.Min(PosY + _cnnNet.NeuronDesirabilityPlainRange, _cnnNet.Height - 1);
+            int minCoordY = Math.Max(PosY - _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, 0);
+            int maxCoordY = Math.Min(PosY + _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange, _cnnNet.Height - 1);
 
             int maxDesirabX = PosX;
             int maxDesirabY = PosY;
@@ -118,9 +118,9 @@ namespace CnnNetLib2
 
                     if (_cnnNet.NeuronDesirabilityMap[y, x] > maxDesirability
                         && GetNeuronAt(y, x) == null
-                        && _movedDistance + Extensions.GetDistance(PosX, PosY, x, y) < _cnnNet.MaxNeuronMoveDistance
-                        && GetDistanceToNearestNeuron(y, x) >= _cnnNet.MinDistanceBetweenNeurons
-                        && Extensions.GetDistance(PosX, PosY, x, y) <= _cnnNet.NeuronDesirabilityPlainRange /* this ensures that we only check within the range */)
+                        && _movedDistance + Extensions.GetDistance(PosX, PosY, x, y) < _cnnNet.NetworkParameters.MaxNeuronMoveDistance
+                        && GetDistanceToNearestNeuron(y, x) >= _cnnNet.NetworkParameters.MinDistanceBetweenNeurons
+                        && Extensions.GetDistance(PosX, PosY, x, y) <= _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange /* this ensures that we only check within the range */)
                     {
                         maxDesirabX = x;
                         maxDesirabY = y;
@@ -150,12 +150,12 @@ namespace CnnNetLib2
 
         private double GetDistanceToNearestNeuron(int referenceY, int referenceX)
         {
-            double distanceToNearestNeuron = _cnnNet.NeuronDesirabilityPlainRange + 1;
+            double distanceToNearestNeuron = _cnnNet.NetworkParameters.NeuronDesirabilityInfluenceRange + 1;
 
-            int xMin = Math.Max(referenceX - _cnnNet.MinDistanceBetweenNeurons, 0);
-            int xMax = Math.Min(referenceX + _cnnNet.MinDistanceBetweenNeurons, _cnnNet.Width - 1);
-            int yMin = Math.Max(referenceY - _cnnNet.MinDistanceBetweenNeurons, 0);
-            int yMax = Math.Min(referenceY + _cnnNet.MinDistanceBetweenNeurons, _cnnNet.Height - 1);
+            int xMin = Math.Max(referenceX - _cnnNet.NetworkParameters.MinDistanceBetweenNeurons, 0);
+            int xMax = Math.Min(referenceX + _cnnNet.NetworkParameters.MinDistanceBetweenNeurons, _cnnNet.Width - 1);
+            int yMin = Math.Max(referenceY - _cnnNet.NetworkParameters.MinDistanceBetweenNeurons, 0);
+            int yMax = Math.Min(referenceY + _cnnNet.NetworkParameters.MinDistanceBetweenNeurons, _cnnNet.Height - 1);
 
             var distances = _cnnNet.Neurons.Where(neuron =>
                 xMin <= neuron.PosX
@@ -214,7 +214,7 @@ namespace CnnNetLib2
         {
             Id = id;
             _cnnNet = cnnNet;
-            _neuronIterationsLeftBeforeFinalPosition = _cnnNet.NeuronIterationCountBeforeFinalPosition;
+            _neuronIterationsLeftBeforeFinalPosition = _cnnNet.NetworkParameters.NeuronIterationCountBeforeFinalPosition;
         }
 
         #endregion
