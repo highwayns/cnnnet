@@ -22,7 +22,7 @@ namespace CnnNetLib2
         public double[,] NeuronDesirabilityMap;
 
         public int NeuronCount;
-        public int NeuronInfluenceRange;
+        public int NeuronDesirabilityInfluenceRange;
         public double MaxNeuronInfluence;
         public double DesirabilityDecayAmount;
         public int NeuronDesirabilityPlainRange;
@@ -31,6 +31,7 @@ namespace CnnNetLib2
         public bool InputNeuronsMoveToHigherDesirability;
         public int MaxNeuronMoveDistance;
         public int NeuronIterationCountBeforeFinalPosition;
+        public int NeuronDendricTreeRange;
 
         #endregion
 
@@ -132,7 +133,7 @@ namespace CnnNetLib2
             lock (_isProcessingSyncObject)
             {
                 NeuronCount = networkParameters.NeuronCount;
-                NeuronInfluenceRange = networkParameters.NeuronInfluenceRange;
+                NeuronDesirabilityInfluenceRange = networkParameters.NeuronDesirabilityInfluenceRange;
                 MaxNeuronInfluence = networkParameters.NeuronDesirabilityMaxInfluence;
                 DesirabilityDecayAmount = networkParameters.DesirabilityDecayAmount;
                 NeuronDesirabilityPlainRange = networkParameters.NeuronHigherDesirabilitySearchPlainRange;
@@ -141,6 +142,7 @@ namespace CnnNetLib2
                 InputNeuronsMoveToHigherDesirability = networkParameters.InputNeuronsMoveToHigherDesirability;
                 MaxNeuronMoveDistance = networkParameters.MaxNeuronMoveDistance;
                 NeuronIterationCountBeforeFinalPosition = networkParameters.NeuronIterationCountBeforeFinalPosition;
+                NeuronDendricTreeRange = networkParameters.NeuronDendricTreeRange;
             }
         }
 

@@ -7,7 +7,7 @@
         /// <summary>
         /// Desirability influence distance
         /// </summary>
-        public int NeuronInfluenceRange = 80;
+        public int NeuronDesirabilityInfluenceRange = 80;
 
         /// <summary>
         /// Maximum desirability increase
@@ -49,5 +49,10 @@
         /// After how many iterations of neuron stagnation (nouron does not move to new position) HasReachedFinalPosition is set automatically to true
         /// </summary>
         public int NeuronIterationCountBeforeFinalPosition = 5;
+
+        /// <summary>
+        /// The range of the neuron dendric tree
+        /// </summary>
+        public int NeuronDendricTreeRange = 160;
     }
 }

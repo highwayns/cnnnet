@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CnnNetLib2
 {
@@ -16,6 +17,18 @@ namespace CnnNetLib2
 
         private double _movedDistance;
         private int _neuronIterationsLeftBeforeFinalPosition;
+
+        #endregion
+
+        #region Properties
+
+        public bool IsActive
+        {
+            get
+            {
+                return _cnnNet.ActiveNeurons.Any(neuron => neuron == this);
+            }
+        }
 
         #endregion
 
@@ -60,10 +73,10 @@ namespace CnnNetLib2
 
         private void AddDesirability()
         {
-            int xMin = Math.Max(PosX - _cnnNet.NeuronInfluenceRange, 0);
-            int xMax = Math.Min(PosX + _cnnNet.NeuronInfluenceRange, _cnnNet.Width);
-            int yMin = Math.Max(PosY - _cnnNet.NeuronInfluenceRange, 0);
-            int yMax = Math.Min(PosY + _cnnNet.NeuronInfluenceRange, _cnnNet.Height);
+            int xMin = Math.Max(PosX - _cnnNet.NeuronDesirabilityInfluenceRange, 0);
+            int xMax = Math.Min(PosX + _cnnNet.NeuronDesirabilityInfluenceRange, _cnnNet.Width);
+            int yMin = Math.Max(PosY - _cnnNet.NeuronDesirabilityInfluenceRange, 0);
+            int yMax = Math.Min(PosY + _cnnNet.NeuronDesirabilityInfluenceRange, _cnnNet.Height);
 
             for (int y = yMin; y < yMax; y++)
             {
@@ -71,10 +84,10 @@ namespace CnnNetLib2
                 {
                     var distance = Extensions.GetDistance(PosX, PosY, x, y);
 
-                    var influenceByRange = Math.Max(_cnnNet.NeuronInfluenceRange - distance, 0);
+                    var influenceByRange = Math.Max(_cnnNet.NeuronDesirabilityInfluenceRange - distance, 0);
 
                     _cnnNet.NeuronDesirabilityMap[y, x] =
-                        Math.Min(1, _cnnNet.NeuronDesirabilityMap[y, x] + influenceByRange / _cnnNet.NeuronInfluenceRange * _cnnNet.MaxNeuronInfluence);
+                        Math.Min(1, _cnnNet.NeuronDesirabilityMap[y, x] + influenceByRange / _cnnNet.NeuronDesirabilityInfluenceRange * _cnnNet.MaxNeuronInfluence);
                 }
             }
         }
@@ -106,7 +119,8 @@ namespace CnnNetLib2
                     if (_cnnNet.NeuronDesirabilityMap[y, x] > maxDesirability
                         && GetNeuronAt(y, x) == null
                         && _movedDistance + Extensions.GetDistance(PosX, PosY, x, y) < _cnnNet.MaxNeuronMoveDistance
-                        && GetDistanceToNearestNeuron(y, x) >= _cnnNet.MinDistanceBetweenNeurons)
+                        && GetDistanceToNearestNeuron(y, x) >= _cnnNet.MinDistanceBetweenNeurons
+                        && Extensions.GetDistance(PosX, PosY, x, y) <= _cnnNet.NeuronDesirabilityPlainRange /* this ensures that we only check within the range */)
                     {
                         maxDesirabX = x;
                         maxDesirabY = y;
@@ -158,6 +172,38 @@ namespace CnnNetLib2
         private Neuron GetNeuronAt(int y, int x)
         {
             return _cnnNet.Neurons.FirstOrDefault(neuron => neuron.PosX == x && neuron.PosY == y);
+        }
+
+        private Neuron[] GetNeuronsWithinRange(int range)
+        {
+            var ret = new List<Neuron>();
+
+            int minCoordX = Math.Max(PosX - range, 0);
+            int maxCoordX = Math.Min(PosX + range, _cnnNet.Width - 1);
+
+            int minCoordY = Math.Max(PosY - range, 0);
+            int maxCoordY = Math.Min(PosY + range, _cnnNet.Height - 1);
+
+            for (int y = minCoordY; y < maxCoordY; y++)
+            {
+                for (int x = minCoordX; x < maxCoordX; x++)
+                {
+                    if ((x == PosX && y == PosY)
+                        || Extensions.GetDistance(PosX, PosY, x, y) > range)
+                    {
+                        continue;
+                    }
+
+                    var neuron = GetNeuronAt(y, x);
+
+                    if (neuron != null)
+                    {
+                        ret.Add(neuron);
+                    }
+                }
+            }
+
+            return ret.ToArray();
         }
 
         #endregion

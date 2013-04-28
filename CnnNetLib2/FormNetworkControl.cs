@@ -51,7 +51,7 @@ namespace CnnNetLib2
                 MinDistanceBetweenNeurons = (int)npMinDistanceBetweenNeurons.Value,
                 NeuronCount = (int)npNeuronCount.Value,
                 NeuronHigherDesirabilitySearchPlainRange = (int)npNeuronDesirabilityPlainRange.Value,
-                NeuronInfluenceRange = (int)npNeuronInfluenceRange.Value
+                NeuronDesirabilityInfluenceRange = (int)npNeuronInfluenceRange.Value
             };
         }
 
@@ -181,7 +181,7 @@ namespace CnnNetLib2
             npMinDistanceBetweenNeurons.Value = templateNetworkParameters.MinDistanceBetweenNeurons;
             npNeuronCount.Value = templateNetworkParameters.NeuronCount;
             npNeuronDesirabilityPlainRange.Value = templateNetworkParameters.NeuronHigherDesirabilitySearchPlainRange;
-            npNeuronInfluenceRange.Value = templateNetworkParameters.NeuronInfluenceRange;
+            npNeuronInfluenceRange.Value = templateNetworkParameters.NeuronDesirabilityInfluenceRange;
         }
 
         #endregion

@@ -147,7 +147,7 @@ namespace CnnNet2
 
         private void UpdateNeurons(IEnumerable<Neuron> neurons, Neuron[] activeNeurons, Neuron[] inputNeurons)
         {
-            Texture2D circle = CreateCircle(_cnnNet.NeuronInfluenceRange);
+            Texture2D circle = CreateCircle(_cnnNet.NeuronDesirabilityInfluenceRange);
 
             foreach (Neuron neuron in neurons)
             {
@@ -158,7 +158,7 @@ namespace CnnNet2
 
                 if (neuron.HasReachedFinalPosition)
                 {
-                    _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronInfluenceRange, neuron.PosY - _cnnNet.NeuronInfluenceRange), Color.Red);
+                    _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronDesirabilityInfluenceRange, neuron.PosY - _cnnNet.NeuronDesirabilityInfluenceRange), Color.Red);
                 }
 
             }
