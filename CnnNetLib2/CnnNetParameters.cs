@@ -1,6 +1,11 @@
-﻿namespace CnnNetLib2
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace CnnNetLib2
 {
-    public class NetworkParameters
+    public partial class CnnNet
     {
         public int NeuronCount = 100;
 

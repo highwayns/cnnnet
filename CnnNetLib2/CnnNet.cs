@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CnnNetLib2
 {
-    public class CnnNet
+    public partial class CnnNet
     {
         #region Fields
 
@@ -24,12 +24,6 @@ namespace CnnNetLib2
         #endregion
 
         #region Properties
-
-        public NetworkParameters NetworkParameters
-        {
-            get;
-            private set;
-        }
 
         public IActiveNeuronGenerator ActiveNeuronGenerator
         {
@@ -117,16 +111,8 @@ namespace CnnNetLib2
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    NeuronDesirabilityMap[y, x] = Math.Max(0, NeuronDesirabilityMap[y, x] - NetworkParameters.DesirabilityDecayAmount);
+                    NeuronDesirabilityMap[y, x] = Math.Max(0, NeuronDesirabilityMap[y, x] - DesirabilityDecayAmount);
                 }
-            }
-        }
-
-        public void SetNetworkParameters(NetworkParameters networkParameters)
-        {
-            lock (_isProcessingSyncObject)
-            {
-                NetworkParameters = networkParameters;
             }
         }
 
@@ -137,7 +123,7 @@ namespace CnnNetLib2
             #region Generate Random Neurons
 
             var neurons = new List<Neuron>();
-            for (int i = 0; i < NetworkParameters.NeuronCount; i++)
+            for (int i = 0; i < NeuronCount; i++)
             {
                 var neuron = new Neuron(i, this);
 
@@ -158,7 +144,7 @@ namespace CnnNetLib2
             #region Generate Input Neurons
 
             var inputNeurons = new List<Neuron>();
-            for (int i = 0; i < NetworkParameters.InputNeuronCount; i++)
+            for (int i = 0; i < InputNeuronCount; i++)
             {
                 Neuron neuron;
                 do
@@ -183,15 +169,13 @@ namespace CnnNetLib2
 
         #region Instance
 
-        public CnnNet(int width, int height, NetworkParameters networkParameters)
+        public CnnNet(int width, int height)
         {
             _random=new Random();
             Width = width;
             Height = height;
 
             _isProcessingSyncObject = new object();
-
-            SetNetworkParameters(networkParameters);
 
             GenerateNetwork();
         }
