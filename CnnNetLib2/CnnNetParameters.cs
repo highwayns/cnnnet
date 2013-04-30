@@ -59,5 +59,30 @@ namespace CnnNetLib2
         /// The range of the neuron dendric tree
         /// </summary>
         public int NeuronDendricTreeRange = 160;
+
+
+
+
+
+        /// <summary>
+        /// Undesirability influence distance
+        /// </summary>
+        public int NeuronUndesirabilityInfluenceRange = 80;
+
+        /// <summary>
+        /// Maximum undesirability increase
+        /// </summary>
+        public double NeuronUndesirabilityMaxInfluence = 0.05;
+
+        /// <summary>
+        /// How much does undesirability decrease with each iteration
+        /// </summary>
+        public double UndesirabilityDecayAmount = 0.005;
+
+        /// <summary>
+        /// After how many iterations of inactivity does the neuron increase 
+        /// the undesirability with NeuronUndesirabilityMaxInfluence
+        /// </summary>
+        public int NeuronUndesirabilityMaxIterationsSinceLastActivation = 10;
     }
 }

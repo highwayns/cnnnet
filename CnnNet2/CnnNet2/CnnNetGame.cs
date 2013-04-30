@@ -115,6 +115,8 @@ namespace CnnNet2
             GraphicsDevice.Textures[0] = null;
 
             var neuronDesirabilityMap = _cnnNet.NeuronDesirabilityMap ?? new double[0, 0];
+            var neuronUndesirabilityMap = _cnnNet.NeuronUndesirabilityMap ?? new double[0, 0];
+
             var tableNeurons = _cnnNet.Neurons ?? new Neuron[0];
             var activeNeurons = _cnnNet.ActiveNeurons ?? new Neuron[0];
             var inputNeurons = _cnnNet.InputNeurons ?? new Neuron[0];
@@ -128,7 +130,12 @@ namespace CnnNet2
 
             if (_formNetworkControl.dsNeuronDesirabilityMap.Checked)
             {
-                UpdateDesirability(neuronDesirabilityMap);
+                UpdateBackground(neuronDesirabilityMap, ColorIndexGreen);
+            }
+
+            if (_formNetworkControl.dsNeuronUndesirabilityMap.Checked)
+            {
+                UpdateBackground(neuronUndesirabilityMap, ColorIndexRed);
             }
 
             #endregion
@@ -147,7 +154,7 @@ namespace CnnNet2
             base.Draw(gameTime);
         }
 
-        private void UpdateDesirability(double[,] tableNeuronDesirability)
+        private void UpdateBackground(double[,] values, int colorIndex)
         {
             for (int y = 0; y < Height; y++)
             {
@@ -155,7 +162,7 @@ namespace CnnNet2
                 {
                     int index = y * Width * 4 + x * 4;
 
-                    _backgroundData[index + ColorIndexGreen] = (byte)(tableNeuronDesirability[y, x] * 255);
+                    _backgroundData[index + colorIndex] = (byte)(values[y, x] * 255);
                 }
             }
         }

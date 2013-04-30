@@ -17,6 +17,7 @@ namespace CnnNetLib2
 
         private double _movedDistance;
         private int _neuronIterationsLeftBeforeFinalPosition;
+        private int _iterationsSinceLastActivation;
 
         #endregion
 
@@ -40,9 +41,20 @@ namespace CnnNetLib2
             {
                 #region Increase region desirability if neuron fires
 
-                if (_cnnNet.ActiveNeurons.Any(an => an == this))
+                if (IsActive)
                 {
                     AddDesirability();
+                    _iterationsSinceLastActivation = 0;
+                }
+
+                #endregion
+
+                #region Else increase region UN-desirability
+
+                else
+                {
+                    _iterationsSinceLastActivation++;
+                    AddUndesirability();
                 }
 
                 #endregion
@@ -73,10 +85,26 @@ namespace CnnNetLib2
 
         private void AddDesirability()
         {
-            int xMin = Math.Max(PosX - _cnnNet.NeuronDesirabilityInfluenceRange, 0);
-            int xMax = Math.Min(PosX + _cnnNet.NeuronDesirabilityInfluenceRange, _cnnNet.Width);
-            int yMin = Math.Max(PosY - _cnnNet.NeuronDesirabilityInfluenceRange, 0);
-            int yMax = Math.Min(PosY + _cnnNet.NeuronDesirabilityInfluenceRange, _cnnNet.Height);
+            AddProportionalRangedValue
+                (_cnnNet.NeuronDesirabilityMap, _cnnNet.Width, _cnnNet.Height,
+                _cnnNet.NeuronDesirabilityInfluenceRange, 
+                _cnnNet.NeuronDesirabilityMaxInfluence);
+        }
+
+        private void AddUndesirability()
+        {
+            AddProportionalRangedValue
+                (_cnnNet.NeuronUndesirabilityMap, _cnnNet.Width, _cnnNet.Height,
+                _cnnNet.NeuronUndesirabilityInfluenceRange,
+                _cnnNet.NeuronUndesirabilityMaxInfluence * Math.Max(1, _iterationsSinceLastActivation / _cnnNet.NeuronUndesirabilityMaxIterationsSinceLastActivation));
+        }
+
+        private void AddProportionalRangedValue(double[,] map, int width, int height, int influencedRange, double maxValue)
+        {
+            int xMin = Math.Max(PosX - influencedRange, 0);
+            int xMax = Math.Min(PosX + influencedRange, width);
+            int yMin = Math.Max(PosY - influencedRange, 0);
+            int yMax = Math.Min(PosY + influencedRange, height);
 
             for (int y = yMin; y < yMax; y++)
             {
@@ -84,10 +112,9 @@ namespace CnnNetLib2
                 {
                     var distance = Extensions.GetDistance(PosX, PosY, x, y);
 
-                    var influenceByRange = Math.Max(_cnnNet.NeuronDesirabilityInfluenceRange - distance, 0);
+                    var influenceByRange = Math.Max(influencedRange - distance, 0);
 
-                    _cnnNet.NeuronDesirabilityMap[y, x] =
-                        Math.Min(1, _cnnNet.NeuronDesirabilityMap[y, x] + influenceByRange / _cnnNet.NeuronDesirabilityInfluenceRange * _cnnNet.NeuronDesirabilityMaxInfluence);
+                    map[y, x] = Math.Min(1, map[y, x] + influenceByRange / influencedRange * maxValue);
                 }
             }
         }

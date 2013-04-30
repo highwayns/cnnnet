@@ -20,6 +20,7 @@ namespace CnnNetLib2
         public readonly int Height;
 
         public double[,] NeuronDesirabilityMap;
+        public double[,] NeuronUndesirabilityMap;
 
         #endregion
 
@@ -74,7 +75,7 @@ namespace CnnNetLib2
 
             #endregion
 
-            ProcessDecayDesirability();
+            ProcessDecayDesirabilityAndUndesirability();
 
             ProcessDetermineActiveNeurons();
 
@@ -105,13 +106,14 @@ namespace CnnNetLib2
             }
         }
 
-        private void ProcessDecayDesirability()
+        private void ProcessDecayDesirabilityAndUndesirability()
         {
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
                     NeuronDesirabilityMap[y, x] = Math.Max(0, NeuronDesirabilityMap[y, x] - DesirabilityDecayAmount);
+                    NeuronUndesirabilityMap[y, x] = Math.Max(0, NeuronUndesirabilityMap[y, x] - UndesirabilityDecayAmount);
                 }
             }
         }
@@ -119,6 +121,7 @@ namespace CnnNetLib2
         public void GenerateNetwork()
         {
             NeuronDesirabilityMap = new double[Height, Width];
+            NeuronUndesirabilityMap = new double[Height, Width];
 
             #region Generate Random Neurons
 

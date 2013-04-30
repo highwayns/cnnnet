@@ -58,8 +58,9 @@
             this.radioButtonStepByStep = new System.Windows.Forms.RadioButton();
             this.buttonNextStepByStep = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dsDisplayNeuronDesirabilityRange = new System.Windows.Forms.CheckBox();
             this.dsNeuronDesirabilityMap = new System.Windows.Forms.CheckBox();
+            this.dsDisplayNeuronDesirabilityRange = new System.Windows.Forms.CheckBox();
+            this.dsNeuronUndesirabilityMap = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronMoveDistance)).BeginInit();
@@ -432,6 +433,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.dsNeuronUndesirabilityMap);
             this.groupBox2.Controls.Add(this.dsNeuronDesirabilityMap);
             this.groupBox2.Controls.Add(this.dsDisplayNeuronDesirabilityRange);
             this.groupBox2.Location = new System.Drawing.Point(12, 147);
@@ -440,6 +442,16 @@
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Display Settings";
+            // 
+            // dsNeuronDesirabilityMap
+            // 
+            this.dsNeuronDesirabilityMap.AutoSize = true;
+            this.dsNeuronDesirabilityMap.Location = new System.Drawing.Point(6, 19);
+            this.dsNeuronDesirabilityMap.Name = "dsNeuronDesirabilityMap";
+            this.dsNeuronDesirabilityMap.Size = new System.Drawing.Size(138, 17);
+            this.dsNeuronDesirabilityMap.TabIndex = 18;
+            this.dsNeuronDesirabilityMap.Text = "Neuron Desirability Map";
+            this.dsNeuronDesirabilityMap.UseVisualStyleBackColor = true;
             // 
             // dsDisplayNeuronDesirabilityRange
             // 
@@ -451,15 +463,15 @@
             this.dsDisplayNeuronDesirabilityRange.Text = "Neuron Desirability Range";
             this.dsDisplayNeuronDesirabilityRange.UseVisualStyleBackColor = true;
             // 
-            // dsNeuronDesirabilityMap
+            // dsNeuronUndesirabilityMap
             // 
-            this.dsNeuronDesirabilityMap.AutoSize = true;
-            this.dsNeuronDesirabilityMap.Location = new System.Drawing.Point(6, 19);
-            this.dsNeuronDesirabilityMap.Name = "dsNeuronDesirabilityMap";
-            this.dsNeuronDesirabilityMap.Size = new System.Drawing.Size(138, 17);
-            this.dsNeuronDesirabilityMap.TabIndex = 18;
-            this.dsNeuronDesirabilityMap.Text = "Neuron Desirability Map";
-            this.dsNeuronDesirabilityMap.UseVisualStyleBackColor = true;
+            this.dsNeuronUndesirabilityMap.AutoSize = true;
+            this.dsNeuronUndesirabilityMap.Location = new System.Drawing.Point(6, 65);
+            this.dsNeuronUndesirabilityMap.Name = "dsNeuronUndesirabilityMap";
+            this.dsNeuronUndesirabilityMap.Size = new System.Drawing.Size(150, 17);
+            this.dsNeuronUndesirabilityMap.TabIndex = 19;
+            this.dsNeuronUndesirabilityMap.Text = "Neuron Undesirability Map";
+            this.dsNeuronUndesirabilityMap.UseVisualStyleBackColor = true;
             // 
             // FormNetworkControl
             // 
@@ -536,5 +548,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         public System.Windows.Forms.CheckBox dsDisplayNeuronDesirabilityRange;
         public System.Windows.Forms.CheckBox dsNeuronDesirabilityMap;
+        public System.Windows.Forms.CheckBox dsNeuronUndesirabilityMap;
     }
 }
