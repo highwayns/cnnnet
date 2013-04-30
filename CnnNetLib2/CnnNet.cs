@@ -13,7 +13,6 @@ namespace CnnNetLib2
         private bool _isProcessing;
 
         private Neuron[] _neurons;
-        private Neuron[] _activeNeurons;
         private Neuron[] _inputNeurons;
 
         public readonly int Width;
@@ -37,14 +36,6 @@ namespace CnnNetLib2
             get
             {
                 return _neurons;
-            }
-        }
-
-        public Neuron[] ActiveNeurons
-        {
-            get
-            {
-                return _activeNeurons;
             }
         }
 
@@ -96,13 +87,16 @@ namespace CnnNetLib2
 
         private void ProcessDetermineActiveNeurons()
         {
-            var activeNeuronIds = ActiveNeuronGenerator.GetActiveNeuronIds();
+            var activeInputNeuronIds = ActiveNeuronGenerator.GetActiveNeuronIds();
 
-            _activeNeurons = new Neuron[activeNeuronIds.Length];
-
-            for (int i = 0; i < activeNeuronIds.Length; i++)
+            foreach (var neuron in _neurons)
             {
-                _activeNeurons[i] = _neurons[activeNeuronIds[i]];
+                neuron.IsActive = false;
+            }
+
+            for (int i = 0; i < activeInputNeuronIds.Length; i++)
+            {
+                _neurons[activeInputNeuronIds[i]].IsActive = true;
             }
         }
 

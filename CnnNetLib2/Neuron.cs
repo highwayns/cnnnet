@@ -11,6 +11,7 @@ namespace CnnNetLib2
         public int Id;
         private readonly CnnNet _cnnNet;
 
+        public bool IsActive;
         public int PosX;
         public int PosY;
         public bool HasReachedFinalPosition;
@@ -18,18 +19,6 @@ namespace CnnNetLib2
         private double _movedDistance;
         private int _neuronIterationsLeftBeforeFinalPosition;
         private int _iterationsSinceLastActivation;
-
-        #endregion
-
-        #region Properties
-
-        public bool IsActive
-        {
-            get
-            {
-                return _cnnNet.ActiveNeurons.Any(neuron => neuron == this);
-            }
-        }
 
         #endregion
 
