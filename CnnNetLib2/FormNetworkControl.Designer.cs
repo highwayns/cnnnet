@@ -58,9 +58,10 @@
             this.radioButtonStepByStep = new System.Windows.Forms.RadioButton();
             this.buttonNextStepByStep = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.dsNeuronUndesirabilityMap = new System.Windows.Forms.CheckBox();
             this.dsNeuronDesirabilityMap = new System.Windows.Forms.CheckBox();
             this.dsDisplayNeuronDesirabilityRange = new System.Windows.Forms.CheckBox();
-            this.dsNeuronUndesirabilityMap = new System.Windows.Forms.CheckBox();
+            this.textBoxStepsPerSecond = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronMoveDistance)).BeginInit();
@@ -149,7 +150,7 @@
             // 
             // textBoxStepNumber
             // 
-            this.textBoxStepNumber.Location = new System.Drawing.Point(93, 6);
+            this.textBoxStepNumber.Location = new System.Drawing.Point(92, 6);
             this.textBoxStepNumber.Name = "textBoxStepNumber";
             this.textBoxStepNumber.ReadOnly = true;
             this.textBoxStepNumber.Size = new System.Drawing.Size(75, 20);
@@ -443,6 +444,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Display Settings";
             // 
+            // dsNeuronUndesirabilityMap
+            // 
+            this.dsNeuronUndesirabilityMap.AutoSize = true;
+            this.dsNeuronUndesirabilityMap.Location = new System.Drawing.Point(6, 65);
+            this.dsNeuronUndesirabilityMap.Name = "dsNeuronUndesirabilityMap";
+            this.dsNeuronUndesirabilityMap.Size = new System.Drawing.Size(150, 17);
+            this.dsNeuronUndesirabilityMap.TabIndex = 19;
+            this.dsNeuronUndesirabilityMap.Text = "Neuron Undesirability Map";
+            this.dsNeuronUndesirabilityMap.UseVisualStyleBackColor = true;
+            // 
             // dsNeuronDesirabilityMap
             // 
             this.dsNeuronDesirabilityMap.AutoSize = true;
@@ -463,15 +474,13 @@
             this.dsDisplayNeuronDesirabilityRange.Text = "Neuron Desirability Range";
             this.dsDisplayNeuronDesirabilityRange.UseVisualStyleBackColor = true;
             // 
-            // dsNeuronUndesirabilityMap
+            // textBoxStepsPerSecond
             // 
-            this.dsNeuronUndesirabilityMap.AutoSize = true;
-            this.dsNeuronUndesirabilityMap.Location = new System.Drawing.Point(6, 65);
-            this.dsNeuronUndesirabilityMap.Name = "dsNeuronUndesirabilityMap";
-            this.dsNeuronUndesirabilityMap.Size = new System.Drawing.Size(150, 17);
-            this.dsNeuronUndesirabilityMap.TabIndex = 19;
-            this.dsNeuronUndesirabilityMap.Text = "Neuron Undesirability Map";
-            this.dsNeuronUndesirabilityMap.UseVisualStyleBackColor = true;
+            this.textBoxStepsPerSecond.Location = new System.Drawing.Point(184, 6);
+            this.textBoxStepsPerSecond.Name = "textBoxStepsPerSecond";
+            this.textBoxStepsPerSecond.ReadOnly = true;
+            this.textBoxStepsPerSecond.Size = new System.Drawing.Size(75, 20);
+            this.textBoxStepsPerSecond.TabIndex = 13;
             // 
             // FormNetworkControl
             // 
@@ -479,6 +488,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 303);
             this.ControlBox = false;
+            this.Controls.Add(this.textBoxStepsPerSecond);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonNextStepByStep);
             this.Controls.Add(this.radioButtonStepByStep);
@@ -549,5 +559,6 @@
         public System.Windows.Forms.CheckBox dsDisplayNeuronDesirabilityRange;
         public System.Windows.Forms.CheckBox dsNeuronDesirabilityMap;
         public System.Windows.Forms.CheckBox dsNeuronUndesirabilityMap;
+        private System.Windows.Forms.TextBox textBoxStepsPerSecond;
     }
 }

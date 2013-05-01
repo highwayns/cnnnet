@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace CnnNetLib2
 {
@@ -18,6 +19,10 @@ namespace CnnNetLib2
         private int _stepNumber = 1;
 
         private int _lastStepNumber = int.MaxValue;
+
+        private readonly Timer _timer;
+        // holds the number of Process calls handeled in the unit of time (1000 ms)
+        private int _numberOfPerformedSteps;
 
         #endregion
 
@@ -86,6 +91,7 @@ namespace CnnNetLib2
                 _cnnNet.Process();
 
                 this.InvokeEx(f => textBoxStepNumber.Text = _stepNumber.ToString(CultureInfo.InvariantCulture));
+                _numberOfPerformedSteps++;
             }
 
             this.InvokeEx(f => OnProcessEnd());
@@ -106,6 +112,7 @@ namespace CnnNetLib2
             buttonStop.Enabled = true;
             buttonReset.Enabled = false;
             nudSteps.Enabled = false;
+            _timer.Start();
         }
 
         private void OnProcessEnding()
@@ -137,6 +144,7 @@ namespace CnnNetLib2
             {
                 OnProcessEnding();
                 _threadProcessStopInitiated = true;
+                _timer.Stop();
             }
         }
 
@@ -166,6 +174,14 @@ namespace CnnNetLib2
             buttonNextStepByStep.Enabled = radioButtonStepByStep.Checked;
         }
 
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            var numberOfPerformedSteps = _numberOfPerformedSteps;
+            _numberOfPerformedSteps = 0;
+
+            textBoxStepsPerSecond.Text = (numberOfPerformedSteps / ((float)_timer.Interval / 1000)).ToString(CultureInfo.InvariantCulture);
+        }
+
         #endregion
 
         #region Instance
@@ -177,6 +193,13 @@ namespace CnnNetLib2
             CreateThread();
 
             _threadSyncObject = new object();
+
+            _timer = new Timer
+            {
+                Interval = 4000,
+                Enabled = false
+            };
+            _timer.Tick += OnTimerTick;
         }
 
         #endregion

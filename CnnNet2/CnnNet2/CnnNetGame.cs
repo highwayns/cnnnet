@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CnnNetLib2;
 using System;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace CnnNet2
 {
@@ -16,7 +18,7 @@ namespace CnnNet2
         #region Fields
 
         private readonly FormNetworkControl _formNetworkControl;
-
+        
         private const int ColorIndexRed = 0;
         private const int ColorIndexGreen = 1;
         private const int ColorIndexBlue = 2;
@@ -83,7 +85,7 @@ namespace CnnNet2
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // Unload any non ContentManager content here
         }
 
         /// <summary>
@@ -100,7 +102,7 @@ namespace CnnNet2
                 Exit();
             }
 
-            // TODO: Add your update logic here
+            // Add your update logic here
 
             base.Update(gameTime);
         }
@@ -189,9 +191,9 @@ namespace CnnNet2
         public Texture2D CreateCircle(int radius)
         {
             int outerRadius = radius * 2 + 2; // So circle doesn't go out of bounds
-            Texture2D texture = new Texture2D(GraphicsDevice, outerRadius, outerRadius);
+            var texture = new Texture2D(GraphicsDevice, outerRadius, outerRadius);
 
-            Color[] data = new Color[outerRadius * outerRadius];
+            var data = new Color[outerRadius * outerRadius];
 
             // Colour the entire texture transparent first.
             for (int i = 0; i < data.Length; i++)
@@ -203,8 +205,8 @@ namespace CnnNet2
             for (double angle = 0; angle < Math.PI * 2; angle += angleStep)
             {
                 // Use the parametric definition of a circle: http://en.wikipedia.org/wiki/Circle#Cartesian_coordinates
-                int x = (int)Math.Round(radius + radius * Math.Cos(angle));
-                int y = (int)Math.Round(radius + radius * Math.Sin(angle));
+                var x = (int)Math.Round(radius + radius * Math.Cos(angle));
+                var y = (int)Math.Round(radius + radius * Math.Sin(angle));
 
                 data[y * outerRadius + x + 1] = Color.White;
             }
