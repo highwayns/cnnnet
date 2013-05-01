@@ -13,11 +13,11 @@ namespace CnnNetLib2
         private bool _isProcessing;
 
         private Neuron[] _neurons;
-        private Neuron[] _inputNeurons;
 
         public readonly int Width;
         public readonly int Height;
 
+        public Neuron[,] NeuronPositionMap;
         public double[,] NeuronDesirabilityMap;
         public double[,] NeuronUndesirabilityMap;
 
@@ -36,14 +36,6 @@ namespace CnnNetLib2
             get
             {
                 return _neurons;
-            }
-        }
-
-        public Neuron[] InputNeurons
-        {
-            get
-            {
-                return _inputNeurons;
             }
         }
 
@@ -87,16 +79,14 @@ namespace CnnNetLib2
 
         private void ProcessDetermineActiveNeurons()
         {
-            var activeInputNeuronIds = ActiveNeuronGenerator.GetActiveNeuronIds();
-
             foreach (var neuron in _neurons)
             {
                 neuron.IsActive = false;
             }
 
-            for (int i = 0; i < activeInputNeuronIds.Length; i++)
+            foreach (int activeNeuronId in ActiveNeuronGenerator.GetActiveNeuronIds())
             {
-                _neurons[activeInputNeuronIds[i]].IsActive = true;
+                _neurons[activeNeuronId].IsActive = true;
             }
         }
 
@@ -116,6 +106,7 @@ namespace CnnNetLib2
         {
             NeuronDesirabilityMap = new double[Height, Width];
             NeuronUndesirabilityMap = new double[Height, Width];
+            NeuronPositionMap = new Neuron[Height, Width];
 
             #region Generate Random Neurons
 
@@ -132,6 +123,7 @@ namespace CnnNetLib2
                 while (neurons.Any(n => n.PosX == neuron.PosX && n.PosY == neuron.PosY));
 
                 neurons.Add(neuron);
+                NeuronPositionMap[neuron.PosY, neuron.PosX] = neuron;
             }
 
             _neurons = neurons.ToArray();
@@ -151,15 +143,15 @@ namespace CnnNetLib2
                 while (inputNeurons.Any(inpNeuron => inpNeuron == neuron));
                 neuron.HasReachedFinalPosition = true;
                 inputNeurons.Add(neuron);
+                neuron.IsInputNeuron = true;
             }
-            _inputNeurons = inputNeurons.ToArray();
 
             #endregion
 
             ActiveNeuronGenerator =
                 new SequentialActiveInputNeuronGenerator
-                    (InputNeurons.Select(inpNeuron => inpNeuron.Id).ToArray(),
-                     Math.Min(InputNeurons.Length, 2));
+                    (inputNeurons.Select(neuron => neuron.Id).ToArray(),
+                     Math.Min(inputNeurons.Count, 2));
         }
 
         #endregion

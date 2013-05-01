@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace CnnNetLib2
@@ -12,6 +11,8 @@ namespace CnnNetLib2
         private readonly CnnNet _cnnNet;
 
         public bool IsActive;
+        public bool IsInputNeuron;
+
         public int PosX;
         public int PosY;
         public bool HasReachedFinalPosition;
@@ -53,7 +54,7 @@ namespace CnnNetLib2
                 #region Neuron searches for better position
 
                 if ((_cnnNet.InputNeuronsMoveToHigherDesirability
-                     || _cnnNet.InputNeurons.All(inpNeuron => inpNeuron != this))
+                     || IsInputNeuron == false)
                     &&
                     _movedDistance < _cnnNet.MaxNeuronMoveDistance)
                 {
@@ -160,34 +161,51 @@ namespace CnnNetLib2
 
         private void MoveTo(int newPosY, int newPosX)
         {
+            _cnnNet.NeuronPositionMap[PosY, PosX] = null;
+            _cnnNet.NeuronPositionMap[newPosY, newPosX] = this;
+
             PosX = newPosX;
             PosY = newPosY;
         }
 
+        /// <summary>
+        /// Remember to optimize this by using spiral matrix processing
+        /// http://pastebin.com/4EYJvv5X
+        /// </summary>
+        /// <param name="referenceY"></param>
+        /// <param name="referenceX"></param>
+        /// <returns></returns>
         private double GetDistanceToNearestNeuron(int referenceY, int referenceX)
         {
-            double distanceToNearestNeuron = _cnnNet.NeuronDesirabilityInfluenceRange + 1;
+            double minDistance = _cnnNet.NeuronDesirabilityInfluenceRange + 1;
 
             int xMin = Math.Max(referenceX - _cnnNet.MinDistanceBetweenNeurons, 0);
             int xMax = Math.Min(referenceX + _cnnNet.MinDistanceBetweenNeurons, _cnnNet.Width - 1);
             int yMin = Math.Max(referenceY - _cnnNet.MinDistanceBetweenNeurons, 0);
             int yMax = Math.Min(referenceY + _cnnNet.MinDistanceBetweenNeurons, _cnnNet.Height - 1);
 
-            var distances = _cnnNet.Neurons.Where(neuron =>
-                xMin <= neuron.PosX
-                && neuron.PosX <= xMax
-                && yMin <= neuron.PosY
-                && neuron.PosY <= yMax).
-                Select(neuron => Extensions.GetDistance(referenceX, referenceY, neuron.PosX, neuron.PosY)).ToArray();
+            for (int y = yMin; y <= yMax; y++)
+            {
+                for (int x = xMin; x < xMax; x++)
+                {
+                    if (_cnnNet.NeuronPositionMap[y, x] != null
+                        && _cnnNet.NeuronPositionMap[y, x] != this)
+                    {
+                        var distance = Extensions.GetDistance(referenceX, referenceY, x, y);
+                        if (minDistance > distance)
+                        {
+                            minDistance = distance;
+                        }
+                    }
+                }
+            }
 
-            return distances.Any()
-                       ? distances.Min()
-                       : distanceToNearestNeuron;
+            return minDistance;
         }
 
         private Neuron GetNeuronAt(int y, int x)
         {
-            return _cnnNet.Neurons.FirstOrDefault(neuron => neuron.PosX == x && neuron.PosY == y);
+            return _cnnNet.NeuronPositionMap[y, x];
         }
 
         private Neuron[] GetNeuronsWithinRange(int range)

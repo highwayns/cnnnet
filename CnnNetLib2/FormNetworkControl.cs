@@ -156,6 +156,7 @@ namespace CnnNetLib2
         private void OnButtonResetClick(object sender, EventArgs e)
         {
             _stepNumber = 1;
+            _numberOfPerformedSteps = 0;
             _cnnNet.GenerateNetwork();
         }
 
