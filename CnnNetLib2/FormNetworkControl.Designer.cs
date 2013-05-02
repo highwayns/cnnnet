@@ -447,6 +447,8 @@
             // dsNeuronUndesirabilityMap
             // 
             this.dsNeuronUndesirabilityMap.AutoSize = true;
+            this.dsNeuronUndesirabilityMap.Checked = true;
+            this.dsNeuronUndesirabilityMap.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dsNeuronUndesirabilityMap.Location = new System.Drawing.Point(6, 65);
             this.dsNeuronUndesirabilityMap.Name = "dsNeuronUndesirabilityMap";
             this.dsNeuronUndesirabilityMap.Size = new System.Drawing.Size(150, 17);
@@ -457,6 +459,8 @@
             // dsNeuronDesirabilityMap
             // 
             this.dsNeuronDesirabilityMap.AutoSize = true;
+            this.dsNeuronDesirabilityMap.Checked = true;
+            this.dsNeuronDesirabilityMap.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dsNeuronDesirabilityMap.Location = new System.Drawing.Point(6, 19);
             this.dsNeuronDesirabilityMap.Name = "dsNeuronDesirabilityMap";
             this.dsNeuronDesirabilityMap.Size = new System.Drawing.Size(138, 17);

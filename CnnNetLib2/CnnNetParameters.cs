@@ -72,7 +72,7 @@ namespace CnnNetLib2
         /// <summary>
         /// Maximum undesirability increase
         /// </summary>
-        public double NeuronUndesirabilityMaxInfluence = 0.05;
+        public double NeuronUndesirabilityMaxInfluence = 0.01;
 
         /// <summary>
         /// How much does undesirability decrease with each iteration

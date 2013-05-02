@@ -119,7 +119,7 @@ namespace CnnNet2
             var neuronDesirabilityMap = _cnnNet.NeuronDesirabilityMap ?? new double[0, 0];
             var neuronUndesirabilityMap = _cnnNet.NeuronUndesirabilityMap ?? new double[0, 0];
 
-            var tableNeurons = _cnnNet.Neurons ?? new Neuron[0];
+            var tableNeurons = _cnnNet.Neurons ?? new NeuronCompute[0];
 
             _backgroundData = Enumerable.Repeat<byte>(0, _background.Width * _background.Height * 4).ToArray();
 
@@ -167,15 +167,17 @@ namespace CnnNet2
             }
         }
 
-        private void UpdateNeurons(IEnumerable<Neuron> neurons)
+        private void UpdateNeurons(IEnumerable<NeuronBase> neurons)
         {
             Texture2D circle = CreateCircle(_cnnNet.NeuronDesirabilityInfluenceRange);
 
-            foreach (Neuron neuron in neurons)
+            foreach (NeuronBase neuron in neurons)
             {
+                var isInputNeuron = neuron is NeuronInput;
+
                 _spriteBatch.Draw(neuron.IsActive
-                                      ? neuron.IsInputNeuron ? _neuronInputActive : _neuronActive
-                                      : neuron.IsInputNeuron ? _neuronInputIdle : _neuronIdle,
+                                      ? isInputNeuron ? _neuronInputActive : _neuronActive
+                                      : isInputNeuron ? _neuronInputIdle : _neuronIdle,
                                   new Vector2(neuron.PosX, neuron.PosY), Color.White);
 
                 if (neuron.HasReachedFinalPosition
