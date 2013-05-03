@@ -37,12 +37,7 @@ namespace CnnNetLib2
         /// <summary>
         /// How many input neurons we should generate
         /// </summary>
-        public int InputNeuronCount = 10;
-
-        /// <summary>
-        /// Indicates if input neurons can move to higher desirability
-        /// </summary>
-        public bool InputNeuronsMoveToHigherDesirability = false;
+        public int InputNeuronCount = 1;
 
         /// <summary>
         /// What is the maximum distance that a neuron can move to higher desirability (should be NeuronHigherDesirabilitySearchPlainRange?)
@@ -72,17 +67,27 @@ namespace CnnNetLib2
         /// <summary>
         /// Maximum undesirability increase
         /// </summary>
-        public double NeuronUndesirabilityMaxInfluence = 0.01;
+        public double NeuronUndesirabilityMaxInfluence = 0.03;
 
         /// <summary>
         /// How much does undesirability decrease with each iteration
         /// </summary>
-        public double UndesirabilityDecayAmount = 0.005;
+        public double UndesirabilityDecayAmount = 0.03;
 
         /// <summary>
         /// After how many iterations of inactivity does the neuron increase 
         /// the undesirability with NeuronUndesirabilityMaxInfluence
         /// </summary>
         public int NeuronUndesirabilityMaxIterationsSinceLastActivation = 10;
+
+        /// <summary>
+        /// The range around a axon terminal searched for higher desirability
+        /// </summary>
+        public int AxonHigherUndesirabilitySearchPlainRange = 10;
+
+        /// <summary>
+        /// The minimum distance allowed between the current found waypoint and previous waypoints
+        /// </summary>
+        public int AxonMinDistanceToPreviousWaypoints = 7;
     }
 }

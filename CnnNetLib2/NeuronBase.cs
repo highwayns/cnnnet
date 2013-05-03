@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CnnNetLib2
 {
@@ -85,6 +83,12 @@ namespace CnnNetLib2
 
             _posX = newPosX;
             _posY = newPosY;
+
+            OnMoveTo(newPosY, newPosX);
+        }
+
+        protected virtual void OnMoveTo(int newPosY, int newPosX)
+        {
         }
 
         /// <summary>
@@ -190,7 +194,7 @@ namespace CnnNetLib2
 
                     var influenceByRange = Math.Max(influencedRange - distance, 0);
 
-                    map[y, x] = Math.Min(1, map[y, x] + influenceByRange / influencedRange * maxValue);
+                    map[y, x] = (float)Math.Min(1, map[y, x] + influenceByRange / influencedRange * maxValue);
                 }
             }
         }

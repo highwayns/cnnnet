@@ -18,10 +18,12 @@ namespace CnnNet2
         #region Fields
 
         private readonly FormNetworkControl _formNetworkControl;
-        
+
+#pragma warning disable 169
         private const int ColorIndexRed = 0;
         private const int ColorIndexGreen = 1;
         private const int ColorIndexBlue = 2;
+#pragma warning restore 169
 
         private const int Width = 800;
         private const int Height = 600;
@@ -31,9 +33,12 @@ namespace CnnNet2
 
         private Texture2D _neuronIdle;
         private Texture2D _neuronActive;
+
         private Texture2D _neuronInputIdle;
         private Texture2D _neuronInputActive;
+
         private Texture2D _background;
+        private Texture2D _blank;
 
         private byte[] _backgroundData;
         private readonly CnnNet _cnnNet;
@@ -173,7 +178,8 @@ namespace CnnNet2
 
             foreach (NeuronBase neuron in neurons)
             {
-                var isInputNeuron = neuron is NeuronInput;
+                var inputNeuron = neuron as NeuronInput;
+                var isInputNeuron = inputNeuron != null;
 
                 _spriteBatch.Draw(neuron.IsActive
                                       ? isInputNeuron ? _neuronInputActive : _neuronActive
@@ -184,8 +190,21 @@ namespace CnnNet2
                     && _formNetworkControl.dsDisplayNeuronDesirabilityRange.Checked)
                 {
                     _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronDesirabilityInfluenceRange, neuron.PosY - _cnnNet.NeuronDesirabilityInfluenceRange), Color.Red);
+                    
                 }
 
+                if (isInputNeuron)
+                {
+                    for (int i = 1; i < inputNeuron.AxonWaypoints.Count; i++)
+                    {
+                        var startPos = new Vector2(inputNeuron.AxonWaypoints[i - 1].Item2, inputNeuron.AxonWaypoints[i - 1].Item1);
+                        var endPos = new Vector2(inputNeuron.AxonWaypoints[i].Item2, inputNeuron.AxonWaypoints[i].Item1);
+
+                        _blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                        _blank.SetData(new[] { Color.White });
+                        DrawLine(_spriteBatch, _blank, 1, Color.White, startPos, endPos);
+                    }
+                }
             }
         }
 
@@ -216,6 +235,17 @@ namespace CnnNet2
             return texture;
         }
 
+        void DrawLine(SpriteBatch batch, Texture2D blank,
+              float width, Color color, Vector2 point1, Vector2 point2)
+        {
+            var angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            var length = Vector2.Distance(point1, point2);
+
+            batch.Draw(blank, point1, null, color,
+                       angle, Vector2.Zero, new Vector2(length, width),
+                       SpriteEffects.None, 0);
+        }
+
         #endregion
 
         #region Instance
@@ -230,11 +260,11 @@ namespace CnnNet2
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
+            _blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            _blank.SetData(new[] { Color.White });
 
             _formNetworkControl = new FormNetworkControl();
-
             _cnnNet = new CnnNet(Width, Height);
-
             _formNetworkControl.CnnNet = _cnnNet;
         }
 

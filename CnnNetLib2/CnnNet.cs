@@ -21,6 +21,7 @@ namespace CnnNetLib2
         public NeuronBase[,] NeuronPositionMap;
         public double[,] NeuronDesirabilityMap;
         public double[,] NeuronUndesirabilityMap;
+        private int _iteration;
 
         #endregion
 
@@ -38,6 +39,11 @@ namespace CnnNetLib2
             {
                 return _neurons;
             }
+        }
+
+        public int Iteration
+        {
+            get { return _iteration; }
         }
 
         #endregion
@@ -59,7 +65,7 @@ namespace CnnNetLib2
 
             #endregion
 
-            ProcessDecayDesirabilityAndUndesirability();
+            _iteration++;
 
             ProcessDetermineActiveNeurons();
 
@@ -67,6 +73,8 @@ namespace CnnNetLib2
             {
                 neuron.Process();
             }
+
+            ProcessDecayDesirabilityAndUndesirability();
 
             #region End
 
@@ -116,7 +124,7 @@ namespace CnnNetLib2
             {
                 var neuron = i < NeuronCount
                     ? (NeuronBase)(new NeuronCompute(i, this))
-                    : (NeuronBase)(new NeuronInput(i, this));
+                    : (new NeuronInput(i, this));
 
                 do
                 {
@@ -138,6 +146,7 @@ namespace CnnNetLib2
                 new SequentialActiveInputNeuronGenerator
                     (_neuronsInput.Select(neuron => neuron.Id).ToArray(),
                      Math.Min(_neuronsInput.Length, 2));
+            _iteration = 0;
         }
 
         #endregion

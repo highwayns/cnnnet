@@ -40,7 +40,6 @@
             this.buttonApplyParameters = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.npMaxNeuronMoveDistance = new System.Windows.Forms.NumericUpDown();
-            this.npInputNeuronsMoveToHigherDesirability = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.npInputNeuronCount = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
@@ -161,7 +160,6 @@
             this.groupBox1.Controls.Add(this.buttonApplyParameters);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.npMaxNeuronMoveDistance);
-            this.groupBox1.Controls.Add(this.npInputNeuronsMoveToHigherDesirability);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.npInputNeuronCount);
             this.groupBox1.Controls.Add(this.label8);
@@ -220,17 +218,6 @@
             0,
             0,
             0});
-            // 
-            // npInputNeuronsMoveToHigherDesirability
-            // 
-            this.npInputNeuronsMoveToHigherDesirability.AutoSize = true;
-            this.npInputNeuronsMoveToHigherDesirability.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.npInputNeuronsMoveToHigherDesirability.Location = new System.Drawing.Point(6, 201);
-            this.npInputNeuronsMoveToHigherDesirability.Name = "npInputNeuronsMoveToHigherDesirability";
-            this.npInputNeuronsMoveToHigherDesirability.Size = new System.Drawing.Size(226, 17);
-            this.npInputNeuronsMoveToHigherDesirability.TabIndex = 16;
-            this.npInputNeuronsMoveToHigherDesirability.Text = "Input Neurons Move To Higher Desirability";
-            this.npInputNeuronsMoveToHigherDesirability.UseVisualStyleBackColor = true;
             // 
             // label9
             // 
@@ -553,7 +540,6 @@
         private System.Windows.Forms.NumericUpDown npMinDistanceBetweenNeurons;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown npInputNeuronCount;
-        private System.Windows.Forms.CheckBox npInputNeuronsMoveToHigherDesirability;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown npMaxNeuronMoveDistance;
         private System.Windows.Forms.Button buttonApplyParameters;

@@ -40,7 +40,6 @@ namespace CnnNetLib2
 
                 npDesirabilityDecayAmount.Value = (decimal)_cnnNet.DesirabilityDecayAmount;
                 npInputNeuronCount.Value = _cnnNet.InputNeuronCount;
-                npInputNeuronsMoveToHigherDesirability.Checked = _cnnNet.InputNeuronsMoveToHigherDesirability;
                 npMaxNeuronInfluence.Value = (decimal)_cnnNet.NeuronDesirabilityMaxInfluence;
                 npMaxNeuronMoveDistance.Value = _cnnNet.MaxNeuronMoveDistance;
                 npMinDistanceBetweenNeurons.Value = _cnnNet.MinDistanceBetweenNeurons;
@@ -58,7 +57,6 @@ namespace CnnNetLib2
         {
             _cnnNet.DesirabilityDecayAmount = (double)npDesirabilityDecayAmount.Value;
             _cnnNet.InputNeuronCount = (int)npInputNeuronCount.Value;
-            _cnnNet.InputNeuronsMoveToHigherDesirability = npInputNeuronsMoveToHigherDesirability.Checked;
             _cnnNet.NeuronDesirabilityMaxInfluence = (double)npMaxNeuronInfluence.Value;
             _cnnNet.MaxNeuronMoveDistance = (int)npMaxNeuronMoveDistance.Value;
             _cnnNet.MinDistanceBetweenNeurons = (int)npMinDistanceBetweenNeurons.Value;

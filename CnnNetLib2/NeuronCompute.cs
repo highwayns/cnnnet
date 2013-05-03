@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CnnNetLib2
+﻿namespace CnnNetLib2
 {
     public class NeuronCompute : NeuronBase
     {
-        
-
         #region Methods
 
         public override void Process()
