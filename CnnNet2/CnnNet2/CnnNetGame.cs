@@ -154,6 +154,14 @@ namespace CnnNet2
 
             #endregion
 
+            var mouseState = Mouse.GetState();
+
+            _spriteBatch.Draw(_neuronIdle, 
+                new Vector2(mouseState.X - _neuronIdle.Width / 2, mouseState.Y - _neuronIdle.Height / 2),
+                Color.White);
+
+            _formNetworkControl.Text = string.Format("X = {0} Y = {1}", mouseState.X, mouseState.Y);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -181,16 +189,18 @@ namespace CnnNet2
                 var inputNeuron = neuron as NeuronInput;
                 var isInputNeuron = inputNeuron != null;
 
-                _spriteBatch.Draw(neuron.IsActive
+                var neuronTexture = neuron.IsActive
                                       ? isInputNeuron ? _neuronInputActive : _neuronActive
-                                      : isInputNeuron ? _neuronInputIdle : _neuronIdle,
-                                  new Vector2(neuron.PosX, neuron.PosY), Color.White);
+                                      : isInputNeuron ? _neuronInputIdle : _neuronIdle;
+
+                _spriteBatch.Draw(neuronTexture, new Vector2
+                    (neuron.PosX - neuronTexture.Width / 2,
+                    neuron.PosY - neuronTexture.Height / 2), Color.White);
 
                 if (neuron.HasReachedFinalPosition
                     && _formNetworkControl.dsDisplayNeuronDesirabilityRange.Checked)
                 {
                     _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronDesirabilityInfluenceRange, neuron.PosY - _cnnNet.NeuronDesirabilityInfluenceRange), Color.Red);
-                    
                 }
 
                 if (isInputNeuron)
@@ -204,6 +214,12 @@ namespace CnnNet2
                         _blank.SetData(new[] { Color.White });
                         DrawLine(_spriteBatch, _blank, 1, Color.White, startPos, endPos);
                     }
+
+                    var axonLastWayPoint = inputNeuron.AxonWaypoints.LastOrDefault();
+
+                    var axonLastWaypointCircle = CreateCircle(_cnnNet.AxonHigherUndesirabilitySearchPlainRange);
+
+                    _spriteBatch.Draw(axonLastWaypointCircle, new Vector2(axonLastWayPoint.Item2 - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, axonLastWayPoint.Item1 - _cnnNet.AxonHigherUndesirabilitySearchPlainRange), Color.Red);
                 }
             }
         }

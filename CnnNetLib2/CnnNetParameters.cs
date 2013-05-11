@@ -48,7 +48,7 @@ namespace CnnNetLib2
         /// <summary>
         /// After how many iterations of neuron stagnation (nouron does not move to new position) HasReachedFinalPosition is set automatically to true
         /// </summary>
-        public int NeuronIterationCountBeforeFinalPosition = 5;
+        public int NeuronIterationCountBeforeFinalPosition = 10;
 
         /// <summary>
         /// The range of the neuron dendric tree
@@ -72,22 +72,22 @@ namespace CnnNetLib2
         /// <summary>
         /// How much does undesirability decrease with each iteration
         /// </summary>
-        public double UndesirabilityDecayAmount = 0.03;
+        public double UndesirabilityDecayAmount = 0.05;
 
         /// <summary>
         /// After how many iterations of inactivity does the neuron increase 
         /// the undesirability with NeuronUndesirabilityMaxInfluence
         /// </summary>
-        public int NeuronUndesirabilityMaxIterationsSinceLastActivation = 10;
+        public int NeuronUndesirabilityMaxIterationsSinceLastActivation = 20;
 
         /// <summary>
         /// The range around a axon terminal searched for higher desirability
         /// </summary>
-        public int AxonHigherUndesirabilitySearchPlainRange = 10;
+        public int AxonHigherUndesirabilitySearchPlainRange = 20;
 
         /// <summary>
         /// The minimum distance allowed between the current found waypoint and previous waypoints
         /// </summary>
-        public int AxonMinDistanceToPreviousWaypoints = 7;
+        public int AxonMinDistanceToPreviousWaypoints = 1;
     }
 }

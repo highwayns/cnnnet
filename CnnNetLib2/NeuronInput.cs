@@ -47,22 +47,25 @@ namespace CnnNetLib2
 
         private bool ProcessGuideAxon()
         {
-            int minCoordX = Math.Max(PosX - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
-            int maxCoordX = Math.Min(PosX + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Width - 1);
-
-            int minCoordY = Math.Max(PosY - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
-            int maxCoordY = Math.Min(PosY + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Height - 1);
-
             int lastPosX = AxonWaypoints.Last().Item2;
             int lastPosY = AxonWaypoints.Last().Item1;
 
             int maxUndesirabX = lastPosX;
             int maxUndesirabY = lastPosY;
+
+            int minCoordX = Math.Max(maxUndesirabX - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
+            int maxCoordX = Math.Min(maxUndesirabX + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Width - 1);
+
+            int minCoordY = Math.Max(maxUndesirabY - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
+            int maxCoordY = Math.Min(maxUndesirabY + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Height - 1);
+            
             double maxUndesirability = _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX];
             Trace.WriteLine(maxUndesirability);
 
             bool axonMoved = false;
-            bool undesirabilityFound = false;
+
+            var record = false;
+            var recordList = new List<double>();
 
             for (int y = minCoordY; y < maxCoordY; y++)
             {
@@ -73,19 +76,24 @@ namespace CnnNetLib2
                         continue;
                     }
 
-                    undesirabilityFound = true;
-
+                    var distance = 0.0d;
                     if ((x == PosX && y == PosY)
                         || (x == maxUndesirabX && y == maxUndesirabY)
-                        || (x == lastPosX && y == lastPosY))
+                        || (x == lastPosX && y == lastPosY)
+                        || GetNeuronAt(y, x) != null
+                        || (distance = Extensions.GetDistance(lastPosX, lastPosY, x, y)) > _cnnNet.AxonHigherUndesirabilitySearchPlainRange /* this ensures that we only check within the range */)
                     {
                         continue;
                     }
 
-                    if (_cnnNet.NeuronUndesirabilityMap[y, x] > maxUndesirability
-                        && GetNeuronAt(y, x) == null
-                        && Extensions.GetDistance(lastPosX, lastPosY, x, y) <= _cnnNet.AxonHigherUndesirabilitySearchPlainRange /* this ensures that we only check within the range */
-                        && DistanceFromPreviousWaypoints(y, x) > _cnnNet.AxonMinDistanceToPreviousWaypoints)
+                    if (record)
+                    {
+                        recordList.Add(_cnnNet.NeuronUndesirabilityMap[y, x]);
+                    }
+                    
+                    if (//_cnnNet.NeuronUndesirabilityMap[y, x] > maxUndesirability
+                        _cnnNet.NeuronUndesirabilityMap[y, x] > _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX]
+                        && DistanceFromPreviousWaypoints(y, x) >= _cnnNet.AxonMinDistanceToPreviousWaypoints)
                     {
                         axonMoved = true;
                         maxUndesirabX = x;
@@ -93,11 +101,6 @@ namespace CnnNetLib2
                         maxUndesirability = _cnnNet.NeuronUndesirabilityMap[y, x];
                     }
                 }
-            }
-
-            if (undesirabilityFound == false)
-            {
-                return false;
             }
 
             if (axonMoved)
