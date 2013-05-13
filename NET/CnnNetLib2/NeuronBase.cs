@@ -13,6 +13,8 @@ namespace CnnNetLib2
         protected int _posX;
         protected int _posY;
         protected bool _hasReachedFinalPosition;
+        protected int _axonLastCoordX;
+        protected int _axonLastCoordY;
 
         protected double _movedDistance;
         protected int _neuronIterationsLeftBeforeFinalPosition;
@@ -166,7 +168,8 @@ namespace CnnNetLib2
         protected void AddDesirability()
         {
             AddProportionalRangedValue
-                (_cnnNet.NeuronDesirabilityMap, _cnnNet.Width, _cnnNet.Height,
+                (_axonLastCoordX, _axonLastCoordY,
+                _cnnNet.NeuronDesirabilityMap, _cnnNet.Width, _cnnNet.Height,
                 _cnnNet.NeuronDesirabilityInfluenceRange,
                 _cnnNet.NeuronDesirabilityMaxInfluence);
         }
@@ -174,23 +177,23 @@ namespace CnnNetLib2
         protected void AddUndesirability()
         {
             AddProportionalRangedValue
-                (_cnnNet.NeuronUndesirabilityMap, _cnnNet.Width, _cnnNet.Height,
+                (PosX, PosY, _cnnNet.NeuronUndesirabilityMap, _cnnNet.Width, _cnnNet.Height,
                 _cnnNet.NeuronUndesirabilityInfluenceRange,
                 _cnnNet.NeuronUndesirabilityMaxInfluence * Math.Max(1, _iterationsSinceLastActivation / _cnnNet.NeuronUndesirabilityMaxIterationsSinceLastActivation));
         }
 
-        protected void AddProportionalRangedValue(double[,] map, int width, int height, int influencedRange, double maxValue)
+        protected void AddProportionalRangedValue(int coordX, int coordY, double[,] map, int width, int height, int influencedRange, double maxValue)
         {
-            int xMin = Math.Max(PosX - influencedRange, 0);
-            int xMax = Math.Min(PosX + influencedRange, width);
-            int yMin = Math.Max(PosY - influencedRange, 0);
-            int yMax = Math.Min(PosY + influencedRange, height);
+            int xMin = Math.Max(coordX - influencedRange, 0);
+            int xMax = Math.Min(coordX + influencedRange, width);
+            int yMin = Math.Max(coordY - influencedRange, 0);
+            int yMax = Math.Min(coordY + influencedRange, height);
 
             for (int y = yMin; y < yMax; y++)
             {
                 for (int x = xMin; x < xMax; x++)
                 {
-                    var distance = Extensions.GetDistance(PosX, PosY, x, y);
+                    var distance = Extensions.GetDistance(coordX, coordY, x, y);
 
                     var influenceByRange = Math.Max(influencedRange - distance, 0);
 

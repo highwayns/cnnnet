@@ -38,10 +38,14 @@ namespace CnnNetLib2
             else
             {
                 // navigate axon to higher undesirability
-                //_axonFinalPositionReached = ProcessGuideAxon() == false
-                //                            && AxonWaypoints.Count > 0;
+                _axonFinalPositionReached = ProcessGuideAxon() == false
+                                            && AxonWaypoints.Count > 1;
 
-                ProcessGuideAxon();
+                if (_axonFinalPositionReached)
+                {
+                    _axonLastCoordX = AxonWaypoints.Last().Item2;
+                    _axonLastCoordY = AxonWaypoints.Last().Item1;
+                }
             }
         }
 
@@ -49,6 +53,12 @@ namespace CnnNetLib2
         {
             int lastPosX = AxonWaypoints.Last().Item2;
             int lastPosY = AxonWaypoints.Last().Item1;
+
+            int minCoordX = Math.Max(lastPosX - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
+            int maxCoordX = Math.Min(lastPosX + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Width - 1);
+
+            int minCoordY = Math.Max(lastPosY - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
+            int maxCoordY = Math.Min(lastPosY + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Height - 1);
 
             int maxUndesirabX = lastPosX;
             int maxUndesirabY = lastPosY;
