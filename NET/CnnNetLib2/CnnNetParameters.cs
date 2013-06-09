@@ -89,5 +89,11 @@ namespace CnnNetLib2
         /// The minimum distance allowed between the current found waypoint and previous waypoints
         /// </summary>
         public int AxonMinDistanceToPreviousWaypoints = 1;
+
+        public int AxonGuidanceFrequency = 1;
+
+        public int DesirabilityFrequency = 4;
+
+        public int UndesirabilityFrequency = 4;
     }
 }
