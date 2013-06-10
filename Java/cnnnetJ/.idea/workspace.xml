@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="894c8014-c416-4ef2-aa00-d57bd54864bd" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/slick_util.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Network.java" afterPath="$PROJECT_DIR$/src/Network.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NetworkDrawer.java" afterPath="$PROJECT_DIR$/src/NetworkDrawer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NeuronBase.java" afterPath="$PROJECT_DIR$/src/NeuronBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NeuronCompute.java" afterPath="$PROJECT_DIR$/src/NeuronCompute.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NeuronInput.java" afterPath="$PROJECT_DIR$/src/NeuronInput.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cnnnetJ.iml" afterPath="$PROJECT_DIR$/cnnnetJ.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+    <list default="true" id="894c8014-c416-4ef2-aa00-d57bd54864bd" name="Default" comment="Fixed build.&#10;Started neuron rendering.">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/ibxm.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/jogg-0.0.7.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/jorbis-0.0.15.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/lwjgl.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/lwjgl_util.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/lwjgl_util_applet.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/slick-util.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cnnnetJ.iws" />
@@ -25,7 +23,7 @@
     <file path="/NeuronInput.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370816580147" ignored="false" />
     <file path="/NeuronCompute.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370805795557" ignored="false" />
     <file path="/NetworkParameters.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370806905872" ignored="false" />
-    <file path="/Dummy.txt" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370898023401" ignored="false" />
+    <file path="/Dummy.txt" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370898131112" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -415,11 +413,16 @@
       <created>1370782653196</created>
       <updated>1370782653196</updated>
     </task>
+    <task id="LOCAL-00001" summary="Fixed build.&#10;Started neuron rendering.">
+      <created>1370898071018</created>
+      <updated>1370898071018</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
