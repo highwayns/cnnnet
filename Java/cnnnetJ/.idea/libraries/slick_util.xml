@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="slick-util">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/slick-util/ibxm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slick-util/jogg-0.0.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slick-util/jorbis-0.0.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slick-util/slick-util.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

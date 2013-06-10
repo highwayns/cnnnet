@@ -8,6 +8,7 @@ public class Main {
     private final int _width = 800;
     private final int _height = 600;
 
+    private NetworkParameters _networkParameters;
     private Network _network;
     private NetworkDrawer _networkDrawer;
 
@@ -62,7 +63,11 @@ public class Main {
     //region Instance
 
     public Main() {
-        _network = new Network(_width, _height);
+        _networkParameters = new NetworkParameters();
+        _networkParameters.Width = _width;
+        _networkParameters.Height = _height;
+
+        _network = new Network(_networkParameters);
         _networkDrawer = new NetworkDrawer(_network);
     }
 
