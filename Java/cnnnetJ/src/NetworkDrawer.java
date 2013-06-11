@@ -71,34 +71,34 @@ public class NetworkDrawer {
     }
 
     public void Update() {
+
+        int textureWidth, textureHeight, posX, posY;
+
         for (Iterator<NeuronBase> iterator = this._neurons.iterator(); iterator.hasNext(); ) {
             NeuronBase currentNeuron = iterator.next();
-
-            int posX = currentNeuron.get_posX();
-            int posY = currentNeuron.get_posY();
-
-            //Texture texture = _neuronIdle;
-            //Texture texture = _neuronActive;
-            //Texture texture = _neuronInputActive;
-            //Texture texture = _neuronInputIdle;
 
             Texture texture = currentNeuron instanceof  NeuronInput
                     ? _neuronInputIdle
                     : _neuronIdle;
 
+            textureWidth = texture.getTextureWidth();
+            textureHeight = texture.getTextureHeight();
+
+            posX = currentNeuron.get_posX() - textureWidth / 2;
+            posY = currentNeuron.get_posY() - textureHeight / 2;
+
             Color.white.bind();
-            texture.bind(); // or GL11.glBind(texture.getTextureID());
+            texture.bind();
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(posX, posY);
             GL11.glTexCoord2f(1, 0);
-            GL11.glVertex2f(posX + texture.getTextureWidth(), posY);
+            GL11.glVertex2f(posX + textureWidth, posY);
             GL11.glTexCoord2f(1, 1);
-            GL11.glVertex2f(posX + texture.getTextureWidth(), posY + texture.getTextureHeight());
+            GL11.glVertex2f(posX + textureWidth, posY + textureHeight);
             GL11.glTexCoord2f(0, 1);
-            GL11.glVertex2f(posX, posY + texture.getTextureHeight());
+            GL11.glVertex2f(posX, posY + textureHeight);
             GL11.glEnd();
-
         }
     }
 

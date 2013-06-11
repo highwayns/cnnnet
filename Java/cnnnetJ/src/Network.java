@@ -8,6 +8,9 @@ public class Network {
 
     private NeuronBase[][] _neuronPositionMap;
     private ArrayList<NeuronBase> _neurons;
+    private ArrayList<NeuronInput> _neuronsInput;
+
+    private IActiveNeuronGenerator _activeNeuronGenerator;
 
     private Random _random;
 
@@ -35,6 +38,7 @@ public class Network {
     {
         _neuronPositionMap = new NeuronBase[_networkParameters.Height][_networkParameters.Width];
         _neurons = new ArrayList<NeuronBase>();
+        _neuronsInput = new ArrayList<NeuronInput>();
 
         for (int i = 0; i < _networkParameters.NeuronCount + _networkParameters.NeuronInputCount; i++)
         {
@@ -58,8 +62,16 @@ public class Network {
             while (continueLoop);
 
             _neurons.add(neuron);
+            if(neuron instanceof NeuronInput) {
+                _neuronsInput.add((NeuronInput)neuron);
+            }
+
             _neuronPositionMap[neuron.get_posY()][neuron.get_posX()] = neuron;
         }
+
+        _activeNeuronGenerator =
+                new SequentialActiveInputNeuronGenerator
+                        (_neuronsInput.toArray(new NeuronInput[_neuronsInput.size()]), _neuronsInput.size() < 2 ? 2 : _neuronsInput.size());
     }
 
     public void Start()
