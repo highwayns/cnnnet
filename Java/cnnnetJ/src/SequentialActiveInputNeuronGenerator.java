@@ -16,7 +16,7 @@ public class SequentialActiveInputNeuronGenerator implements IActiveNeuronGenera
 
     //region Methods
     @Override
-    public NeuronInput[] GetActiveNeuronIds() {
+    public NeuronInput[] GetActiveNeurons() {
         NeuronInput[] ret = new NeuronInput[_activeNeuronCount];
 
         for (int i = 0; i < _activeNeuronCount; i++) {

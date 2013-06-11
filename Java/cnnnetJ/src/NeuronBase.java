@@ -8,6 +8,8 @@ public abstract class NeuronBase
 
     private int _posX;
     private int _posY;
+
+    private boolean _isActive;
     //endregion
 
     public int get_posX()
@@ -20,6 +22,14 @@ public abstract class NeuronBase
         return _posY;
     }
 
+    public boolean is_isActive() {
+        return _isActive;
+    }
+
+    public void set_isActive(boolean _isActive) {
+        this._isActive = _isActive;
+    }
+
     public void MoveTo(int newPosY, int newPosX)
     {
         _neuronPositionMap[_posY][_posX] = null;
@@ -27,6 +37,10 @@ public abstract class NeuronBase
 
         _posX = newPosX;
         _posY = newPosY;
+    }
+
+    public void Process() {
+
     }
 
     //region Instance
@@ -37,5 +51,6 @@ public abstract class NeuronBase
 
         _neuronPositionMap = _network.get_neuronPositionMap();
     }
+
     //endregion
 }

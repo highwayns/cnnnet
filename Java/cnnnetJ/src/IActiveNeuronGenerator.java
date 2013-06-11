@@ -1,4 +1,4 @@
 
 public interface IActiveNeuronGenerator {
-    NeuronInput[] GetActiveNeuronIds();
+    NeuronInput[] GetActiveNeurons();
 }

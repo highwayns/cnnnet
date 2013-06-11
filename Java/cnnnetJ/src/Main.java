@@ -21,14 +21,16 @@ public class Main {
     public void Start() throws IOException {
 
         _network.GenerateNetwork();
-        _network.Start();
         _networkDrawer.Init();
 
         // init OpenGL here
         while (!Display.isCloseRequested()) {
             // Clear the screen and depth buffer
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+            _network.Process();
             _networkDrawer.Update();
+
             Display.update();
         }
 
