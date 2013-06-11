@@ -1,6 +1,8 @@
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 
+import java.io.IOException;
+
 public class Main {
 
     //region Fields
@@ -16,23 +18,11 @@ public class Main {
 
     //region Methods
 
-    public void Start() {
+    public void Start() throws IOException {
 
         _network.GenerateNetwork();
         _network.Start();
-
-        try {
-            Display.setDisplayMode(new DisplayMode(_width, _height));
-            Display.create();
-        } catch (LWJGLException e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, 800, 0, 600, 1, -1);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        _networkDrawer.Init();
 
         // init OpenGL here
         while (!Display.isCloseRequested()) {
@@ -49,7 +39,7 @@ public class Main {
 
     //region Entry Point
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("Start");
 
         Main main = new Main();
@@ -68,7 +58,12 @@ public class Main {
         _networkParameters.Height = _height;
 
         _network = new Network(_networkParameters);
-        _networkDrawer = new NetworkDrawer(_network);
+
+        try {
+            _networkDrawer = new NetworkDrawer(_network);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //endregion

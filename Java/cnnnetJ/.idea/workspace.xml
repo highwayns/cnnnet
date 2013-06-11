@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="894c8014-c416-4ef2-aa00-d57bd54864bd" name="Default" comment="Fixed build.&#10;Started neuron rendering.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/ibxm.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/jogg-0.0.7.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/jorbis-0.0.15.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/lwjgl.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/lwjgl_util.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/lwjgl_util_applet.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slick-util/slick-util.jar" />
+    <list default="true" id="894c8014-c416-4ef2-aa00-d57bd54864bd" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/neuronActive.png" afterPath="$PROJECT_DIR$/res/neuronActive.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/neuronIdle.png" afterPath="$PROJECT_DIR$/res/neuronIdle.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/neuronInputActive.png" afterPath="$PROJECT_DIR$/res/neuronInputActive.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/neuronInputIdle.png" afterPath="$PROJECT_DIR$/res/neuronInputIdle.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Network.java" afterPath="$PROJECT_DIR$/src/Network.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NetworkDrawer.java" afterPath="$PROJECT_DIR$/src/NetworkDrawer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NeuronBase.java" afterPath="$PROJECT_DIR$/src/NeuronBase.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cnnnetJ.iws" />
@@ -16,14 +17,14 @@
     <file path="/main.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370806194489" ignored="false" />
     <file path="/fragment.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370783082230" ignored="false" />
     <file path="/DrawingUtility.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370805086211" ignored="false" />
-    <file path="/NetworkDrawer.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370897950275" ignored="false" />
-    <file path="/Main.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370813981676" ignored="false" />
+    <file path="/NetworkDrawer.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370978082179" ignored="false" />
+    <file path="/Main.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370976105712" ignored="false" />
     <file path="/Network.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370897830954" ignored="false" />
-    <file path="/NeuronBase.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370893383210" ignored="false" />
+    <file path="/NeuronBase.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370976982390" ignored="false" />
     <file path="/NeuronInput.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370816580147" ignored="false" />
     <file path="/NeuronCompute.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370805795557" ignored="false" />
     <file path="/NetworkParameters.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370806905872" ignored="false" />
-    <file path="/Dummy.txt" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370898131112" ignored="false" />
+    <file path="/Dummy.txt" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370975790768" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +39,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -74,7 +76,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -87,7 +88,7 @@
       <file leaf-file-name="NetworkDrawer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/NetworkDrawer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="0" selection-start="439" selection-end="439" vertical-scroll-proportion="0.64748204">
+            <state line="89" column="40" selection-start="3021" selection-end="3021" vertical-scroll-proportion="0.5901387">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -95,10 +96,37 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="NetworkParameters.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NetworkParameters.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="32" selection-start="125" selection-end="125" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="0" selection-start="401" selection-end="401" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Network.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Network.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="39" selection-start="524" selection-end="535" vertical-scroll-proportion="0.0">
+            <state line="47" column="0" selection-start="1126" selection-end="1126" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NeuronBase.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NeuronBase.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="47" selection-start="405" selection-end="405" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -124,12 +152,12 @@
       <list>
         <option value="$PROJECT_DIR$/src/main.java" />
         <option value="$PROJECT_DIR$/src/DrawingUtility.java" />
-        <option value="$PROJECT_DIR$/src/NetworkParameters.java" />
-        <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/NeuronCompute.java" />
         <option value="$PROJECT_DIR$/src/NeuronInput.java" />
-        <option value="$PROJECT_DIR$/src/NeuronBase.java" />
+        <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/Network.java" />
+        <option value="$PROJECT_DIR$/src/NeuronBase.java" />
+        <option value="$PROJECT_DIR$/src/NetworkParameters.java" />
         <option value="$PROJECT_DIR$/src/NetworkDrawer.java" />
       </list>
     </option>
@@ -197,8 +225,8 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -254,7 +282,7 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
+    <property name="options.lastSelected" value="appearance" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
@@ -417,12 +445,16 @@
       <created>1370898071018</created>
       <updated>1370898071018</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added slick-util library">
+      <created>1370898214026</created>
+      <updated>1370898214026</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -432,13 +464,13 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32949308" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32949308" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1891065" sideWeight="0.6705069" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22235022" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1891065" sideWeight="0.77764976" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22235022" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -488,7 +520,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed build.&#10;Started neuron rendering." />
+    <option name="LAST_COMMIT_MESSAGE" value="added slick-util library" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -503,6 +535,7 @@
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="Fixed build.&#10;Started neuron rendering." />
+    <MESSAGE value="added slick-util library" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -512,20 +545,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Network.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="53" selection-start="718" selection-end="718" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/NeuronBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/NeuronCompute.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="42" selection-start="43" selection-end="43" vertical-scroll-proportion="0.0">
@@ -547,23 +566,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lwjgl-2.9.0/jar/lwjgl.jar!/org/lwjgl/opengl/GL11.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="23" selection-start="165" selection-end="169" vertical-scroll-proportion="0.16409266" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/neuronActive.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/NetworkParameters.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="27" selection-start="61" selection-end="61" vertical-scroll-proportion="0.092449926">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/NeuronInput.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="3" column="10" selection-start="57" selection-end="57" vertical-scroll-proportion="0.07125891">
@@ -578,13 +580,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/NeuronBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="22" selection-start="218" selection-end="218" vertical-scroll-proportion="0.27734977">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/DrawingUtility.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="12" selection-start="150" selection-end="156" vertical-scroll-proportion="0.18489985">
@@ -595,30 +590,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.java">
+    <entry file="jar://$PROJECT_DIR$/slick-util/slick-util.jar!/org/newdawn/slick/opengl/TextureLoader.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="20" selection-start="409" selection-end="409" vertical-scroll-proportion="0.53775036">
+        <state line="9" column="51" selection-start="286" selection-end="286" vertical-scroll-proportion="0.2618658" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lwjgl-2.9.0/jar/lwjgl.jar!/org/lwjgl/opengl/GL11.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1288" column="0" selection-start="60098" selection-end="60098" vertical-scroll-proportion="0.34697217" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lwjgl-2.9.0/jar/lwjgl.jar!/org/lwjgl/opengl/GLContext.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="0" selection-start="2889" selection-end="2889" vertical-scroll-proportion="0.90422887">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/slick-util/slick-util.jar!/org/newdawn/slick/opengl/TextureLoader.class">
+    <entry file="file://$PROJECT_DIR$/res/neuronIdle.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/neuronActive.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="51" selection-start="286" selection-end="286" vertical-scroll-proportion="0.2618658">
+        <state line="22" column="0" selection-start="401" selection-end="401" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Network.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="39" selection-start="524" selection-end="535" vertical-scroll-proportion="0.0">
+        <state line="47" column="0" selection-start="1126" selection-end="1126" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NeuronBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="47" selection-start="405" selection-end="405" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NetworkParameters.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="32" selection-start="125" selection-end="125" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/NetworkDrawer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="0" selection-start="439" selection-end="439" vertical-scroll-proportion="0.64748204">
+        <state line="89" column="40" selection-start="3021" selection-end="3021" vertical-scroll-proportion="0.5901387">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

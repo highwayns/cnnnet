@@ -33,7 +33,7 @@ public class Network {
 
     public void GenerateNetwork()
     {
-        _neuronPositionMap = new NeuronBase[_networkParameters.Width][_networkParameters.Height];
+        _neuronPositionMap = new NeuronBase[_networkParameters.Height][_networkParameters.Width];
         _neurons = new ArrayList<NeuronBase>();
 
         for (int i = 0; i < _networkParameters.NeuronCount + _networkParameters.NeuronInputCount; i++)

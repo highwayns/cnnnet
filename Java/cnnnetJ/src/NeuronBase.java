@@ -20,9 +20,9 @@ public abstract class NeuronBase
         return _posY;
     }
 
-    public void MoveTo(int newPosX, int newPosY)
+    public void MoveTo(int newPosY, int newPosX)
     {
-        _neuronPositionMap[_posX][_posY] = null;
+        _neuronPositionMap[_posY][_posX] = null;
         _neuronPositionMap[newPosY][newPosX] = this;
 
         _posX = newPosX;
