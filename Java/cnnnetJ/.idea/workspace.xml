@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="894c8014-c416-4ef2-aa00-d57bd54864bd" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/IActiveNeuronGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/SequentialActiveInputNeuronGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Network.java" afterPath="$PROJECT_DIR$/src/Network.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NetworkDrawer.java" afterPath="$PROJECT_DIR$/src/NetworkDrawer.java" />
+    <list default="true" id="894c8014-c416-4ef2-aa00-d57bd54864bd" name="Default" comment="work in progress @ input neuron activation">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cnnnetJ.iws" />
@@ -20,7 +16,7 @@
     <file path="/NeuronInput.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370816580147" ignored="false" />
     <file path="/NeuronCompute.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370805795557" ignored="false" />
     <file path="/NetworkParameters.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370806905872" ignored="false" />
-    <file path="/Dummy.txt" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370978181624" ignored="false" />
+    <file path="/Dummy.txt" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370980471447" ignored="false" />
     <file path="/SequentialActiveInputNeuronGenerator.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370980108957" ignored="false" />
     <file path="/IActiveNeuronGenerator.java" changelist="894c8014-c416-4ef2-aa00-d57bd54864bd" time="1370980161260" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -216,34 +212,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cnnnetJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cnnnetJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cnnnetJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cnnnetJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -425,7 +393,11 @@
       <created>1370978189199</created>
       <updated>1370978189200</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="work in progress @ input neuron activation">
+      <created>1370980423994</created>
+      <updated>1370980423994</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -450,7 +422,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -465,7 +437,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1891065" sideWeight="0.77764976" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1891065" sideWeight="0.77764976" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22235022" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -516,7 +488,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented generate network" />
+    <option name="LAST_COMMIT_MESSAGE" value="work in progress @ input neuron activation" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -533,6 +505,7 @@
     <MESSAGE value="Fixed build.&#10;Started neuron rendering." />
     <MESSAGE value="added slick-util library" />
     <MESSAGE value="implemented generate network" />
+    <MESSAGE value="work in progress @ input neuron activation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
