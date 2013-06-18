@@ -36,6 +36,10 @@ public class Network {
         return this._neurons;
     }
 
+    public double[][] get_neuronDesirabilityMap(){
+        return _neuronDesirabilityMap;
+    }
+
     //endregion
 
     public void GenerateNetwork()

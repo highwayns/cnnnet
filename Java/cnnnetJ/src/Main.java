@@ -29,6 +29,7 @@ public class Main {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
             _network.Process();
+
             _networkDrawer.Update();
 
             Display.update();
