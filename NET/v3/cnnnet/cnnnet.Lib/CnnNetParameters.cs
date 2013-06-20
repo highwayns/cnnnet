@@ -12,7 +12,7 @@ namespace cnnnet.Lib
         /// <summary>
         /// Desirability influence distance
         /// </summary>
-        public int NeuronDesirabilityInfluenceRange = 80;
+        public int NeuronDesirabilityInfluenceRange = 40;
 
         /// <summary>
         /// Maximum desirability increase
@@ -44,11 +44,6 @@ namespace cnnnet.Lib
         /// When this distance is reached the neuron automatically sets HasReachedFinalPosition = true
         /// </summary>
         public int MaxNeuronMoveDistance = 50;
-
-        /// <summary>
-        /// After how many iterations of neuron stagnation (nouron does not move to new position) HasReachedFinalPosition is set automatically to true
-        /// </summary>
-        public int NeuronIterationCountBeforeFinalPosition = 10;
 
         /// <summary>
         /// The range of the neuron dendric tree

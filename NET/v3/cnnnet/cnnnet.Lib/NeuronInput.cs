@@ -9,8 +9,6 @@ namespace cnnnet.Lib
     {
         #region Fields
 
-        private bool _axonFinalPositionReached;
-
         /// <summary>
         /// Y = Item1
         /// X = Item2
@@ -28,7 +26,7 @@ namespace cnnnet.Lib
 
         public override void Process()
         {
-            if (_axonFinalPositionReached)
+            if (HasAxonReachedFinalPosition)
             {
                 if (IsActive)
                 {
@@ -38,10 +36,10 @@ namespace cnnnet.Lib
             else
             {
                 // navigate axon to higher undesirability
-                _axonFinalPositionReached = ProcessGuideAxon() == false
+                HasAxonReachedFinalPosition = ProcessGuideAxon() == false
                                             && AxonWaypoints.Count > 1;
 
-                if (_axonFinalPositionReached)
+                if (HasAxonReachedFinalPosition)
                 {
                     _axonLastCoordX = AxonWaypoints.Last().Item2;
                     _axonLastCoordY = AxonWaypoints.Last().Item1;
@@ -145,7 +143,7 @@ namespace cnnnet.Lib
         public NeuronInput(int id, CnnNet cnnNet)
             : base(id, cnnNet)
         {
-            _hasReachedFinalPosition = true;
+            HasSomaReachedFinalPosition = true;
             AxonWaypoints = new List<Tuple<int, int>>
             {
                 new Tuple<int, int>(PosY, PosX)

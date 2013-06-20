@@ -6,27 +6,9 @@
 
         public override void Process()
         {
-            if (HasReachedFinalPosition)
+            if (HasSomaReachedFinalPosition)
             {
-                #region Increase region desirability if neuron fires
-
-                if (IsActive)
-                {
-                    AddDesirability();
-                    _iterationsSinceLastActivation = 0;
-                }
-
-                #endregion
-
-                #region Else increase region UN-desirability
-
-                else
-                {
-                    _iterationsSinceLastActivation++;
-                    AddUndesirability();
-                }
-
-                #endregion
+                ProcessHasReachedFinalPosition();
             }
             else
             {
@@ -34,19 +16,39 @@
 
                 if (_movedDistance < _cnnNet.MaxNeuronMoveDistance)
                 {
-                    _neuronIterationsLeftBeforeFinalPosition =
-                        ProcessMoveToHigherDesirability()
-                        ? _cnnNet.NeuronIterationCountBeforeFinalPosition
-                        : _neuronIterationsLeftBeforeFinalPosition - 1;
-
-                    if (_neuronIterationsLeftBeforeFinalPosition == 0)
-                    {
-                        _hasReachedFinalPosition = true;
-                    }
+                    ProcessMoveToHigherDesirability();
+                    _iterationsSinceLastActivation++;
+                    AddUndesirability();
                 }
 
                 #endregion
             }
+        }
+
+        /// <summary>
+        /// Processes the HasReachedFinalPosition = true branch
+        /// </summary>
+        private void ProcessHasReachedFinalPosition()
+        {
+            #region Increase region desirability if neuron fires
+
+            if (IsActive)
+            {
+                AddDesirability();
+                _iterationsSinceLastActivation = 0;
+            }
+
+            #endregion
+
+            #region Else increase region UN-desirability
+
+            else
+            {
+                _iterationsSinceLastActivation++;
+                AddUndesirability();
+            }
+
+            #endregion
         }
 
         #endregion
@@ -56,7 +58,6 @@
         public NeuronCompute(int id, CnnNet cnnNet)
             : base(id, cnnNet)
         {
-            _neuronIterationsLeftBeforeFinalPosition = _cnnNet.NeuronIterationCountBeforeFinalPosition;
         }
 
         #endregion

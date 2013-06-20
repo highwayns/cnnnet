@@ -12,12 +12,10 @@ namespace cnnnet.Lib
         protected bool _isActive;
         protected int _posX;
         protected int _posY;
-        protected bool _hasReachedFinalPosition;
         protected int _axonLastCoordX;
         protected int _axonLastCoordY;
 
         protected double _movedDistance;
-        protected int _neuronIterationsLeftBeforeFinalPosition;
         protected int _iterationsSinceLastActivation;
 
         #endregion
@@ -64,12 +62,16 @@ namespace cnnnet.Lib
             }
         }
 
-        public bool HasReachedFinalPosition
+        public bool HasSomaReachedFinalPosition
         {
-            get
-            {
-                return _hasReachedFinalPosition;
-            }
+            get;
+            protected set;
+        }
+
+        public bool HasAxonReachedFinalPosition
+        {
+            get;
+            protected set;
         }
 
         #endregion

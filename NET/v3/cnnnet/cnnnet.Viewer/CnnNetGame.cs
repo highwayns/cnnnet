@@ -200,7 +200,7 @@ namespace cnnnet.Viewer
                     (neuron.PosX - neuronTexture.Width / 2,
                     neuron.PosY - neuronTexture.Height / 2), Color.White);
 
-                if (neuron.HasReachedFinalPosition
+                if (neuron.HasSomaReachedFinalPosition
                     && _formNetworkControl.dsDisplayNeuronDesirabilityRange.Checked)
                 {
                     _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronDesirabilityInfluenceRange, neuron.PosY - _cnnNet.NeuronDesirabilityInfluenceRange), Color.Red);
