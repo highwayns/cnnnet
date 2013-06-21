@@ -210,8 +210,8 @@ namespace cnnnet.Viewer
                 {
                     for (int i = 1; i < inputNeuron.AxonWaypoints.Count; i++)
                     {
-                        var startPos = new Vector2(inputNeuron.AxonWaypoints[i - 1].Item2, inputNeuron.AxonWaypoints[i - 1].Item1);
-                        var endPos = new Vector2(inputNeuron.AxonWaypoints[i].Item2, inputNeuron.AxonWaypoints[i].Item1);
+                        var startPos = new Vector2(inputNeuron.AxonWaypoints[i - 1].X, inputNeuron.AxonWaypoints[i - 1].Y);
+                        var endPos = new Vector2(inputNeuron.AxonWaypoints[i].X, inputNeuron.AxonWaypoints[i].Y);
 
                         _blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
                         _blank.SetData(new[] { Color.White });
@@ -222,7 +222,7 @@ namespace cnnnet.Viewer
 
                     var axonLastWaypointCircle = CreateCircle(_cnnNet.AxonHigherUndesirabilitySearchPlainRange);
 
-                    _spriteBatch.Draw(axonLastWaypointCircle, new Vector2(axonLastWayPoint.Item2 - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, axonLastWayPoint.Item1 - _cnnNet.AxonHigherUndesirabilitySearchPlainRange), Color.Red);
+                    _spriteBatch.Draw(axonLastWaypointCircle, new Vector2(axonLastWayPoint.X - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, axonLastWayPoint.Y - _cnnNet.AxonHigherUndesirabilitySearchPlainRange), Color.Red);
                 }
             }
         }

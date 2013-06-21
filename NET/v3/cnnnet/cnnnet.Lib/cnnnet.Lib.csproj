@@ -55,6 +55,7 @@
     <Compile Include="NeuronBase.cs" />
     <Compile Include="NeuronCompute.cs" />
     <Compile Include="NeuronInput.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomActiveNeuronGenerator.cs" />
     <Compile Include="SequentialActiveInputNeuronGenerator.cs" />

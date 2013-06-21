@@ -13,7 +13,7 @@ namespace cnnnet.Lib
         /// Y = Item1
         /// X = Item2
         /// </summary>
-        public readonly List<Tuple<int, int>> AxonWaypoints;
+        public readonly List<Point> AxonWaypoints;
 
         #endregion
 
@@ -41,16 +41,16 @@ namespace cnnnet.Lib
 
                 if (HasAxonReachedFinalPosition)
                 {
-                    _axonLastCoordX = AxonWaypoints.Last().Item2;
-                    _axonLastCoordY = AxonWaypoints.Last().Item1;
+                    _axonLastCoordX = AxonWaypoints.Last().X;
+                    _axonLastCoordY = AxonWaypoints.Last().Y;
                 }
             }
         }
 
         private bool ProcessGuideAxon()
         {
-            int lastPosX = AxonWaypoints.Last().Item2;
-            int lastPosY = AxonWaypoints.Last().Item1;
+            int lastPosX = AxonWaypoints.Last().X;
+            int lastPosY = AxonWaypoints.Last().Y;
 
             int minCoordX = Math.Max(lastPosX - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
             int maxCoordX = Math.Min(lastPosX + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Width - 1);
@@ -113,7 +113,11 @@ namespace cnnnet.Lib
 
             if (axonMoved)
             {
-                AxonWaypoints.Add(new Tuple<int, int>(maxUndesirabY, maxUndesirabX));
+                AxonWaypoints.Add(new Point()
+                {
+                    X = maxUndesirabX,
+                    Y = maxUndesirabY
+                });
             }
 
             return axonMoved;
@@ -126,14 +130,18 @@ namespace cnnnet.Lib
                 return float.MaxValue;
             }
 
-            return AxonWaypoints.Select(waypoint => Extensions.GetDistance(x, y, waypoint.Item2, waypoint.Item1)).Min();
+            return AxonWaypoints.Select(waypoint => Extensions.GetDistance(x, y, waypoint.X, waypoint.Y)).Min();
         }
 
         protected override void OnMoveTo(int newPosY, int newPosX)
         {
             base.OnMoveTo(newPosY, newPosX);
 
-            AxonWaypoints[0] = new Tuple<int, int>(newPosY, newPosX);
+            AxonWaypoints[0] = new Point()
+            {
+                X = newPosX,
+                Y = newPosY
+            };
         }
 
         #endregion
@@ -144,9 +152,13 @@ namespace cnnnet.Lib
             : base(id, cnnNet)
         {
             HasSomaReachedFinalPosition = true;
-            AxonWaypoints = new List<Tuple<int, int>>
+            AxonWaypoints = new List<Point>
             {
-                new Tuple<int, int>(PosY, PosX)
+                new Point
+                {
+                    X = PosX,
+                    Y = PosY
+                }
             };
         }
 
