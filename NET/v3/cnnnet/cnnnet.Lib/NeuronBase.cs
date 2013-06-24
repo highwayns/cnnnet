@@ -14,12 +14,13 @@ namespace cnnnet.Lib
         protected bool _isActive;
         protected int _posX;
         protected int _posY;
-        protected int _axonLastCoordX;
-        protected int _axonLastCoordY;
-
+        
         protected double _movedDistance;
         protected int _iterationsSinceLastActivation;
         public readonly List<Point> AxonWaypoints;
+        public Point AxonTerminal;
+
+        public int ActivityScore;
 
         #endregion
 
@@ -142,8 +143,11 @@ namespace cnnnet.Lib
 
                 if (HasAxonReachedFinalPosition)
                 {
-                    _axonLastCoordX = AxonWaypoints.Last().X;
-                    _axonLastCoordY = AxonWaypoints.Last().Y;
+                    AxonTerminal = new Point
+                    {
+                        X = AxonWaypoints.Last().X,
+                        Y = AxonWaypoints.Last().Y
+                    };
                 }
             }
         }
@@ -162,14 +166,7 @@ namespace cnnnet.Lib
             int maxUndesirabX = lastPosX;
             int maxUndesirabY = lastPosY;
 
-            //int minCoordX = Math.Max(maxUndesirabX - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
-            //int maxCoordX = Math.Min(maxUndesirabX + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Width - 1);
-
-            //int minCoordY = Math.Max(maxUndesirabY - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
-            //int maxCoordY = Math.Min(maxUndesirabY + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Height - 1);
-
             double maxUndesirability = _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX];
-            Trace.WriteLine(maxUndesirability);
 
             bool axonMoved = false;
 
@@ -295,12 +292,10 @@ namespace cnnnet.Lib
             return minDistance;
         }
 
-        
-
         protected void AddDesirability()
         {
             AddProportionalRangedValue
-                (_axonLastCoordX, _axonLastCoordY,
+                (AxonTerminal.X, AxonTerminal.Y,
                 _cnnNet.NeuronDesirabilityMap, _cnnNet.Width, _cnnNet.Height,
                 _cnnNet.NeuronDesirabilityInfluenceRange,
                 _cnnNet.NeuronDesirabilityMaxInfluence);

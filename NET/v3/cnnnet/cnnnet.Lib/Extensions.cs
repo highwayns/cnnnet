@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -60,6 +61,22 @@ namespace cnnnet.Lib
             }
 
             return ret.ToArray();
+        }
+
+        public static NeuronBase[] GetNeuronsWithAxonTerminalWithinRange(int posX, int posY, CnnNet network, int range)
+        {
+            int minCoordX = Math.Max(posX - range, 0);
+            int maxCoordX = Math.Min(posX + range, network.Width - 1);
+
+            int minCoordY = Math.Max(posY - range, 0);
+            int maxCoordY = Math.Min(posY + range, network.Height - 1);
+
+            return network.Neurons.Where(neuron => neuron.PosX != posX
+                           && neuron.PosY != posY
+                           && neuron.HasAxonReachedFinalPosition
+                           && minCoordX <= neuron.AxonTerminal.X && neuron.AxonTerminal.X <= maxCoordX
+                           && minCoordY <= neuron.AxonTerminal.Y && neuron.AxonTerminal.Y <= maxCoordY
+                           && GetDistance(neuron.AxonTerminal.X, neuron.AxonTerminal.Y, posX, posY) <= range).ToArray();
         }
     }
 }

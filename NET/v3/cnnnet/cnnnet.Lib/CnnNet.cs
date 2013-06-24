@@ -95,12 +95,32 @@ namespace cnnnet.Lib
 
             foreach (int activeNeuronId in ActiveNeuronGenerator.GetActiveNeuronIds())
             {
-                ((NeuronInput)_neurons[activeNeuronId]).SetIsActive(true);
+                _neurons[activeNeuronId].SetIsActive(true);
             }
 
+            var activeComputeNeurons = new List<NeuronCompute>();
             foreach (var neuron in _neurons.OfType<NeuronCompute>().ToList())
             {
+                neuron.ActivityScore += 
+                    Extensions.GetNeuronsWithAxonTerminalWithinRange(neuron.PosX, neuron.PosY, this, NeuronDendricTreeRange).
+                    Where(activeNeuronWithAxonsWithinDendricTreeRange => activeNeuronWithAxonsWithinDendricTreeRange.IsActive).Count() * NeuronActivityScoreMultiply;
 
+                if (neuron.ActivityScore >= NeuronIsActiveMinimumActivityScore)
+                {
+                    // add neuron to activation list
+                    activeComputeNeurons.Add(neuron);
+                    neuron.ActivityScore = 0;
+                }
+                else
+                {
+                    // decay activity score
+                    neuron.ActivityScore = Math.Max(0, neuron.ActivityScore - NeuronActivityScoreDecayAmnount);
+                }
+            }
+
+            foreach (var computeNeuron in _neurons.OfType<NeuronCompute>().ToList())
+            {
+                computeNeuron.SetIsActive(activeComputeNeurons.Contains(computeNeuron));
             }
         }
 

@@ -90,5 +90,12 @@ namespace cnnnet.Lib
         public int DesirabilityFrequency = 4;
 
         public int UndesirabilityFrequency = 4;
+
+
+        public int NeuronIsActiveMinimumActivityScore = 3;
+
+        public int NeuronActivityScoreDecayAmnount = 1;
+
+        public int NeuronActivityScoreMultiply = 2;
     }
 }
