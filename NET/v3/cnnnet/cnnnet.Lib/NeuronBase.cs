@@ -189,7 +189,7 @@ namespace cnnnet.Lib
                     if ((x == PosX && y == PosY)
                         || (x == maxUndesirabX && y == maxUndesirabY)
                         || (x == lastPosX && y == lastPosY)
-                        || GetNeuronAt(y, x) != null
+                        || Extensions.GetNeuronAt(y, x, _cnnNet) != null
                         || (distance = Extensions.GetDistance(lastPosX, lastPosY, x, y)) > _cnnNet.AxonHigherUndesirabilitySearchPlainRange /* this ensures that we only check within the range */)
                     {
                         continue;
@@ -295,42 +295,7 @@ namespace cnnnet.Lib
             return minDistance;
         }
 
-        protected NeuronBase GetNeuronAt(int y, int x)
-        {
-            return _cnnNet.NeuronPositionMap[y, x];
-        }
-
-        protected NeuronBase[] GetNeuronsWithinRange(int range)
-        {
-            var ret = new List<NeuronBase>();
-
-            int minCoordX = Math.Max(PosX - range, 0);
-            int maxCoordX = Math.Min(PosX + range, _cnnNet.Width - 1);
-
-            int minCoordY = Math.Max(PosY - range, 0);
-            int maxCoordY = Math.Min(PosY + range, _cnnNet.Height - 1);
-
-            for (int y = minCoordY; y < maxCoordY; y++)
-            {
-                for (int x = minCoordX; x < maxCoordX; x++)
-                {
-                    if ((x == PosX && y == PosY)
-                        || Extensions.GetDistance(PosX, PosY, x, y) > range)
-                    {
-                        continue;
-                    }
-
-                    var neuron = GetNeuronAt(y, x);
-
-                    if (neuron != null)
-                    {
-                        ret.Add(neuron);
-                    }
-                }
-            }
-
-            return ret.ToArray();
-        }
+        
 
         protected void AddDesirability()
         {
@@ -394,7 +359,7 @@ namespace cnnnet.Lib
                     }
 
                     if (_cnnNet.NeuronDesirabilityMap[y, x] > maxDesirability
-                        && GetNeuronAt(y, x) == null
+                        && Extensions.GetNeuronAt(y, x, _cnnNet) == null
                         && _movedDistance + Extensions.GetDistance(PosX, PosY, x, y) < _cnnNet.MaxNeuronMoveDistance
                         && GetDistanceToNearestNeuron(y, x) >= _cnnNet.MinDistanceBetweenNeurons
                         && Extensions.GetDistance(PosX, PosY, x, y) <= _cnnNet.NeuronDesirabilityInfluenceRange /* this ensures that we only check within the range */)

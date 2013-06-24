@@ -97,6 +97,11 @@ namespace cnnnet.Lib
             {
                 ((NeuronInput)_neurons[activeNeuronId]).SetIsActive(true);
             }
+
+            foreach (var neuron in _neurons.OfType<NeuronCompute>().ToList())
+            {
+
+            }
         }
 
         private void ProcessDecayDesirabilityAndUndesirability()

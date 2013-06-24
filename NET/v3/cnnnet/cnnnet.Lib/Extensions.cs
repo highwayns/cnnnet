@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace cnnnet.Lib
@@ -22,6 +23,43 @@ namespace cnnnet.Lib
             {
                 action(@this);
             }
+        }
+
+        public static NeuronBase GetNeuronAt(int y, int x, CnnNet network)
+        {
+            return network.NeuronPositionMap[y, x];
+        }
+
+        public static NeuronBase[] GetNeuronsWithinRange(int posX, int posY, CnnNet network, int range)
+        {
+            var ret = new List<NeuronBase>();
+
+            int minCoordX = Math.Max(posX - range, 0);
+            int maxCoordX = Math.Min(posX + range, network.Width - 1);
+
+            int minCoordY = Math.Max(posY - range, 0);
+            int maxCoordY = Math.Min(posY + range, network.Height - 1);
+
+            for (int y = minCoordY; y < maxCoordY; y++)
+            {
+                for (int x = minCoordX; x < maxCoordX; x++)
+                {
+                    if ((x == posX && y == posY)
+                        || Extensions.GetDistance(posX, posY, x, y) > range)
+                    {
+                        continue;
+                    }
+
+                    var neuron = GetNeuronAt(y, x, network);
+
+                    if (neuron != null)
+                    {
+                        ret.Add(neuron);
+                    }
+                }
+            }
+
+            return ret.ToArray();
         }
     }
 }
