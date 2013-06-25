@@ -3,7 +3,8 @@
     public class SequentialActiveInputNeuronGenerator : IActiveNeuronGenerator
     {
         #region Fields
-        
+
+        private bool _shouldReturnActive = true;
         private readonly int[] _inputNeuronIds;
         private readonly int _activeNeuronCount;
 
@@ -16,12 +17,16 @@
         public int[] GetActiveNeuronIds()
         {
             var ret = new int[_activeNeuronCount];
+            _shouldReturnActive = !_shouldReturnActive;
 
-            for (int i = 0; i < _activeNeuronCount; i++)
+            if (_shouldReturnActive)
             {
-                ret[i] = _inputNeuronIds[(_currentIndex + i)%_inputNeuronIds.Length];
+                for (int i = 0; i < _activeNeuronCount; i++)
+                {
+                    ret[i] = _inputNeuronIds[(_currentIndex + i) % _inputNeuronIds.Length];
+                }
+                _currentIndex = (_currentIndex + _activeNeuronCount) % _inputNeuronIds.Length;
             }
-            _currentIndex = (_currentIndex + _activeNeuronCount)%_inputNeuronIds.Length;
 
             return ret;
         }

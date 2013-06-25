@@ -71,7 +71,8 @@ namespace cnnnet.Lib
             int minCoordY = Math.Max(posY - range, 0);
             int maxCoordY = Math.Min(posY + range, network.Height - 1);
 
-            return network.Neurons.Where(neuron => neuron.PosX != posX
+            return network.Neurons.Where
+                (neuron => neuron.PosX != posX
                            && neuron.PosY != posY
                            && neuron.HasAxonReachedFinalPosition
                            && minCoordX <= neuron.AxonTerminal.X && neuron.AxonTerminal.X <= maxCoordX

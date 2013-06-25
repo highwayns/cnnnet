@@ -17,12 +17,12 @@ namespace cnnnet.Lib
         /// <summary>
         /// Maximum desirability increase
         /// </summary>
-        public double NeuronDesirabilityMaxInfluence = 0.05;
+        public double NeuronDesirabilityMaxInfluence = 0.3;
 
         /// <summary>
         /// How much does desirability decrease with each iteration
         /// </summary>
-        public double DesirabilityDecayAmount = 0.005;
+        public double DesirabilityDecayAmount = 0.001;
 
         /// <summary>
         /// The range around a neuron searched for higher desirability
@@ -48,7 +48,7 @@ namespace cnnnet.Lib
         /// <summary>
         /// The range of the neuron dendric tree
         /// </summary>
-        public int NeuronDendricTreeRange = 160;
+        public int NeuronDendricTreeRange = 80;
 
 
 
@@ -96,6 +96,6 @@ namespace cnnnet.Lib
 
         public int NeuronActivityScoreDecayAmnount = 1;
 
-        public int NeuronActivityScoreMultiply = 2;
+        public int NeuronActivityScoreMultiply = 3;
     }
 }

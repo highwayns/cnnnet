@@ -92,12 +92,17 @@ namespace cnnnet.Lib
             {
                 #region Neuron searches for better position
 
+                bool movedToHigherDesirability = false;
                 if (_movedDistance < _cnnNet.MaxNeuronMoveDistance)
                 {
-                    ProcessMoveToHigherDesirability();
-                    _iterationsSinceLastActivation++;
-                    AddUndesirability();
+                    movedToHigherDesirability = ProcessMoveToHigherDesirability();
                 }
+
+                HasSomaReachedFinalPosition = _movedDistance > _cnnNet.MaxNeuronMoveDistance
+                    || (_movedDistance > 0 && movedToHigherDesirability == false);
+
+                _iterationsSinceLastActivation++;
+                AddUndesirability();
 
                 #endregion
             }
@@ -138,10 +143,15 @@ namespace cnnnet.Lib
             else
             {
                 // navigate axon to higher undesirability
-                HasAxonReachedFinalPosition = ProcessGuideAxon() == false
-                                            && AxonWaypoints.Count > 1;
+                if (HasAxonReachedFinalPosition == false)
+                {
+                    HasAxonReachedFinalPosition = ProcessGuideAxon() == false
+                                                && AxonWaypoints.Count > 1;
+                }
 
-                if (HasAxonReachedFinalPosition)
+                if (HasAxonReachedFinalPosition
+                    && AxonTerminal.X == 0
+                    && AxonTerminal.Y == 0)
                 {
                     AxonTerminal = new Point
                     {
@@ -197,8 +207,7 @@ namespace cnnnet.Lib
                         recordList.Add(_cnnNet.NeuronUndesirabilityMap[y, x]);
                     }
 
-                    if (//_cnnNet.NeuronUndesirabilityMap[y, x] > maxUndesirability
-                        _cnnNet.NeuronUndesirabilityMap[y, x] > _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX]
+                    if (_cnnNet.NeuronUndesirabilityMap[y, x] > _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX]
                         && DistanceFromPreviousWaypoints(y, x) >= _cnnNet.AxonMinDistanceToPreviousWaypoints)
                     {
                         axonMoved = true;

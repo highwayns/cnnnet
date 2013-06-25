@@ -103,7 +103,7 @@ namespace cnnnet.Lib
             {
                 neuron.ActivityScore += 
                     Extensions.GetNeuronsWithAxonTerminalWithinRange(neuron.PosX, neuron.PosY, this, NeuronDendricTreeRange).
-                    Where(activeNeuronWithAxonsWithinDendricTreeRange => activeNeuronWithAxonsWithinDendricTreeRange.IsActive).Count() * NeuronActivityScoreMultiply;
+                    Where(neuronsWithAxonTerminalWithinRange => neuronsWithAxonTerminalWithinRange.IsActive).Count() * NeuronActivityScoreMultiply;
 
                 if (neuron.ActivityScore >= NeuronIsActiveMinimumActivityScore)
                 {
@@ -120,7 +120,8 @@ namespace cnnnet.Lib
 
             foreach (var computeNeuron in _neurons.OfType<NeuronCompute>().ToList())
             {
-                computeNeuron.SetIsActive(activeComputeNeurons.Contains(computeNeuron));
+                var isActive = activeComputeNeurons.Contains(computeNeuron);
+                computeNeuron.SetIsActive(isActive);
             }
         }
 
