@@ -1,4 +1,4 @@
-﻿namespace cnnnet.Lib
+﻿namespace cnnnet.Lib.Neurons
 {
     public class NeuronCompute : NeuronBase
     {
@@ -9,6 +9,6 @@
         {
         }
 
-        #endregion
+        #endregion Instance
     }
 }

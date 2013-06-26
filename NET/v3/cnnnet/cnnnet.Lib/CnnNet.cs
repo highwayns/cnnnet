@@ -1,4 +1,7 @@
-﻿using System;
+﻿using cnnnet.Lib.ActiveNeuronGenerator;
+using cnnnet.Lib.Neurons;
+using cnnnet.Lib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +26,7 @@ namespace cnnnet.Lib
         public double[,] NeuronUndesirabilityMap;
         private int _iteration;
 
-        #endregion
+        #endregion Fields
 
         #region Properties
 
@@ -46,7 +49,7 @@ namespace cnnnet.Lib
             get { return _iteration; }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Methods
 
@@ -63,7 +66,7 @@ namespace cnnnet.Lib
                 _isProcessing = true;
             }
 
-            #endregion
+            #endregion PreCheck
 
             _iteration++;
 
@@ -83,7 +86,7 @@ namespace cnnnet.Lib
                 _isProcessing = false;
             }
 
-            #endregion
+            #endregion End
         }
 
         private void ProcessDetermineActiveNeurons()
@@ -101,7 +104,7 @@ namespace cnnnet.Lib
             var activeComputeNeurons = new List<NeuronCompute>();
             foreach (var neuron in _neurons.OfType<NeuronCompute>().ToList())
             {
-                neuron.ActivityScore += 
+                neuron.ActivityScore +=
                     Extensions.GetNeuronsWithAxonTerminalWithinRange(neuron.PosX, neuron.PosY, this, NeuronDendricTreeRange).
                     Where(neuronsWithAxonTerminalWithinRange => neuronsWithAxonTerminalWithinRange.IsActive).Count() * NeuronActivityScoreMultiply;
 
@@ -164,7 +167,7 @@ namespace cnnnet.Lib
 
             _neurons = neurons.ToArray();
 
-            #endregion
+            #endregion Generate Random Neurons
 
             _neuronsInput = neurons.OfType<NeuronInput>().ToArray();
 
@@ -175,13 +178,13 @@ namespace cnnnet.Lib
             _iteration = 0;
         }
 
-        #endregion
+        #endregion Methods
 
         #region Instance
 
         public CnnNet(int width, int height)
         {
-            _random=new Random();
+            _random = new Random();
             Width = width;
             Height = height;
 
@@ -190,6 +193,6 @@ namespace cnnnet.Lib
             GenerateNetwork();
         }
 
-        #endregion
+        #endregion Instance
     }
 }

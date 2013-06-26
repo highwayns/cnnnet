@@ -1,9 +1,10 @@
-﻿using System;
+﻿using cnnnet.Lib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace cnnnet.Lib
+namespace cnnnet.Lib.Neurons
 {
     public abstract class NeuronBase
     {

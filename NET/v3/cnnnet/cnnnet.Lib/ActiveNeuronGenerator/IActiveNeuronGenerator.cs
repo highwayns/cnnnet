@@ -1,4 +1,4 @@
-﻿namespace cnnnet.Lib
+﻿namespace cnnnet.Lib.ActiveNeuronGenerator
 {
     public interface IActiveNeuronGenerator
     {

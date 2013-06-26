@@ -1,15 +1,18 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
+
+using cnnnet.Lib;
+using cnnnet.Lib.Neurons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
-using cnnnet.Lib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-#endregion
+
+#endregion Using Statements
 
 namespace cnnnet.Viewer
 {
@@ -46,7 +49,7 @@ namespace cnnnet.Viewer
         private byte[] _backgroundData;
         private readonly CnnNet _cnnNet;
 
-        #endregion
+        #endregion Fields
 
         #region Methods
 
@@ -143,7 +146,7 @@ namespace cnnnet.Viewer
                 UpdateBackground(neuronUndesirabilityMap, ColorIndexRed);
             }
 
-            #endregion
+            #endregion Background
 
             _background.SetData(_backgroundData);
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
@@ -152,7 +155,7 @@ namespace cnnnet.Viewer
 
             UpdateNeurons(tableNeurons);
 
-            #endregion
+            #endregion Neurons
 
             var mouseState = Mouse.GetState();
 
@@ -167,8 +170,6 @@ namespace cnnnet.Viewer
             base.Draw(gameTime);
             System.Windows.Forms.Application.DoEvents();
         }
-
-        
 
         private void UpdateBackground(double[,] values, int colorIndex)
         {
@@ -264,7 +265,7 @@ namespace cnnnet.Viewer
                        SpriteEffects.None, 0);
         }
 
-        #endregion
+        #endregion Methods
 
         #region Instance
 
@@ -287,6 +288,6 @@ namespace cnnnet.Viewer
             _formNetworkControl.CnnNet = _cnnNet;
         }
 
-        #endregion
+        #endregion Instance
     }
 }

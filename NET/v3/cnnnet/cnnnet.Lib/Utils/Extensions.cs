@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using cnnnet.Lib.Neurons;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
-namespace cnnnet.Lib
+namespace cnnnet.Lib.Utils
 {
     public static class Extensions
     {

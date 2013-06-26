@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cnnnet.Lib.Utils;
+using System;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
@@ -21,10 +22,11 @@ namespace cnnnet.Lib
         private int _lastStepNumber = int.MaxValue;
 
         private readonly Timer _timer;
+
         // holds the number of Process calls handeled in the unit of time (1000 ms)
         private int _numberOfPerformedSteps;
 
-        #endregion
+        #endregion Fields
 
         #region Properties
 
@@ -49,7 +51,7 @@ namespace cnnnet.Lib
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Methods
 
@@ -101,9 +103,9 @@ namespace cnnnet.Lib
             {
                 _lastStepNumber = int.MaxValue;
             }
-            else if(radioButtonSteps.Checked)
+            else if (radioButtonSteps.Checked)
             {
-                _lastStepNumber = _stepNumber + (int) nudSteps.Value;
+                _lastStepNumber = _stepNumber + (int)nudSteps.Value;
             }
 
             buttonStart.Enabled = false;
@@ -181,7 +183,7 @@ namespace cnnnet.Lib
             textBoxStepsPerSecond.Text = (numberOfPerformedSteps / ((float)_timer.Interval / 1000)).ToString(CultureInfo.InvariantCulture);
         }
 
-        #endregion
+        #endregion Methods
 
         #region Instance
 
@@ -201,6 +203,6 @@ namespace cnnnet.Lib
             _timer.Tick += OnTimerTick;
         }
 
-        #endregion
+        #endregion Instance
     }
 }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace cnnnet.Lib
+namespace cnnnet.Lib.Utils
 {
-    public interface IAxonGuidanceForce
+    public struct Point
     {
+        public int X;
+        public int Y;
     }
 }

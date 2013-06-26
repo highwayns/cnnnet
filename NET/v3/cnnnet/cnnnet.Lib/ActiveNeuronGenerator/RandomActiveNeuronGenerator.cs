@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace cnnnet.Lib
+namespace cnnnet.Lib.ActiveNeuronGenerator
 {
     public class RandomActiveNeuronGenerator : IActiveNeuronGenerator
     {
@@ -10,7 +10,7 @@ namespace cnnnet.Lib
         private readonly double _percentActiveNourons;
         private readonly Random _random;
 
-        #endregion
+        #endregion Fields
 
         #region Methods
 
@@ -25,7 +25,7 @@ namespace cnnnet.Lib
             return ret;
         }
 
-        #endregion
+        #endregion Methods
 
         #region Instance
 
@@ -36,6 +36,6 @@ namespace cnnnet.Lib
             _random = new Random();
         }
 
-        #endregion
+        #endregion Instance
     }
 }

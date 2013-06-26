@@ -1,4 +1,4 @@
-﻿namespace cnnnet.Lib
+﻿namespace cnnnet.Lib.ActiveNeuronGenerator
 {
     public class SequentialActiveInputNeuronGenerator : IActiveNeuronGenerator
     {
@@ -10,7 +10,7 @@
 
         private int _currentIndex;
 
-        #endregion
+        #endregion Fields
 
         #region Methods
 
@@ -31,7 +31,7 @@
             return ret;
         }
 
-        #endregion
+        #endregion Methods
 
         #region Instance
 
@@ -41,6 +41,6 @@
             _activeNeuronCount = activeNeuronCount;
         }
 
-        #endregion
+        #endregion Instance
     }
 }

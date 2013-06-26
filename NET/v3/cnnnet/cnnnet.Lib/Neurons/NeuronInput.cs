@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Diagnostics;
+using System.Linq;
 
-namespace cnnnet.Lib
+namespace cnnnet.Lib.Neurons
 {
     public class NeuronInput : NeuronBase
     {
@@ -15,6 +15,6 @@ namespace cnnnet.Lib
             HasSomaReachedFinalPosition = true;
         }
 
-        #endregion
+        #endregion Instance
     }
 }
