@@ -80,5 +80,24 @@ namespace cnnnet.Lib.Utils
                            && minCoordY <= neuron.AxonTerminal.Y && neuron.AxonTerminal.Y <= maxCoordY
                            && GetDistance(neuron.AxonTerminal.X, neuron.AxonTerminal.Y, posX, posY) <= range).ToArray();
         }
+
+        public static Point GetMaxLocation(this double[,] map)
+        {
+            Point result = new Point();
+
+            for (int y = 1; y < map.GetLength(0); y++)
+            {
+                for (int x = 0; x < map.GetLength(1); x++)
+                {
+                    if (map[y, x] > map[result.Y, result.X])
+                    {
+                        result.X = x;
+                        result.Y = y;
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 }
