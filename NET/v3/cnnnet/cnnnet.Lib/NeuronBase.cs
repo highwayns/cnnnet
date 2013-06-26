@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace cnnnet.Lib
 {
@@ -9,20 +9,18 @@ namespace cnnnet.Lib
     {
         #region Fields
 
+        public readonly List<Point> AxonWaypoints;
+        public int ActivityScore;
+        public Point AxonTerminal;
         protected CnnNet _cnnNet;
         protected int _id;
         protected bool _isActive;
+        protected int _iterationsSinceLastActivation;
+        protected double _movedDistance;
         protected int _posX;
         protected int _posY;
-        
-        protected double _movedDistance;
-        protected int _iterationsSinceLastActivation;
-        public readonly List<Point> AxonWaypoints;
-        public Point AxonTerminal;
 
-        public int ActivityScore;
-
-        #endregion
+        #endregion Fields
 
         #region Properties
 
@@ -32,6 +30,18 @@ namespace cnnnet.Lib
             {
                 return _cnnNet;
             }
+        }
+
+        public bool HasAxonReachedFinalPosition
+        {
+            get;
+            protected set;
+        }
+
+        public bool HasSomaReachedFinalPosition
+        {
+            get;
+            protected set;
         }
 
         public int Id
@@ -66,179 +76,9 @@ namespace cnnnet.Lib
             }
         }
 
-        public bool HasSomaReachedFinalPosition
-        {
-            get;
-            protected set;
-        }
-
-        public bool HasAxonReachedFinalPosition
-        {
-            get;
-            protected set;
-        }
-
-        #endregion
+        #endregion Properties
 
         #region Methods
-
-        public void Process()
-        {
-            if (HasSomaReachedFinalPosition)
-            {
-                ProcessSomaHasReachedFinalPosition();
-            }
-            else
-            {
-                #region Neuron searches for better position
-
-                bool movedToHigherDesirability = false;
-                if (_movedDistance < _cnnNet.MaxNeuronMoveDistance)
-                {
-                    movedToHigherDesirability = ProcessMoveToHigherDesirability();
-                }
-
-                HasSomaReachedFinalPosition = _movedDistance > _cnnNet.MaxNeuronMoveDistance
-                    || (_movedDistance > 0 && movedToHigherDesirability == false);
-
-                _iterationsSinceLastActivation++;
-                AddUndesirability();
-
-                #endregion
-            }
-        }
-
-        public void SetIsActive(bool isActive)
-        {
-            _isActive = isActive;
-        }
-
-        /// <summary>
-        /// Processes the HasReachedFinalPosition = true branch
-        /// </summary>
-        private void ProcessSomaHasReachedFinalPosition()
-        {
-            if (HasAxonReachedFinalPosition)
-            {
-                #region Increase region desirability if neuron fires
-
-                if (IsActive)
-                {
-                    AddDesirability();
-                    _iterationsSinceLastActivation = 0;
-                }
-
-                #endregion
-
-                #region Else increase region UN-desirability
-
-                else
-                {
-                    _iterationsSinceLastActivation++;
-                    AddUndesirability();
-                }
-
-                #endregion
-            }
-            else
-            {
-                // navigate axon to higher undesirability
-                if (HasAxonReachedFinalPosition == false)
-                {
-                    HasAxonReachedFinalPosition = ProcessGuideAxon() == false
-                                                && AxonWaypoints.Count > 1;
-                }
-
-                if (HasAxonReachedFinalPosition
-                    && AxonTerminal.X == 0
-                    && AxonTerminal.Y == 0)
-                {
-                    AxonTerminal = new Point
-                    {
-                        X = AxonWaypoints.Last().X,
-                        Y = AxonWaypoints.Last().Y
-                    };
-                }
-            }
-        }
-
-        private bool ProcessGuideAxon()
-        {
-            int lastPosX = AxonWaypoints.Last().X;
-            int lastPosY = AxonWaypoints.Last().Y;
-
-            int minCoordX = Math.Max(lastPosX - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
-            int maxCoordX = Math.Min(lastPosX + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Width - 1);
-
-            int minCoordY = Math.Max(lastPosY - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
-            int maxCoordY = Math.Min(lastPosY + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Height - 1);
-
-            int maxUndesirabX = lastPosX;
-            int maxUndesirabY = lastPosY;
-
-            double maxUndesirability = _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX];
-
-            bool axonMoved = false;
-
-            var record = false;
-            var recordList = new List<double>();
-
-            for (int y = minCoordY; y < maxCoordY; y++)
-            {
-                for (int x = minCoordX; x < maxCoordX; x++)
-                {
-                    if (Math.Abs(_cnnNet.NeuronUndesirabilityMap[y, x] - 0.0d) < 0.00001)
-                    {
-                        continue;
-                    }
-
-                    var distance = 0.0d;
-                    if ((x == PosX && y == PosY)
-                        || (x == maxUndesirabX && y == maxUndesirabY)
-                        || (x == lastPosX && y == lastPosY)
-                        || Extensions.GetNeuronAt(y, x, _cnnNet) != null
-                        || (distance = Extensions.GetDistance(lastPosX, lastPosY, x, y)) > _cnnNet.AxonHigherUndesirabilitySearchPlainRange /* this ensures that we only check within the range */)
-                    {
-                        continue;
-                    }
-
-                    if (record)
-                    {
-                        recordList.Add(_cnnNet.NeuronUndesirabilityMap[y, x]);
-                    }
-
-                    if (_cnnNet.NeuronUndesirabilityMap[y, x] > _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX]
-                        && DistanceFromPreviousWaypoints(y, x) >= _cnnNet.AxonMinDistanceToPreviousWaypoints)
-                    {
-                        axonMoved = true;
-                        maxUndesirabX = x;
-                        maxUndesirabY = y;
-                        maxUndesirability = _cnnNet.NeuronUndesirabilityMap[y, x];
-                    }
-                }
-            }
-
-            if (axonMoved)
-            {
-                AxonWaypoints.Add(new Point()
-                {
-                    X = maxUndesirabX,
-                    Y = maxUndesirabY
-                });
-            }
-
-            return axonMoved;
-        }
-
-        private double DistanceFromPreviousWaypoints(int y, int x)
-        {
-            if (AxonWaypoints.Count == 0)
-            {
-                return float.MaxValue;
-            }
-
-            return AxonWaypoints.Select(waypoint => Extensions.GetDistance(x, y, waypoint.X, waypoint.Y)).Min();
-        }
 
         public void MoveTo(int newPosY, int newPosX)
         {
@@ -262,8 +102,72 @@ namespace cnnnet.Lib
             OnMoveToInternal(newPosY, newPosX);
         }
 
-        protected virtual void OnMoveToInternal(int newPosY, int newPosX)
+        public void Process()
         {
+            if (HasSomaReachedFinalPosition)
+            {
+                ProcessSomaHasReachedFinalPosition();
+            }
+            else
+            {
+                #region Neuron searches for better position
+
+                bool movedToHigherDesirability = false;
+                if (_movedDistance < _cnnNet.MaxNeuronMoveDistance)
+                {
+                    movedToHigherDesirability = ProcessMoveToHigherDesirability();
+                }
+
+                HasSomaReachedFinalPosition = _movedDistance > _cnnNet.MaxNeuronMoveDistance
+                    || (_movedDistance > 0 && movedToHigherDesirability == false);
+
+                _iterationsSinceLastActivation++;
+                AddUndesirability();
+
+                #endregion Neuron searches for better position
+            }
+        }
+
+        public void SetIsActive(bool isActive)
+        {
+            _isActive = isActive;
+        }
+
+        protected void AddDesirability()
+        {
+            AddProportionalRangedValue
+                (AxonTerminal.X, AxonTerminal.Y,
+                _cnnNet.NeuronDesirabilityMap, _cnnNet.Width, _cnnNet.Height,
+                _cnnNet.NeuronDesirabilityInfluenceRange,
+                _cnnNet.NeuronDesirabilityMaxInfluence);
+        }
+
+        protected void AddProportionalRangedValue(int coordX, int coordY, double[,] map, int width, int height, int influencedRange, double maxValue)
+        {
+            int xMin = Math.Max(coordX - influencedRange, 0);
+            int xMax = Math.Min(coordX + influencedRange, width);
+            int yMin = Math.Max(coordY - influencedRange, 0);
+            int yMax = Math.Min(coordY + influencedRange, height);
+
+            for (int y = yMin; y < yMax; y++)
+            {
+                for (int x = xMin; x < xMax; x++)
+                {
+                    var distance = Extensions.GetDistance(coordX, coordY, x, y);
+
+                    var influenceByRange = Math.Max(influencedRange - distance, 0);
+
+                    map[y, x] = (float)Math.Min(1, map[y, x] + influenceByRange / influencedRange * maxValue);
+                }
+            }
+        }
+
+        protected void AddUndesirability()
+        {
+            AddProportionalRangedValue
+                (PosX, PosY, _cnnNet.NeuronUndesirabilityMap, _cnnNet.Width, _cnnNet.Height,
+                _cnnNet.NeuronUndesirabilityInfluenceRange,
+                _cnnNet.NeuronUndesirabilityMaxInfluence * Math.Max(1, _iterationsSinceLastActivation / _cnnNet.NeuronUndesirabilityMaxIterationsSinceLastActivation));
         }
 
         /// <summary>
@@ -301,41 +205,8 @@ namespace cnnnet.Lib
             return minDistance;
         }
 
-        protected void AddDesirability()
+        protected virtual void OnMoveToInternal(int newPosY, int newPosX)
         {
-            AddProportionalRangedValue
-                (AxonTerminal.X, AxonTerminal.Y,
-                _cnnNet.NeuronDesirabilityMap, _cnnNet.Width, _cnnNet.Height,
-                _cnnNet.NeuronDesirabilityInfluenceRange,
-                _cnnNet.NeuronDesirabilityMaxInfluence);
-        }
-
-        protected void AddUndesirability()
-        {
-            AddProportionalRangedValue
-                (PosX, PosY, _cnnNet.NeuronUndesirabilityMap, _cnnNet.Width, _cnnNet.Height,
-                _cnnNet.NeuronUndesirabilityInfluenceRange,
-                _cnnNet.NeuronUndesirabilityMaxInfluence * Math.Max(1, _iterationsSinceLastActivation / _cnnNet.NeuronUndesirabilityMaxIterationsSinceLastActivation));
-        }
-
-        protected void AddProportionalRangedValue(int coordX, int coordY, double[,] map, int width, int height, int influencedRange, double maxValue)
-        {
-            int xMin = Math.Max(coordX - influencedRange, 0);
-            int xMax = Math.Min(coordX + influencedRange, width);
-            int yMin = Math.Max(coordY - influencedRange, 0);
-            int yMax = Math.Min(coordY + influencedRange, height);
-
-            for (int y = yMin; y < yMax; y++)
-            {
-                for (int x = xMin; x < xMax; x++)
-                {
-                    var distance = Extensions.GetDistance(coordX, coordY, x, y);
-
-                    var influenceByRange = Math.Max(influencedRange - distance, 0);
-
-                    map[y, x] = (float)Math.Min(1, map[y, x] + influenceByRange / influencedRange * maxValue);
-                }
-            }
         }
 
         protected bool ProcessMoveToHigherDesirability()
@@ -388,7 +259,135 @@ namespace cnnnet.Lib
             return ret;
         }
 
-        #endregion
+        private double DistanceFromPreviousWaypoints(int y, int x)
+        {
+            if (AxonWaypoints.Count == 0)
+            {
+                return float.MaxValue;
+            }
+
+            return AxonWaypoints.Select(waypoint => Extensions.GetDistance(x, y, waypoint.X, waypoint.Y)).Min();
+        }
+
+        private bool ProcessGuideAxon()
+        {
+            int lastPosX = AxonWaypoints.Last().X;
+            int lastPosY = AxonWaypoints.Last().Y;
+
+            int minCoordX = Math.Max(lastPosX - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
+            int maxCoordX = Math.Min(lastPosX + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Width - 1);
+
+            int minCoordY = Math.Max(lastPosY - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, 0);
+            int maxCoordY = Math.Min(lastPosY + _cnnNet.AxonHigherUndesirabilitySearchPlainRange, _cnnNet.Height - 1);
+
+            int maxUndesirabX = lastPosX;
+            int maxUndesirabY = lastPosY;
+
+            double maxUndesirability = _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX];
+
+            bool axonMoved = false;
+
+            var record = false;
+            var recordList = new List<double>();
+
+            for (int y = minCoordY; y < maxCoordY; y++)
+            {
+                for (int x = minCoordX; x < maxCoordX; x++)
+                {
+                    // undesirability at position [y, x] is 0 (zero)
+                    if (Math.Abs(_cnnNet.NeuronUndesirabilityMap[y, x] - 0.0d) < 0.00001)
+                    {
+                        continue;
+                    }
+
+                    var distance = 0.0d;
+                    if ((x == PosX && y == PosY)
+                        || (x == maxUndesirabX && y == maxUndesirabY)
+                        || (x == lastPosX && y == lastPosY)
+                        || Extensions.GetNeuronAt(y, x, _cnnNet) != null
+                        || (distance = Extensions.GetDistance(lastPosX, lastPosY, x, y)) > _cnnNet.AxonHigherUndesirabilitySearchPlainRange /* this ensures that we only check within the range */)
+                    {
+                        continue;
+                    }
+
+                    if (record)
+                    {
+                        recordList.Add(_cnnNet.NeuronUndesirabilityMap[y, x]);
+                    }
+
+                    if (_cnnNet.NeuronUndesirabilityMap[y, x] > _cnnNet.NeuronUndesirabilityMap[maxUndesirabY, maxUndesirabX]
+                        && DistanceFromPreviousWaypoints(y, x) >= _cnnNet.AxonMinDistanceToPreviousWaypoints)
+                    {
+                        axonMoved = true;
+                        maxUndesirabX = x;
+                        maxUndesirabY = y;
+                        maxUndesirability = _cnnNet.NeuronUndesirabilityMap[y, x];
+                    }
+                }
+            }
+
+            if (axonMoved)
+            {
+                AxonWaypoints.Add(new Point()
+                {
+                    X = maxUndesirabX,
+                    Y = maxUndesirabY
+                });
+            }
+
+            return axonMoved;
+        }
+
+        /// <summary>
+        /// Processes the HasReachedFinalPosition = true branch
+        /// </summary>
+        private void ProcessSomaHasReachedFinalPosition()
+        {
+            if (HasAxonReachedFinalPosition)
+            {
+                #region Increase region desirability if neuron fires
+
+                if (IsActive)
+                {
+                    AddDesirability();
+                    _iterationsSinceLastActivation = 0;
+                }
+
+                #endregion Increase region desirability if neuron fires
+
+                #region Else increase region UN-desirability
+
+                else
+                {
+                    _iterationsSinceLastActivation++;
+                    AddUndesirability();
+                }
+
+                #endregion Else increase region UN-desirability
+            }
+            else
+            {
+                // navigate axon to higher undesirability
+                if (HasAxonReachedFinalPosition == false)
+                {
+                    HasAxonReachedFinalPosition = ProcessGuideAxon() == false
+                                                && AxonWaypoints.Count > 1;
+                }
+
+                if (HasAxonReachedFinalPosition
+                    && AxonTerminal.X == 0
+                    && AxonTerminal.Y == 0)
+                {
+                    AxonTerminal = new Point
+                    {
+                        X = AxonWaypoints.Last().X,
+                        Y = AxonWaypoints.Last().Y
+                    };
+                }
+            }
+        }
+
+        #endregion Methods
 
         #region Instance
 
@@ -406,6 +405,6 @@ namespace cnnnet.Lib
             };
         }
 
-        #endregion
+        #endregion Instance
     }
 }

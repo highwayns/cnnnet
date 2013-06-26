@@ -52,6 +52,7 @@
       <DependentUpon>FormNetworkControl.cs</DependentUpon>
     </Compile>
     <Compile Include="IActiveNeuronGenerator.cs" />
+    <Compile Include="IAxonGuidanceForce.cs" />
     <Compile Include="NeuronBase.cs" />
     <Compile Include="NeuronCompute.cs" />
     <Compile Include="NeuronInput.cs" />
