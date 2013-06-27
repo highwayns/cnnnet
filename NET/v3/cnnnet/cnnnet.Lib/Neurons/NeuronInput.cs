@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cnnnet.Lib.AxonGuidanceForces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace cnnnet.Lib.Neurons
     {
         #region Instance
 
-        public NeuronInput(int id, CnnNet cnnNet)
-            : base(id, cnnNet)
+        public NeuronInput(int id, CnnNet cnnNet, IEnumerable<IAxonGuidanceForce> axonGuidanceForces)
+            : base(id, cnnNet, axonGuidanceForces)
         {
             HasSomaReachedFinalPosition = true;
         }

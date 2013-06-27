@@ -7,7 +7,7 @@ using System.Text;
 
 namespace cnnnet.Lib.AxonGuidanceForces
 {
-    public class UndesirabilityMapAxonGuidanceForce : IAxonGuidanceForce
+    public class DesirabilityMapAxonGuidanceForce : IAxonGuidanceForce
     {
         public double[,] GetScore(NeuronBase neuron, CnnNet network)
         {
@@ -26,8 +26,8 @@ namespace cnnnet.Lib.AxonGuidanceForces
             {
                 for (int x = minCoordX; x < maxCoordX; x++)
                 {
-                    // undesirability at position [y, x] is 0 (zero)
-                    if (Math.Abs(network.NeuronUndesirabilityMap[y, x] - 0.0d) < 0.00001)
+                    // Desirability at position [y, x] is 0 (zero)
+                    if (Math.Abs(network.NeuronDesirabilityMap[y, x] - 0.0d) < 0.00001)
                     {
                         continue;
                     }
@@ -43,7 +43,7 @@ namespace cnnnet.Lib.AxonGuidanceForces
 
                     if (GetDistanceFromPreviousWaypoints(y, x, neuron) >= network.AxonMinDistanceToPreviousWaypoints)
                     {
-                        result[y - minCoordY, x - minCoordX] = network.NeuronUndesirabilityMap[y, x];
+                        result[y - minCoordY, x - minCoordX] = -network.NeuronDesirabilityMap[y, x];
                     }
                 }
             }

@@ -220,9 +220,9 @@ namespace cnnnet.Viewer
 
                 if (isInputNeuron)
                 {
-                    var axonLastWaypointCircle = CreateCircle(_cnnNet.AxonHigherUndesirabilitySearchPlainRange);
+                    var axonLastWaypointCircle = CreateCircle(_cnnNet.AxonGuidanceForceSearchPlainRange);
 
-                    _spriteBatch.Draw(axonLastWaypointCircle, new Vector2(axonLastWayPoint.X - _cnnNet.AxonHigherUndesirabilitySearchPlainRange, axonLastWayPoint.Y - _cnnNet.AxonHigherUndesirabilitySearchPlainRange), Color.Red);
+                    _spriteBatch.Draw(axonLastWaypointCircle, new Vector2(axonLastWayPoint.X - _cnnNet.AxonGuidanceForceSearchPlainRange, axonLastWayPoint.Y - _cnnNet.AxonGuidanceForceSearchPlainRange), Color.Red);
                 }
             }
         }

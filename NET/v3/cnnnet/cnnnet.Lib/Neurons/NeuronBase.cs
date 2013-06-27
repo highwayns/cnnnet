@@ -21,6 +21,7 @@ namespace cnnnet.Lib.Neurons
         protected double _movedDistance;
         protected int _posX;
         protected int _posY;
+        protected IEnumerable<IAxonGuidanceForce> AxonGuidanceForces;
 
         #endregion Fields
 
@@ -273,14 +274,13 @@ namespace cnnnet.Lib.Neurons
 
         private bool ProcessGuideAxon()
         {
-            var undesirabilityMapAxonGuidanceForce = new UndesirabilityMapAxonGuidanceForce();
-
-            double[,] undesirabilityScoreMap = undesirabilityMapAxonGuidanceForce.GetScore(this, _network);
-
             Point lastMaxLocation = AxonWaypoints.Last();
-            Point maxLocation = undesirabilityScoreMap.GetMaxLocation();
-            maxLocation.X += lastMaxLocation.X - _network.AxonHigherUndesirabilitySearchPlainRange;
-            maxLocation.Y += lastMaxLocation.Y - _network.AxonHigherUndesirabilitySearchPlainRange;
+
+            Point maxLocation = AxonGuidanceForces.
+                Select(axonGuidanceForce => axonGuidanceForce.GetScore(this, _network)).Sum().GetMaxLocation();
+
+            maxLocation.X += Math.Max(lastMaxLocation.X - _network.AxonGuidanceForceSearchPlainRange, 0);
+            maxLocation.Y += Math.Max(lastMaxLocation.Y - _network.AxonGuidanceForceSearchPlainRange, 0);
 
             bool result = false;
 
@@ -346,7 +346,7 @@ namespace cnnnet.Lib.Neurons
 
         #region Instance
 
-        protected NeuronBase(int id, CnnNet cnnNet)
+        protected NeuronBase(int id, CnnNet cnnNet, IEnumerable<IAxonGuidanceForce> axonGuidanceForces)
         {
             _id = id;
             _network = cnnNet;
@@ -358,6 +358,7 @@ namespace cnnnet.Lib.Neurons
                     Y = PosY
                 }
             };
+            AxonGuidanceForces = axonGuidanceForces;
         }
 
         #endregion Instance

@@ -99,5 +99,23 @@ namespace cnnnet.Lib.Utils
 
             return result;
         }
+
+        public static double[,] Sum(this IEnumerable<double[,]> maps)
+        {
+            var result = (double[,])maps.ElementAt(0).Clone();
+
+            foreach (var map in maps.Skip(1))
+            {
+                for (int y = 0; y < map.GetLength(0); y++)
+                {
+                    for (int x = 0; x < map.GetLength(1); x++)
+                    {
+                        result[y, x] += map[y, x];
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 }

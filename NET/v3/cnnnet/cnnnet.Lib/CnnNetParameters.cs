@@ -7,7 +7,7 @@ namespace cnnnet.Lib
 {
     public partial class CnnNet
     {
-        public int NeuronCount = 100;
+        public int NeuronCount = 300;
 
         /// <summary>
         /// Desirability influence distance
@@ -32,7 +32,7 @@ namespace cnnnet.Lib
         /// <summary>
         /// The minimum distance allowed between neurons
         /// </summary>
-        public int MinDistanceBetweenNeurons = 10;
+        public int MinDistanceBetweenNeurons = 20;
 
         /// <summary>
         /// How many input neurons we should generate
@@ -48,11 +48,7 @@ namespace cnnnet.Lib
         /// <summary>
         /// The range of the neuron dendric tree
         /// </summary>
-        public int NeuronDendricTreeRange = 80;
-
-
-
-
+        public int NeuronDendricTreeRange = 40;
 
         /// <summary>
         /// Undesirability influence distance
@@ -70,15 +66,15 @@ namespace cnnnet.Lib
         public double UndesirabilityDecayAmount = 0.05;
 
         /// <summary>
-        /// After how many iterations of inactivity does the neuron increase 
+        /// After how many iterations of inactivity does the neuron increase
         /// the undesirability with NeuronUndesirabilityMaxInfluence
         /// </summary>
         public int NeuronUndesirabilityMaxIterationsSinceLastActivation = 20;
 
         /// <summary>
-        /// The range around a axon terminal searched for higher desirability
+        /// The range around a axon terminal searched according to the guidance forces
         /// </summary>
-        public int AxonHigherUndesirabilitySearchPlainRange = 20;
+        public int AxonGuidanceForceSearchPlainRange = 20;
 
         /// <summary>
         /// The minimum distance allowed between the current found waypoint and previous waypoints
@@ -90,7 +86,6 @@ namespace cnnnet.Lib
         public int DesirabilityFrequency = 4;
 
         public int UndesirabilityFrequency = 4;
-
 
         public int NeuronIsActiveMinimumActivityScore = 3;
 
