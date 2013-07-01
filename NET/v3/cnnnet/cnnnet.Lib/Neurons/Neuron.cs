@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace cnnnet.Lib.Neurons
 {
-    public abstract class NeuronBase
+    public class Neuron
     {
         #region Fields
 
         public readonly List<Point> AxonWaypoints;
-        public int ActivityScore;
+        private int _activityScore;
         public Point AxonTerminal;
         protected CnnNet _network;
         protected int _id;
@@ -44,7 +44,7 @@ namespace cnnnet.Lib.Neurons
         public bool HasSomaReachedFinalPosition
         {
             get;
-            protected set;
+            private set;
         }
 
         public int Id
@@ -63,6 +63,18 @@ namespace cnnnet.Lib.Neurons
             }
         }
 
+        public int ActivityScore
+        {
+            get
+            {
+                return _activityScore;
+            }
+            private set
+            {
+                _activityScore = value;
+            }
+        }
+
         public int PosX
         {
             get
@@ -77,6 +89,12 @@ namespace cnnnet.Lib.Neurons
             {
                 return _posY;
             }
+        }
+
+        public bool IsInputNeuron
+        {
+            get;
+            private set;
         }
 
         #endregion Properties
@@ -134,6 +152,7 @@ namespace cnnnet.Lib.Neurons
         public void SetIsActive(bool isActive)
         {
             _isActive = isActive;
+            _activityScore = 0;
         }
 
         protected void AddDesirability()
@@ -300,6 +319,28 @@ namespace cnnnet.Lib.Neurons
         {
             if (HasAxonReachedFinalPosition)
             {
+                #region Determine if neuron is active
+
+                if(_isActive == false)
+                {
+                    _activityScore +=
+                        Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, _network, _network.NeuronDendricTreeRange).
+                        Where(neuronsWithAxonTerminalWithinRange => neuronsWithAxonTerminalWithinRange.IsActive).Count() * _network.NeuronActivityScoreMultiply;
+
+                    if (_activityScore >= _network.NeuronIsActiveMinimumActivityScore)
+                    {
+                        // add neuron to activation list
+                        SetIsActive(true);
+                    }
+                    else
+                    {
+                        // decay activity score
+                        ActivityScore = Math.Max(0, ActivityScore - _network.NeuronActivityScoreDecayAmount);
+                    }
+                }
+
+                #endregion
+
                 #region Increase region desirability if neuron fires
 
                 if (IsActive)
@@ -322,7 +363,8 @@ namespace cnnnet.Lib.Neurons
             }
             else
             {
-                // navigate axon to higher undesirability
+                #region navigate axon to higher undesirability
+
                 if (HasAxonReachedFinalPosition == false)
                 {
                     HasAxonReachedFinalPosition = ProcessGuideAxon() == false
@@ -339,6 +381,8 @@ namespace cnnnet.Lib.Neurons
                         Y = AxonWaypoints.Last().Y
                     };
                 }
+
+                #endregion
             }
         }
 
@@ -346,7 +390,7 @@ namespace cnnnet.Lib.Neurons
 
         #region Instance
 
-        protected NeuronBase(int id, CnnNet cnnNet, IEnumerable<IAxonGuidanceForce> axonGuidanceForces)
+        public Neuron(int id, CnnNet cnnNet, IEnumerable<IAxonGuidanceForce> axonGuidanceForces, bool isInputNeuron = false)
         {
             _id = id;
             _network = cnnNet;
@@ -359,6 +403,9 @@ namespace cnnnet.Lib.Neurons
                 }
             };
             AxonGuidanceForces = axonGuidanceForces;
+
+            HasSomaReachedFinalPosition = isInputNeuron;
+            IsInputNeuron = isInputNeuron;
         }
 
         #endregion Instance

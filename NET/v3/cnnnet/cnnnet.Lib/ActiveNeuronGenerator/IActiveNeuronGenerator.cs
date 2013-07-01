@@ -1,7 +1,9 @@
-﻿namespace cnnnet.Lib.ActiveNeuronGenerator
+﻿using cnnnet.Lib.Neurons;
+using System.Collections.Generic;
+namespace cnnnet.Lib.ActiveNeuronGenerator
 {
     public interface IActiveNeuronGenerator
     {
-        int[] GetActiveNeuronIds();
+        IEnumerable<Neuron> GetActiveNeurons();
     }
 }

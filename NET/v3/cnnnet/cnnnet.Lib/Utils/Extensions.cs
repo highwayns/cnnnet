@@ -27,14 +27,14 @@ namespace cnnnet.Lib.Utils
             }
         }
 
-        public static NeuronBase GetNeuronAt(int y, int x, CnnNet network)
+        public static Neuron GetNeuronAt(int y, int x, CnnNet network)
         {
             return network.NeuronPositionMap[y, x];
         }
 
-        public static NeuronBase[] GetNeuronsWithinRange(int posX, int posY, CnnNet network, int range)
+        public static Neuron[] GetNeuronsWithinRange(int posX, int posY, CnnNet network, int range)
         {
-            var ret = new List<NeuronBase>();
+            var ret = new List<Neuron>();
 
             int minCoordX = Math.Max(posX - range, 0);
             int maxCoordX = Math.Min(posX + range, network.Width - 1);
@@ -64,7 +64,7 @@ namespace cnnnet.Lib.Utils
             return ret.ToArray();
         }
 
-        public static NeuronBase[] GetNeuronsWithAxonTerminalWithinRange(int posX, int posY, CnnNet network, int range)
+        public static Neuron[] GetNeuronsWithAxonTerminalWithinRange(int posX, int posY, CnnNet network, int range)
         {
             int minCoordX = Math.Max(posX - range, 0);
             int maxCoordX = Math.Min(posX + range, network.Width - 1);

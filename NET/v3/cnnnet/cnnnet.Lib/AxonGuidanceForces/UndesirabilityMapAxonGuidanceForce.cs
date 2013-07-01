@@ -9,7 +9,7 @@ namespace cnnnet.Lib.AxonGuidanceForces
 {
     public class UndesirabilityMapAxonGuidanceForce : IAxonGuidanceForce
     {
-        public double[,] GetScore(NeuronBase neuron, CnnNet network)
+        public double[,] GetScore(Neuron neuron, CnnNet network)
         {
             var result = new double[2 * network.AxonGuidanceForceSearchPlainRange, 2 * network.AxonGuidanceForceSearchPlainRange];
 
@@ -51,7 +51,7 @@ namespace cnnnet.Lib.AxonGuidanceForces
             return result;
         }
 
-        private double GetDistanceFromPreviousWaypoints(int y, int x, NeuronBase neuron)
+        private double GetDistanceFromPreviousWaypoints(int y, int x, Neuron neuron)
         {
             if (neuron.AxonWaypoints.Count == 0)
             {

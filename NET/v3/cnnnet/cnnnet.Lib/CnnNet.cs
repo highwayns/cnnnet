@@ -16,20 +16,20 @@ namespace cnnnet.Lib
         private readonly object _isProcessingSyncObject;
         private bool _isProcessing;
 
-        private NeuronBase[] _neurons;
-        private NeuronInput[] _neuronsInput;
+        private Neuron[] _neurons;
+        private Neuron[] _neuronsInput;
 
         public readonly int Width;
         public readonly int Height;
 
-        public NeuronBase[,] NeuronPositionMap;
+        public Neuron[,] NeuronPositionMap;
         public double[,] NeuronDesirabilityMap;
         public double[,] NeuronUndesirabilityMap;
 
         /// <summary>
         /// Neuron activity recorded from the last 'NeuronActivityHistoryLength' iterations
         /// </summary>
-        public List<NeuronBase[]> NeuronActivityHistory;
+        public List<Neuron[]> NeuronActivityHistory;
         
         private int _iteration;
 
@@ -43,7 +43,7 @@ namespace cnnnet.Lib
             set;
         }
 
-        public NeuronBase[] Neurons
+        public Neuron[] Neurons
         {
             get
             {
@@ -77,14 +77,14 @@ namespace cnnnet.Lib
 
             _iteration++;
 
-            ProcessDetermineActiveNeurons();
-
-            RecordNeuronalActivity();
+            ProcessResetActiveNeurons();
 
             foreach (var neuron in _neurons)
             {
                 neuron.Process();
             }
+
+            RecordNeuronalActivity();
 
             ProcessDecayDesirabilityAndUndesirability();
 
@@ -108,41 +108,16 @@ namespace cnnnet.Lib
             NeuronActivityHistory.Add(_neurons.Where(neuron => neuron.IsActive).ToArray());
         }
 
-        private void ProcessDetermineActiveNeurons()
+        private void ProcessResetActiveNeurons()
         {
             foreach (var neuron in _neuronsInput)
             {
                 neuron.SetIsActive(false);
             }
 
-            foreach (int activeNeuronId in ActiveNeuronGenerator.GetActiveNeuronIds())
+            foreach (var activeNeuron in ActiveNeuronGenerator.GetActiveNeurons())
             {
-                _neurons[activeNeuronId].SetIsActive(true);
-            }
-
-            var activeComputeNeurons = new List<NeuronCompute>();
-            foreach (var neuron in _neurons.OfType<NeuronCompute>().ToList())
-            {
-                neuron.ActivityScore +=
-                    Extensions.GetNeuronsWithAxonTerminalWithinRange(neuron.PosX, neuron.PosY, this, NeuronDendricTreeRange).
-                    Where(neuronsWithAxonTerminalWithinRange => neuronsWithAxonTerminalWithinRange.IsActive).Count() * NeuronActivityScoreMultiply;
-
-                if (neuron.ActivityScore >= NeuronIsActiveMinimumActivityScore)
-                {
-                    // add neuron to activation list
-                    activeComputeNeurons.Add(neuron);
-                    neuron.ActivityScore = 0;
-                }
-                else
-                {
-                    // decay activity score
-                    neuron.ActivityScore = Math.Max(0, neuron.ActivityScore - NeuronActivityScoreDecayAmount);
-                }
-            }
-
-            foreach (var computeNeuron in _neurons.OfType<NeuronCompute>().ToList())
-            {
-                computeNeuron.SetIsActive(activeComputeNeurons.Contains(computeNeuron));
+                activeNeuron.SetIsActive(true);
             }
         }
 
@@ -162,7 +137,7 @@ namespace cnnnet.Lib
         {
             NeuronDesirabilityMap = new double[Height, Width];
             NeuronUndesirabilityMap = new double[Height, Width];
-            NeuronPositionMap = new NeuronBase[Height, Width];
+            NeuronPositionMap = new Neuron[Height, Width];
 
             var axonGuidanceForces = new IAxonGuidanceForce[]
                 {
@@ -172,12 +147,10 @@ namespace cnnnet.Lib
 
             #region Generate Random Neurons
 
-            var neurons = new List<NeuronBase>();
+            var neurons = new List<Neuron>();
             for (int i = 0; i < NeuronCount + InputNeuronCount; i++)
             {
-                var neuron = i < NeuronCount
-                    ? (NeuronBase)(new NeuronCompute(i, this, axonGuidanceForces))
-                    : (new NeuronInput(i, this, axonGuidanceForces));
+                var neuron = new Neuron(i, this, axonGuidanceForces, i >= NeuronCount);
 
                 do
                 {
@@ -193,12 +166,9 @@ namespace cnnnet.Lib
 
             #endregion Generate Random Neurons
 
-            _neuronsInput = neurons.OfType<NeuronInput>().ToArray();
+            _neuronsInput = neurons.GetRange(NeuronCount,InputNeuronCount).ToArray();
 
-            ActiveNeuronGenerator =
-                new SequentialActiveInputNeuronGenerator
-                    (_neuronsInput.Select(neuron => neuron.Id).ToArray(),
-                     Math.Min(_neuronsInput.Length, 2));
+            ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 2));
             _iteration = 0;
         }
 
@@ -211,7 +181,7 @@ namespace cnnnet.Lib
             _random = new Random();
             Width = width;
             Height = height;
-            NeuronActivityHistory = new List<NeuronBase[]>();
+            NeuronActivityHistory = new List<Neuron[]>();
 
             _isProcessingSyncObject = new object();
 

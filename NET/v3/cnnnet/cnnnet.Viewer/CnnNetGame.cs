@@ -127,7 +127,7 @@ namespace cnnnet.Viewer
             var neuronDesirabilityMap = _cnnNet.NeuronDesirabilityMap ?? new double[0, 0];
             var neuronUndesirabilityMap = _cnnNet.NeuronUndesirabilityMap ?? new double[0, 0];
 
-            var tableNeurons = _cnnNet.Neurons ?? new NeuronCompute[0];
+            var tableNeurons = _cnnNet.Neurons ?? new Neuron[0];
 
             _backgroundData = Enumerable.Repeat<byte>(0, _background.Width * _background.Height * 4).ToArray();
 
@@ -184,17 +184,15 @@ namespace cnnnet.Viewer
             }
         }
 
-        private void UpdateNeurons(IEnumerable<NeuronBase> neurons)
+        private void UpdateNeurons(IEnumerable<Neuron> neurons)
         {
             Texture2D circle = CreateCircle(_cnnNet.NeuronDesirabilityInfluenceRange);
 
-            foreach (NeuronBase neuron in neurons)
+            foreach (Neuron neuron in neurons)
             {
-                var isInputNeuron = neuron is NeuronInput;
-
                 var neuronTexture = neuron.IsActive
-                                      ? isInputNeuron ? _neuronInputActive : _neuronActive
-                                      : isInputNeuron ? _neuronInputIdle : _neuronIdle;
+                                      ? neuron.IsInputNeuron ? _neuronInputActive : _neuronActive
+                                      : neuron.IsInputNeuron ? _neuronInputIdle : _neuronIdle;
 
                 _spriteBatch.Draw(neuronTexture, new Vector2
                     (neuron.PosX - neuronTexture.Width / 2,
@@ -218,7 +216,7 @@ namespace cnnnet.Viewer
 
                 var axonLastWayPoint = neuron.AxonWaypoints.LastOrDefault();
 
-                if (isInputNeuron)
+                if (neuron.IsInputNeuron)
                 {
                     var axonLastWaypointCircle = CreateCircle(_cnnNet.AxonGuidanceForceSearchPlainRange);
 

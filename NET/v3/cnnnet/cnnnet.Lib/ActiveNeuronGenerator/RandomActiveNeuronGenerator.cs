@@ -1,4 +1,7 @@
-﻿using System;
+﻿using cnnnet.Lib.Neurons;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace cnnnet.Lib.ActiveNeuronGenerator
 {
@@ -6,7 +9,7 @@ namespace cnnnet.Lib.ActiveNeuronGenerator
     {
         #region Fields
 
-        private readonly int _neuronCount;
+        private readonly List<Neuron> _availableNeurons;
         private readonly double _percentActiveNourons;
         private readonly Random _random;
 
@@ -14,24 +17,24 @@ namespace cnnnet.Lib.ActiveNeuronGenerator
 
         #region Methods
 
-        public int[] GetActiveNeuronIds()
+        public IEnumerable<Neuron> GetActiveNeurons()
         {
-            var retCount = (int)(_neuronCount * _percentActiveNourons);
-            var ret = new int[retCount];
+            var retCount = (int)(_availableNeurons.Count * _percentActiveNourons);
+            var result = new Neuron[retCount];
             for (int i = 0; i < retCount; i++)
             {
-                ret[i] = _random.Next(_neuronCount);
+                result[i] = _availableNeurons[_random.Next(_availableNeurons.Count)];
             }
-            return ret;
+            return result;
         }
 
         #endregion Methods
 
         #region Instance
 
-        public RandomActiveNeuronGenerator(int neuronCount, double percentActiveNourons)
+        public RandomActiveNeuronGenerator(IEnumerable<Neuron> availableNeurons, double percentActiveNourons)
         {
-            _neuronCount = neuronCount;
+            _availableNeurons = availableNeurons.ToList();
             _percentActiveNourons = percentActiveNourons;
             _random = new Random();
         }

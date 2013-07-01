@@ -8,6 +8,6 @@ namespace cnnnet.Lib.AxonGuidanceForces
 {
     public interface IAxonGuidanceForce
     {
-        double[,] GetScore(NeuronBase neuron, CnnNet network);
+        double[,] GetScore(Neuron neuron, CnnNet network);
     }
 }

@@ -1,11 +1,15 @@
-﻿namespace cnnnet.Lib.ActiveNeuronGenerator
+﻿using cnnnet.Lib.Neurons;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace cnnnet.Lib.ActiveNeuronGenerator
 {
     public class SequentialActiveInputNeuronGenerator : IActiveNeuronGenerator
     {
         #region Fields
 
         private bool _shouldReturnActive = true;
-        private readonly int[] _inputNeuronIds;
+        private readonly List<Neuron> _availableInputNeuron;
         private readonly int _activeNeuronCount;
 
         private int _currentIndex;
@@ -14,30 +18,30 @@
 
         #region Methods
 
-        public int[] GetActiveNeuronIds()
+        public IEnumerable<Neuron> GetActiveNeurons()
         {
-            var ret = new int[_activeNeuronCount];
+            var result = new List<Neuron>();
             _shouldReturnActive = !_shouldReturnActive;
 
             if (_shouldReturnActive)
             {
                 for (int i = 0; i < _activeNeuronCount; i++)
                 {
-                    ret[i] = _inputNeuronIds[(_currentIndex + i) % _inputNeuronIds.Length];
+                    result.Add(_availableInputNeuron[(_currentIndex + i) % _availableInputNeuron.Count]);
                 }
-                _currentIndex = (_currentIndex + _activeNeuronCount) % _inputNeuronIds.Length;
+                _currentIndex = (_currentIndex + _activeNeuronCount) % _availableInputNeuron.Count;
             }
 
-            return ret;
+            return result;
         }
 
         #endregion Methods
 
         #region Instance
 
-        public SequentialActiveInputNeuronGenerator(int[] inputNeuronIds, int activeNeuronCount)
+        public SequentialActiveInputNeuronGenerator(IEnumerable<Neuron> availableInputNeuron, int activeNeuronCount)
         {
-            _inputNeuronIds = inputNeuronIds;
+            _availableInputNeuron = availableInputNeuron.ToList();
             _activeNeuronCount = activeNeuronCount;
         }
 
