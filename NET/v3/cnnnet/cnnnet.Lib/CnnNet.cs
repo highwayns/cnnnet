@@ -25,6 +25,12 @@ namespace cnnnet.Lib
         public NeuronBase[,] NeuronPositionMap;
         public double[,] NeuronDesirabilityMap;
         public double[,] NeuronUndesirabilityMap;
+
+        /// <summary>
+        /// Neuron activity recorded from the last 'NeuronActivityHistoryLength' iterations
+        /// </summary>
+        public List<NeuronBase[]> NeuronActivityHistory;
+        
         private int _iteration;
 
         #endregion Fields
@@ -73,6 +79,8 @@ namespace cnnnet.Lib
 
             ProcessDetermineActiveNeurons();
 
+            RecordNeuronalActivity();
+
             foreach (var neuron in _neurons)
             {
                 neuron.Process();
@@ -88,6 +96,16 @@ namespace cnnnet.Lib
             }
 
             #endregion End
+        }
+
+        private void RecordNeuronalActivity()
+        {
+            if (NeuronActivityHistory.Count == NeuronActivityHistoryLength)
+            {
+                NeuronActivityHistory.RemoveAt(0);
+            }
+
+            NeuronActivityHistory.Add(_neurons.Where(neuron => neuron.IsActive).ToArray());
         }
 
         private void ProcessDetermineActiveNeurons()
@@ -118,14 +136,13 @@ namespace cnnnet.Lib
                 else
                 {
                     // decay activity score
-                    neuron.ActivityScore = Math.Max(0, neuron.ActivityScore - NeuronActivityScoreDecayAmnount);
+                    neuron.ActivityScore = Math.Max(0, neuron.ActivityScore - NeuronActivityScoreDecayAmount);
                 }
             }
 
             foreach (var computeNeuron in _neurons.OfType<NeuronCompute>().ToList())
             {
-                var isActive = activeComputeNeurons.Contains(computeNeuron);
-                computeNeuron.SetIsActive(isActive);
+                computeNeuron.SetIsActive(activeComputeNeurons.Contains(computeNeuron));
             }
         }
 
@@ -194,6 +211,7 @@ namespace cnnnet.Lib
             _random = new Random();
             Width = width;
             Height = height;
+            NeuronActivityHistory = new List<NeuronBase[]>();
 
             _isProcessingSyncObject = new object();
 

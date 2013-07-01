@@ -63,7 +63,7 @@ namespace cnnnet.Lib
         /// <summary>
         /// How much does undesirability decrease with each iteration
         /// </summary>
-        public double UndesirabilityDecayAmount = 0.05;
+        public double UndesirabilityDecayAmount = 0.1;
 
         /// <summary>
         /// After how many iterations of inactivity does the neuron increase
@@ -81,16 +81,19 @@ namespace cnnnet.Lib
         /// </summary>
         public int AxonMinDistanceToPreviousWaypoints = 1;
 
-        public int AxonGuidanceFrequency = 1;
-
-        public int DesirabilityFrequency = 4;
-
-        public int UndesirabilityFrequency = 4;
-
         public int NeuronIsActiveMinimumActivityScore = 3;
 
-        public int NeuronActivityScoreDecayAmnount = 1;
+        /// <summary>
+        /// The amount of activity score to decay with each iteration
+        /// </summary>
+        public int NeuronActivityScoreDecayAmount = 1;
 
         public int NeuronActivityScoreMultiply = 3;
+
+        /// <summary>
+        /// For how many iterations do we hold the neuronal activity.
+        /// This also means that only the last 10 iterations are going to be used for neuronal plasticity
+        /// </summary>
+        public int NeuronActivityHistoryLength = 10;
     }
 }
