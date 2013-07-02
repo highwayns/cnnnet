@@ -97,6 +97,12 @@ namespace cnnnet.Lib.Neurons
             private set;
         }
 
+        public bool BreakOnProcessCall
+        {
+            get;
+            set;
+        }
+
         #endregion Properties
 
         #region Methods
@@ -125,6 +131,11 @@ namespace cnnnet.Lib.Neurons
 
         public void Process()
         {
+            if (BreakOnProcessCall)
+            {
+                Debugger.Break();
+            }
+
             if (HasSomaReachedFinalPosition)
             {
                 ProcessSomaHasReachedFinalPosition();

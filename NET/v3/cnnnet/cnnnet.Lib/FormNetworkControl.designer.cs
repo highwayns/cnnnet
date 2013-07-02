@@ -61,6 +61,12 @@
             this.dsNeuronDesirabilityMap = new System.Windows.Forms.CheckBox();
             this.dsDisplayNeuronDesirabilityRange = new System.Windows.Forms.CheckBox();
             this.textBoxStepsPerSecond = new System.Windows.Forms.TextBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lbNeuronLocation = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lbNeuronId = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cboxBreakOnceOnNeuronProcess = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSteps)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.npMaxNeuronMoveDistance)).BeginInit();
@@ -72,6 +78,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronInfluenceRange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronCount)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonStart
@@ -473,12 +480,73 @@
             this.textBoxStepsPerSecond.Size = new System.Drawing.Size(75, 20);
             this.textBoxStepsPerSecond.TabIndex = 13;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.cboxBreakOnceOnNeuronProcess);
+            this.groupBox3.Controls.Add(this.lbNeuronLocation);
+            this.groupBox3.Controls.Add(this.label11);
+            this.groupBox3.Controls.Add(this.lbNeuronId);
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Location = new System.Drawing.Point(12, 300);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(525, 292);
+            this.groupBox3.TabIndex = 14;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Neuron Control";
+            // 
+            // lbNeuronLocation
+            // 
+            this.lbNeuronLocation.AutoSize = true;
+            this.lbNeuronLocation.Location = new System.Drawing.Point(60, 52);
+            this.lbNeuronLocation.Name = "lbNeuronLocation";
+            this.lbNeuronLocation.Size = new System.Drawing.Size(73, 13);
+            this.lbNeuronLocation.TabIndex = 3;
+            this.lbNeuronLocation.Text = "<LOCATION>";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 52);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(48, 13);
+            this.label11.TabIndex = 2;
+            this.label11.Text = "Location";
+            // 
+            // lbNeuronId
+            // 
+            this.lbNeuronId.AutoSize = true;
+            this.lbNeuronId.Location = new System.Drawing.Point(37, 26);
+            this.lbNeuronId.Name = "lbNeuronId";
+            this.lbNeuronId.Size = new System.Drawing.Size(30, 13);
+            this.lbNeuronId.TabIndex = 1;
+            this.lbNeuronId.Text = "<ID>";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 26);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(18, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "ID";
+            // 
+            // cboxBreakOnceOnNeuronProcess
+            // 
+            this.cboxBreakOnceOnNeuronProcess.AutoSize = true;
+            this.cboxBreakOnceOnNeuronProcess.Location = new System.Drawing.Point(9, 81);
+            this.cboxBreakOnceOnNeuronProcess.Name = "cboxBreakOnceOnNeuronProcess";
+            this.cboxBreakOnceOnNeuronProcess.Size = new System.Drawing.Size(179, 17);
+            this.cboxBreakOnceOnNeuronProcess.TabIndex = 4;
+            this.cboxBreakOnceOnNeuronProcess.Text = "Break Once On Neuron Process";
+            this.cboxBreakOnceOnNeuronProcess.UseVisualStyleBackColor = true;
+            // 
             // FormNetworkControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 303);
+            this.ClientSize = new System.Drawing.Size(549, 604);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.textBoxStepsPerSecond);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonNextStepByStep);
@@ -510,6 +578,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.npNeuronCount)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -550,5 +620,11 @@
         public System.Windows.Forms.CheckBox dsNeuronDesirabilityMap;
         public System.Windows.Forms.CheckBox dsNeuronUndesirabilityMap;
         private System.Windows.Forms.TextBox textBoxStepsPerSecond;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label11;
+        public System.Windows.Forms.Label lbNeuronId;
+        public System.Windows.Forms.Label lbNeuronLocation;
+        public System.Windows.Forms.CheckBox cboxBreakOnceOnNeuronProcess;
     }
 }

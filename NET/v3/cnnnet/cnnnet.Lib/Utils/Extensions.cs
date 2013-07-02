@@ -34,7 +34,7 @@ namespace cnnnet.Lib.Utils
 
         public static Neuron[] GetNeuronsWithinRange(int posX, int posY, CnnNet network, int range)
         {
-            var ret = new List<Neuron>();
+            var result = new List<Neuron>();
 
             int minCoordX = Math.Max(posX - range, 0);
             int maxCoordX = Math.Min(posX + range, network.Width - 1);
@@ -56,12 +56,48 @@ namespace cnnnet.Lib.Utils
 
                     if (neuron != null)
                     {
-                        ret.Add(neuron);
+                        result.Add(neuron);
                     }
                 }
             }
 
-            return ret.ToArray();
+            return result.ToArray();
+        }
+
+        public static Neuron GetClosestNeuronsWithinRange(int posX, int posY, CnnNet network, int range)
+        {
+            Neuron result = null;
+
+            int minCoordX = Math.Max(posX - range, 0);
+            int maxCoordX = Math.Min(posX + range, network.Width - 1);
+
+            int minCoordY = Math.Max(posY - range, 0);
+            int maxCoordY = Math.Min(posY + range, network.Height - 1);
+
+            double minDistance = double.MaxValue;
+            double distance;
+
+            for (int y = minCoordY; y < maxCoordY; y++)
+            {
+                for (int x = minCoordX; x < maxCoordX; x++)
+                {
+                    if ((distance = Extensions.GetDistance(posX, posY, x, y)) > range
+                        || distance > minDistance)
+                    {
+                        continue;
+                    }
+
+                    var neuron = GetNeuronAt(y, x, network);
+                    if (neuron != null)
+                    {
+                        minDistance = distance;
+                        result = neuron;
+                    }
+                    
+                }
+            }
+
+            return result;
         }
 
         public static Neuron[] GetNeuronsWithAxonTerminalWithinRange(int posX, int posY, CnnNet network, int range)

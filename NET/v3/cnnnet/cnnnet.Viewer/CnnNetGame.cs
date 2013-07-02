@@ -2,6 +2,7 @@
 
 using cnnnet.Lib;
 using cnnnet.Lib.Neurons;
+using cnnnet.Lib.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
@@ -37,17 +38,22 @@ namespace cnnnet.Viewer
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D _neuronIdle;
-        private Texture2D _neuronActive;
+        private Texture2D _textureNeuronIdle;
+        private Texture2D _textureNeuronActive;
 
-        private Texture2D _neuronInputIdle;
-        private Texture2D _neuronInputActive;
+        private Texture2D _textureNeuronInputIdle;
+        private Texture2D _textureNeuronInputActive;
 
-        private Texture2D _background;
-        private Texture2D _blank;
+        private Texture2D _textureNeuronHover;
+        private Texture2D _textureNeuronSelected;
+
+        private Texture2D _textureBackground;
+        private Texture2D _textureBlank;
 
         private byte[] _backgroundData;
-        private readonly CnnNet _cnnNet;
+        private readonly CnnNet _network;
+
+        private Neuron _neuronSelected;
 
         #endregion Fields
 
@@ -81,14 +87,16 @@ namespace cnnnet.Viewer
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // use this.Content to load your game content here
-            _neuronIdle = Content.Load<Texture2D>("neuronIdle");
-            _neuronActive = Content.Load<Texture2D>("neuronActive");
-            _neuronInputIdle = Content.Load<Texture2D>("neuronInputIdle");
-            _neuronInputActive = Content.Load<Texture2D>("neuronInputActive");
+            _textureNeuronIdle = Content.Load<Texture2D>("neuronIdle");
+            _textureNeuronActive = Content.Load<Texture2D>("neuronActive");
+            _textureNeuronInputIdle = Content.Load<Texture2D>("neuronInputIdle");
+            _textureNeuronInputActive = Content.Load<Texture2D>("neuronInputActive");
+            _textureNeuronHover = Content.Load<Texture2D>("neuronHover");
+            _textureNeuronSelected = Content.Load<Texture2D>("neuronSelected");
 
-            _background = new Texture2D(GraphicsDevice, Width, Height);
-            _backgroundData = Enumerable.Repeat<byte>(0, _background.Width * _background.Height * 4).ToArray();
-            _background.SetData(_backgroundData);
+            _textureBackground = new Texture2D(GraphicsDevice, Width, Height);
+            _backgroundData = Enumerable.Repeat<byte>(0, _textureBackground.Width * _textureBackground.Height * 4).ToArray();
+            _textureBackground.SetData(_backgroundData);
         }
 
         /// <summary>
@@ -124,12 +132,12 @@ namespace cnnnet.Viewer
             GraphicsDevice.Clear(Color.Black);
             GraphicsDevice.Textures[0] = null;
 
-            var neuronDesirabilityMap = _cnnNet.NeuronDesirabilityMap ?? new double[0, 0];
-            var neuronUndesirabilityMap = _cnnNet.NeuronUndesirabilityMap ?? new double[0, 0];
+            var neuronDesirabilityMap = _network.NeuronDesirabilityMap ?? new double[0, 0];
+            var neuronUndesirabilityMap = _network.NeuronUndesirabilityMap ?? new double[0, 0];
 
-            var tableNeurons = _cnnNet.Neurons ?? new Neuron[0];
+            var tableNeurons = _network.Neurons ?? new Neuron[0];
 
-            _backgroundData = Enumerable.Repeat<byte>(0, _background.Width * _background.Height * 4).ToArray();
+            _backgroundData = Enumerable.Repeat<byte>(0, _textureBackground.Width * _textureBackground.Height * 4).ToArray();
 
             // Drawing code here
             _spriteBatch.Begin();
@@ -148,8 +156,8 @@ namespace cnnnet.Viewer
 
             #endregion Background
 
-            _background.SetData(_backgroundData);
-            _spriteBatch.Draw(_background, new Rectangle(0, 0, Width, Height), Color.White);
+            _textureBackground.SetData(_backgroundData);
+            _spriteBatch.Draw(_textureBackground, new Rectangle(0, 0, Width, Height), Color.White);
 
             #region Neurons
 
@@ -157,18 +165,41 @@ namespace cnnnet.Viewer
 
             #endregion Neurons
 
-            var mouseState = Mouse.GetState();
-
-            _spriteBatch.Draw(_neuronIdle,
-                new Vector2(mouseState.X - _neuronIdle.Width / 2, mouseState.Y - _neuronIdle.Height / 2),
-                Color.White);
-
-            _formNetworkControl.Text = string.Format("X = {0} Y = {1}", mouseState.X, mouseState.Y);
+            UpdateHoverAndSelectedNeuron();
 
             _spriteBatch.End();
 
             base.Draw(gameTime);
             System.Windows.Forms.Application.DoEvents();
+        }
+
+        private void UpdateHoverAndSelectedNeuron()
+        {
+            var mouseState = Mouse.GetState();
+            _formNetworkControl.Text = string.Format("X = {0} Y = {1}", mouseState.X, mouseState.Y);
+
+            var neuron = Extensions.GetClosestNeuronsWithinRange(mouseState.X, mouseState.Y, _network, 10);
+
+            if (neuron != null)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    _neuronSelected = neuron;
+                    DrawTexture(_textureNeuronSelected, neuron.PosX, neuron.PosY);
+                }
+                else
+                {
+                    DrawTexture(_textureNeuronHover, neuron.PosX, neuron.PosY);
+                }
+            }
+
+            if (_neuronSelected != null)
+            {
+                DrawTexture(_textureNeuronHover, _neuronSelected.PosX, _neuronSelected.PosY);
+                _formNetworkControl.InvokeEx(form => form.lbNeuronId.Text = _neuronSelected.Id.ToString());
+                _formNetworkControl.InvokeEx(form => form.lbNeuronLocation.Text = string.Format("X = {0} Y = {1}", _neuronSelected.PosX, _neuronSelected.PosY));
+                _formNetworkControl.InvokeEx(form => _neuronSelected.BreakOnProcessCall = form.cboxBreakOnceOnNeuronProcess.Checked);
+            }
         }
 
         private void UpdateBackground(double[,] values, int colorIndex)
@@ -186,22 +217,18 @@ namespace cnnnet.Viewer
 
         private void UpdateNeurons(IEnumerable<Neuron> neurons)
         {
-            Texture2D circle = CreateCircle(_cnnNet.NeuronDesirabilityInfluenceRange);
-
             foreach (Neuron neuron in neurons)
             {
                 var neuronTexture = neuron.IsActive
-                                      ? neuron.IsInputNeuron ? _neuronInputActive : _neuronActive
-                                      : neuron.IsInputNeuron ? _neuronInputIdle : _neuronIdle;
+                                      ? neuron.IsInputNeuron ? _textureNeuronInputActive : _textureNeuronActive
+                                      : neuron.IsInputNeuron ? _textureNeuronInputIdle : _textureNeuronIdle;
 
-                _spriteBatch.Draw(neuronTexture, new Vector2
-                    (neuron.PosX - neuronTexture.Width / 2,
-                    neuron.PosY - neuronTexture.Height / 2), Color.White);
+                DrawTexture(neuronTexture, neuron.PosX, neuron.PosY);
 
                 if (neuron.HasSomaReachedFinalPosition
                     && _formNetworkControl.dsDisplayNeuronDesirabilityRange.Checked)
                 {
-                    _spriteBatch.Draw(circle, new Vector2(neuron.PosX - _cnnNet.NeuronDesirabilityInfluenceRange, neuron.PosY - _cnnNet.NeuronDesirabilityInfluenceRange), Color.Red);
+                    DrawTexture(CreateCircle(_network.NeuronDesirabilityInfluenceRange), neuron.PosX, neuron.PosY);
                 }
 
                 for (int i = 1; i < neuron.AxonWaypoints.Count; i++)
@@ -209,18 +236,18 @@ namespace cnnnet.Viewer
                     var startPos = new Vector2(neuron.AxonWaypoints[i - 1].X, neuron.AxonWaypoints[i - 1].Y);
                     var endPos = new Vector2(neuron.AxonWaypoints[i].X, neuron.AxonWaypoints[i].Y);
 
-                    _blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-                    _blank.SetData(new[] { Color.White });
-                    DrawLine(_spriteBatch, _blank, 1, Color.White, startPos, endPos);
+                    _textureBlank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                    _textureBlank.SetData(new[] { Color.White });
+                    DrawLine(_spriteBatch, _textureBlank, 1, Color.White, startPos, endPos);
                 }
 
                 var axonLastWayPoint = neuron.AxonWaypoints.LastOrDefault();
 
                 if (neuron.IsInputNeuron)
                 {
-                    var axonLastWaypointCircle = CreateCircle(_cnnNet.AxonGuidanceForceSearchPlainRange);
+                    var axonLastWaypointCircle = CreateCircle(_network.AxonGuidanceForceSearchPlainRange);
 
-                    _spriteBatch.Draw(axonLastWaypointCircle, new Vector2(axonLastWayPoint.X - _cnnNet.AxonGuidanceForceSearchPlainRange, axonLastWayPoint.Y - _cnnNet.AxonGuidanceForceSearchPlainRange), Color.Red);
+                    _spriteBatch.Draw(axonLastWaypointCircle, new Vector2(axonLastWayPoint.X - _network.AxonGuidanceForceSearchPlainRange, axonLastWayPoint.Y - _network.AxonGuidanceForceSearchPlainRange), Color.Red);
                 }
             }
         }
@@ -263,6 +290,13 @@ namespace cnnnet.Viewer
                        SpriteEffects.None, 0);
         }
 
+        private void DrawTexture(Texture2D texture, int posX, int posY)
+        {
+            _spriteBatch.Draw(texture,
+                new Vector2(posX - _textureNeuronIdle.Width / 2, posY - _textureNeuronIdle.Height / 2),
+                Color.White);
+        }
+
         #endregion Methods
 
         #region Instance
@@ -278,12 +312,12 @@ namespace cnnnet.Viewer
             _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
 
-            _blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            _blank.SetData(new[] { Color.White });
+            _textureBlank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            _textureBlank.SetData(new[] { Color.White });
 
             _formNetworkControl = new FormNetworkControl();
-            _cnnNet = new CnnNet(Width, Height);
-            _formNetworkControl.CnnNet = _cnnNet;
+            _network = new CnnNet(Width, Height);
+            _formNetworkControl.CnnNet = _network;
         }
 
         #endregion Instance
