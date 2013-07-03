@@ -5,9 +5,15 @@ using System.Text;
 
 namespace cnnnet.Lib.Utils
 {
-    public struct Point
+    public class Point
     {
-        public int X;
-        public int Y;
+        public readonly int X;
+        public readonly int Y;
+
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }

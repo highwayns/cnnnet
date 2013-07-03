@@ -21,7 +21,8 @@ namespace cnnnet.Lib.Neurons
         protected double _movedDistance;
         protected int _posX;
         protected int _posY;
-        protected IEnumerable<IAxonGuidanceForce> AxonGuidanceForces;
+        protected IEnumerable<AxonGuidanceForceBase> AxonGuidanceForces;
+        private bool _hasAxonReachedFinalPosition;
 
         #endregion Fields
 
@@ -37,8 +38,18 @@ namespace cnnnet.Lib.Neurons
 
         public bool HasAxonReachedFinalPosition
         {
-            get;
-            protected set;
+            get
+            {
+                return _hasAxonReachedFinalPosition;
+            }
+            protected set
+            {
+                _hasAxonReachedFinalPosition = value;
+                if (_hasAxonReachedFinalPosition)
+                {
+                    _network.RegisterAxonWaypoints(this, AxonWaypoints);
+                }
+            }
         }
 
         public bool HasSomaReachedFinalPosition
@@ -120,12 +131,7 @@ namespace cnnnet.Lib.Neurons
 
         public void OnMoveTo(int newPosY, int newPosX)
         {
-            AxonWaypoints[0] = new Point()
-            {
-                X = newPosX,
-                Y = newPosY
-            };
-
+            AxonWaypoints[0] = new Point(newPosX, newPosY);
             OnMoveToInternal(newPosY, newPosX);
         }
 
@@ -309,8 +315,9 @@ namespace cnnnet.Lib.Neurons
             Point maxLocation = AxonGuidanceForces.
                 Select(axonGuidanceForce => axonGuidanceForce.GetScore(this, _network)).Sum().GetMaxLocation();
 
-            maxLocation.X += Math.Max(lastMaxLocation.X - _network.AxonGuidanceForceSearchPlainRange, 0);
-            maxLocation.Y += Math.Max(lastMaxLocation.Y - _network.AxonGuidanceForceSearchPlainRange, 0);
+            maxLocation = new Point
+                (maxLocation.X + Math.Max(lastMaxLocation.X - _network.AxonGuidanceForceSearchPlainRange, 0),
+                maxLocation.Y + Math.Max(lastMaxLocation.Y - _network.AxonGuidanceForceSearchPlainRange, 0));
 
             bool result = false;
 
@@ -383,14 +390,9 @@ namespace cnnnet.Lib.Neurons
                 }
 
                 if (HasAxonReachedFinalPosition
-                    && AxonTerminal.X == 0
-                    && AxonTerminal.Y == 0)
+                    && AxonTerminal == null)
                 {
-                    AxonTerminal = new Point
-                    {
-                        X = AxonWaypoints.Last().X,
-                        Y = AxonWaypoints.Last().Y
-                    };
+                    AxonTerminal = new Point(AxonWaypoints.Last().X, AxonWaypoints.Last().Y);
                 }
 
                 #endregion
@@ -401,17 +403,13 @@ namespace cnnnet.Lib.Neurons
 
         #region Instance
 
-        public Neuron(int id, CnnNet cnnNet, IEnumerable<IAxonGuidanceForce> axonGuidanceForces, bool isInputNeuron = false)
+        public Neuron(int id, CnnNet cnnNet, IEnumerable<AxonGuidanceForceBase> axonGuidanceForces, bool isInputNeuron = false)
         {
             _id = id;
             _network = cnnNet;
             AxonWaypoints = new List<Point>
             {
-                new Point
-                {
-                    X = PosX,
-                    Y = PosY
-                }
+                new Point(PosX, PosY)
             };
             AxonGuidanceForces = axonGuidanceForces;
 

@@ -7,12 +7,10 @@ using System.Text;
 
 namespace cnnnet.Lib.AxonGuidanceForces
 {
-    public class UndesirabilityMapAxonGuidanceForce : IAxonGuidanceForce
+    public class UndesirabilityMapAxonGuidanceForce : AxonGuidanceForceBase
     {
-        public double[,] GetScore(Neuron neuron, CnnNet network)
+        protected override void ComputeScoreInternal(Neuron neuron, CnnNet network, double[,] scoreMap)
         {
-            var result = new double[2 * network.AxonGuidanceForceSearchPlainRange, 2 * network.AxonGuidanceForceSearchPlainRange];
-
             int lastPosX = neuron.AxonWaypoints.Last().X;
             int lastPosY = neuron.AxonWaypoints.Last().Y;
 
@@ -43,12 +41,10 @@ namespace cnnnet.Lib.AxonGuidanceForces
 
                     if (GetDistanceFromPreviousWaypoints(y, x, neuron) >= network.AxonMinDistanceToPreviousWaypoints)
                     {
-                        result[y - minCoordY, x - minCoordX] = network.NeuronUndesirabilityMap[y, x];
+                        scoreMap[y - minCoordY, x - minCoordX] = network.NeuronUndesirabilityMap[y, x];
                     }
                 }
             }
-
-            return result;
         }
 
         private double GetDistanceFromPreviousWaypoints(int y, int x, Neuron neuron)

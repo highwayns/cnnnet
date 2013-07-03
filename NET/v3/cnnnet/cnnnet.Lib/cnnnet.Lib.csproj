@@ -43,8 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AxonGuidanceForces\DesirabilityMapAxonGuidanceForce.cs" />
+    <Compile Include="AxonGuidanceForces\FollowExistingAxonGuidanceForce.cs" />
     <Compile Include="CnnNet.cs" />
     <Compile Include="CnnNetParameters.cs" />
+    <Compile Include="Neurons\NeuronAxonWaypoint.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="FormNetworkControl.cs">
       <SubType>Form</SubType>
@@ -53,7 +55,7 @@
       <DependentUpon>FormNetworkControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ActiveNeuronGenerator\IActiveNeuronGenerator.cs" />
-    <Compile Include="AxonGuidanceForces\IAxonGuidanceForce.cs" />
+    <Compile Include="AxonGuidanceForces\AxonGuidanceForceBase.cs" />
     <Compile Include="Neurons\Neuron.cs" />
     <Compile Include="Utils\Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

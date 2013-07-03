@@ -25,6 +25,7 @@ namespace cnnnet.Lib
         public Neuron[,] NeuronPositionMap;
         public double[,] NeuronDesirabilityMap;
         public double[,] NeuronUndesirabilityMap;
+        public NeuronAxonWaypoint[,] NeuronAxonWaypoints;
 
         /// <summary>
         /// Neuron activity recorded from the last 'NeuronActivityHistoryLength' iterations
@@ -138,8 +139,9 @@ namespace cnnnet.Lib
             NeuronDesirabilityMap = new double[Height, Width];
             NeuronUndesirabilityMap = new double[Height, Width];
             NeuronPositionMap = new Neuron[Height, Width];
+            NeuronAxonWaypoints = new NeuronAxonWaypoint[Height, Width];
 
-            var axonGuidanceForces = new IAxonGuidanceForce[]
+            var axonGuidanceForces = new AxonGuidanceForceBase[]
                 {
                 new UndesirabilityMapAxonGuidanceForce(),
                 new DesirabilityMapAxonGuidanceForce()
@@ -170,6 +172,17 @@ namespace cnnnet.Lib
 
             ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 2));
             _iteration = 0;
+        }
+
+        public void RegisterAxonWaypoints(Neuron neuron, IEnumerable<Point> axonWaypoints)
+        {
+            var axonWaypointsList = axonWaypoints.ToList();
+
+            for (int axonWaypointIndex = 0; axonWaypointIndex < axonWaypointsList.Count; axonWaypointIndex++)
+            {
+                var axonWaypoint = axonWaypointsList[axonWaypointIndex];
+                NeuronAxonWaypoints[axonWaypoint.Y, axonWaypoint.X] = new NeuronAxonWaypoint(axonWaypointIndex,neuron, axonWaypoint);
+            }
         }
 
         #endregion Methods

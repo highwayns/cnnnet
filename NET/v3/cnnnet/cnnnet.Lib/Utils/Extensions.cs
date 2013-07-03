@@ -119,16 +119,16 @@ namespace cnnnet.Lib.Utils
 
         public static Point GetMaxLocation(this double[,] map)
         {
-            Point result = new Point();
+            Point result = null;
 
             for (int y = 1; y < map.GetLength(0); y++)
             {
                 for (int x = 0; x < map.GetLength(1); x++)
                 {
-                    if (map[y, x] > map[result.Y, result.X])
+                    if (result == null
+                        || map[y, x] > map[result.Y, result.X])
                     {
-                        result.X = x;
-                        result.Y = y;
+                        result = new Point(x, y);
                     }
                 }
             }
