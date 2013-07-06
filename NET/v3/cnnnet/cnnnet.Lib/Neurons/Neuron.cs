@@ -397,11 +397,8 @@ namespace cnnnet.Lib.Neurons
             {
                 #region navigate axon to higher undesirability
 
-                if (HasAxonReachedFinalPosition == false)
-                {
-                    HasAxonReachedFinalPosition = ProcessGuideAxon() == false
-                                                && AxonWaypoints.Count > 1;
-                }
+                HasAxonReachedFinalPosition = ProcessGuideAxon() == false
+                                            && AxonWaypoints.Count > 1;
 
                 if (HasAxonReachedFinalPosition
                     && AxonTerminal == null)
