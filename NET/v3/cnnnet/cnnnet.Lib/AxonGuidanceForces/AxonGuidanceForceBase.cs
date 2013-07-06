@@ -43,7 +43,7 @@ namespace cnnnet.Lib.AxonGuidanceForces
                         continue;
                     }
 
-                    ComputeScoreInternal(neuron, network, x, y, ref result[y - minCoordY, x - minCoordX]);
+                    result[y - minCoordY, x - minCoordX] = ComputeScoreAtLocation(neuron, network, new Point(x, y));
                 }
             }
 
@@ -70,7 +70,7 @@ namespace cnnnet.Lib.AxonGuidanceForces
             return true;
         }
 
-        protected abstract void ComputeScoreInternal(Neuron neuron, CnnNet network, int x, int y, ref double result);
+        public abstract double ComputeScoreAtLocation(Neuron neuron, CnnNet network, Point location);
 
         private double GetDistanceFromPreviousWaypoints(int y, int x, Neuron neuron)
         {

@@ -9,9 +9,9 @@ namespace cnnnet.Lib.AxonGuidanceForces
 {
     public class DesirabilityMapAxonGuidanceForce : AxonGuidanceForceBase
     {
-        protected override void ComputeScoreInternal(Neuron neuron, CnnNet network, int x, int y, ref double result)
+        public override double ComputeScoreAtLocation(Neuron neuron, CnnNet network, Point location)
         {
-            result = -network.NeuronDesirabilityMap[y, x];
+            return -network.NeuronDesirabilityMap[location.Y, location.X];
         }
 
         protected override bool PreCheckLocation(Neuron neuron, CnnNet network, int x, int y)

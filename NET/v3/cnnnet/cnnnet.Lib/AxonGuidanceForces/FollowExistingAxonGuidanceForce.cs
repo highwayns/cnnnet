@@ -1,4 +1,5 @@
 ﻿using cnnnet.Lib.Neurons;
+using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,9 @@ namespace cnnnet.Lib.AxonGuidanceForces
 {
     public class FollowExistingAxonGuidanceForce : AxonGuidanceForceBase
     {
-        protected override void ComputeScoreInternal(Neuron neuron, CnnNet network, int x, int y, ref double result)
+        public override double ComputeScoreAtLocation(Neuron neuron, CnnNet network, Point location)
         {
-            result = double.MinValue;
+            return 0;
         }
     }
 }

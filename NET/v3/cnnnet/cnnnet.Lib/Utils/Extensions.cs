@@ -117,7 +117,7 @@ namespace cnnnet.Lib.Utils
                            && GetDistance(neuron.AxonTerminal.X, neuron.AxonTerminal.Y, posX, posY) <= range).ToArray();
         }
 
-        public static void GetMaxLocation(this double[,] map, out Point location, out double maxValue)
+        public static void GetMaxAndLocation(this double[,] map, out Point location, out double maxValue)
         {
             location = null;
             maxValue = double.MinValue;
