@@ -29,6 +29,7 @@ namespace cnnnet.Lib
 
         /// <summary>
         /// Neuron activity recorded from the last 'NeuronActivityHistoryLength' iterations
+        /// The last item in the list represents the most recent neuron activity
         /// </summary>
         public List<Neuron[]> NeuronActivityHistory;
         

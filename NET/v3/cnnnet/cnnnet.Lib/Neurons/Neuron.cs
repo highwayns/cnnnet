@@ -66,6 +66,17 @@ namespace cnnnet.Lib.Neurons
             }
         }
 
+        public bool WasActive
+        {
+            get
+            {
+                return _network.NeuronActivityHistory.Last().Contains(this);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the neuron is active in the current iteration
+        /// </summary>
         public bool IsActive
         {
             get
@@ -312,12 +323,14 @@ namespace cnnnet.Lib.Neurons
         {
             Point lastMaxLocation = AxonWaypoints.Last();
 
-            Point maxLocation = AxonGuidanceForces.
-                Select(axonGuidanceForce => axonGuidanceForce.GetScore(this, _network)).Sum().GetMaxLocation();
+            Point maxLocation;
+            double maxValue;
+            AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.GetScore(this, _network)).Sum().
+                GetMaxLocation(out maxLocation, out maxValue);
 
             maxLocation = new Point
-                (maxLocation.X + Math.Max(lastMaxLocation.X - _network.AxonGuidanceForceSearchPlainRange, 0),
-                maxLocation.Y + Math.Max(lastMaxLocation.Y - _network.AxonGuidanceForceSearchPlainRange, 0));
+                (Math.Min(Math.Max(maxLocation.X - _network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), _network.Width - 1),
+                Math.Min(Math.Max(maxLocation.Y - _network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.Y, 0), _network.Height - 1));
 
             bool result = false;
 
@@ -343,7 +356,8 @@ namespace cnnnet.Lib.Neurons
                 {
                     _activityScore +=
                         Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, _network, _network.NeuronDendricTreeRange).
-                        Where(neuronsWithAxonTerminalWithinRange => neuronsWithAxonTerminalWithinRange.IsActive).Count() * _network.NeuronActivityScoreMultiply;
+                        Where(neuronsWithAxonTerminalWithinRange => neuronsWithAxonTerminalWithinRange.WasActive).Count() 
+                        * _network.NeuronActivityScoreMultiply;
 
                     if (_activityScore >= _network.NeuronIsActiveMinimumActivityScore)
                     {
