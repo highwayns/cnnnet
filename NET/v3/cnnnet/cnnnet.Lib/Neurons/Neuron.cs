@@ -261,13 +261,13 @@ namespace cnnnet.Lib.Neurons
 
         protected bool ProcessMoveToHigherDesirability()
         {
-            bool ret = false;
+            bool result = false;
 
-            int minCoordX = Math.Max(PosX - _network.NeuronDesirabilityInfluenceRange, 0);
-            int maxCoordX = Math.Min(PosX + _network.NeuronDesirabilityInfluenceRange, _network.Width - 1);
+            int minCoordX = Math.Max(PosX - _network.NeuronHigherDesirabilitySearchPlainRange, 0);
+            int maxCoordX = Math.Min(PosX + _network.NeuronHigherDesirabilitySearchPlainRange, _network.Width - 1);
 
-            int minCoordY = Math.Max(PosY - _network.NeuronDesirabilityInfluenceRange, 0);
-            int maxCoordY = Math.Min(PosY + _network.NeuronDesirabilityInfluenceRange, _network.Height - 1);
+            int minCoordY = Math.Max(PosY - _network.NeuronHigherDesirabilitySearchPlainRange, 0);
+            int maxCoordY = Math.Min(PosY + _network.NeuronHigherDesirabilitySearchPlainRange, _network.Height - 1);
 
             int maxDesirabX = PosX;
             int maxDesirabY = PosY;
@@ -287,7 +287,7 @@ namespace cnnnet.Lib.Neurons
                         && Extensions.GetNeuronAt(y, x, _network) == null
                         && _movedDistance + Extensions.GetDistance(PosX, PosY, x, y) < _network.MaxNeuronMoveDistance
                         && GetDistanceToNearestNeuron(y, x) >= _network.MinDistanceBetweenNeurons
-                        && Extensions.GetDistance(PosX, PosY, x, y) <= _network.NeuronDesirabilityInfluenceRange /* this ensures that we only check within the range */)
+                        && Extensions.GetDistance(PosX, PosY, x, y) <= _network.NeuronHigherDesirabilitySearchPlainRange /* this ensures that we only check within the range */)
                     {
                         maxDesirabX = x;
                         maxDesirabY = y;
@@ -298,15 +298,15 @@ namespace cnnnet.Lib.Neurons
             }
 
             if (PosX != maxDesirabX
-                && PosY != maxDesirabY)
+                || PosY != maxDesirabY)
             {
                 MoveTo(maxDesirabY, maxDesirabX);
                 _movedDistance += maxDesirabMovedDistance;
 
-                ret = true;
+                result = true;
             }
 
-            return ret;
+            return result;
         }
 
         private double DistanceFromPreviousWaypoints(int y, int x)
