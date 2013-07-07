@@ -32,8 +32,8 @@ namespace cnnnet.Viewer
         private const int ColorIndexBlue = 2;
 #pragma warning restore 169
 
-        private const int Width = 800;
-        private const int Height = 600;
+        private const int Width = 400;
+        private const int Height = 300;
 
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -231,6 +231,8 @@ namespace cnnnet.Viewer
                     DrawTexture(CreateCircle(_network.NeuronDesirabilityInfluenceRange), neuron.PosX, neuron.PosY);
                 }
 
+                #region Draw Axon
+
                 for (int i = 1; i < neuron.AxonWaypoints.Count; i++)
                 {
                     var startPos = new Vector2(neuron.AxonWaypoints[i - 1].X, neuron.AxonWaypoints[i - 1].Y);
@@ -238,8 +240,10 @@ namespace cnnnet.Viewer
 
                     _textureBlank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
                     _textureBlank.SetData(new[] { Color.White });
-                    DrawLine(_spriteBatch, _textureBlank, 1, Color.White, startPos, endPos);
+                    DrawLine(_spriteBatch, _textureBlank, 1, neuron == _neuronSelected ? Color.DarkBlue : Color.White, startPos, endPos);
                 }
+
+                #endregion
 
                 var axonLastWayPoint = neuron.AxonWaypoints.LastOrDefault();
 

@@ -7,7 +7,7 @@ namespace cnnnet.Lib
 {
     public partial class CnnNet
     {
-        public int NeuronCount = 300;
+        public int NeuronCount = 150;
 
         /// <summary>
         /// Desirability influence distance
@@ -27,7 +27,7 @@ namespace cnnnet.Lib
         /// <summary>
         /// The range around a neuron searched for higher desirability
         /// </summary>
-        public int NeuronHigherDesirabilitySearchPlainRange = 10;
+        public int NeuronHigherDesirabilitySearchPlainRange = 20;
 
         /// <summary>
         /// The minimum distance allowed between neurons

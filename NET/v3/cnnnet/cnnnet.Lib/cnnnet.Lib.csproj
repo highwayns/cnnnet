@@ -42,10 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AxonGuidanceForces\DesirabilityMapAxonGuidanceForce.cs" />
-    <Compile Include="AxonGuidanceForces\FollowExistingAxonGuidanceForce.cs" />
+    <Compile Include="GuidanceForces\DesirabilityMapAxonGuidanceForce.cs" />
+    <Compile Include="GuidanceForces\FollowExistingAxonGuidanceForce.cs" />
     <Compile Include="CnnNet.cs" />
     <Compile Include="CnnNetParameters.cs" />
+    <Compile Include="GuidanceForces\GuidanceForceBase.cs" />
     <Compile Include="Neurons\NeuronAxonWaypoint.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="FormNetworkControl.cs">
@@ -55,13 +56,13 @@
       <DependentUpon>FormNetworkControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ActiveNeuronGenerator\IActiveNeuronGenerator.cs" />
-    <Compile Include="AxonGuidanceForces\AxonGuidanceForceBase.cs" />
+    <Compile Include="GuidanceForces\AxonGuidanceForceBase.cs" />
     <Compile Include="Neurons\Neuron.cs" />
     <Compile Include="Utils\Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ActiveNeuronGenerator\RandomActiveNeuronGenerator.cs" />
     <Compile Include="ActiveNeuronGenerator\SequentialActiveInputNeuronGenerator.cs" />
-    <Compile Include="AxonGuidanceForces\UndesirabilityMapAxonGuidanceForce.cs" />
+    <Compile Include="GuidanceForces\UndesirabilityMapAxonGuidanceForce.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FormNetworkControl.resx">

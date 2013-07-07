@@ -1,4 +1,4 @@
-﻿using cnnnet.Lib.AxonGuidanceForces;
+﻿using cnnnet.Lib.GuidanceForces;
 using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
@@ -325,7 +325,7 @@ namespace cnnnet.Lib.Neurons
 
             Point maxLocation;
             double maxScore;
-            AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.GetScore(this, _network)).Sum().
+            AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.GetScore(this)).Sum().
                 GetMaxAndLocation(out maxLocation, out maxScore);
 
             maxLocation = new Point
@@ -334,7 +334,7 @@ namespace cnnnet.Lib.Neurons
 
             bool result = false;
 
-            double lastMaxLocationScore = AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.ComputeScoreAtLocation(this, _network, lastMaxLocation)).Sum();
+            double lastMaxLocationScore = AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.ComputeScoreAtLocation(lastMaxLocation.X, lastMaxLocation.Y, this)).Sum();
 
             if (maxScore > lastMaxLocationScore
                 || AxonWaypoints.Count == 1)

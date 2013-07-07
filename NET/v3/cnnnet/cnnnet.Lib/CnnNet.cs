@@ -1,5 +1,5 @@
 ﻿using cnnnet.Lib.ActiveNeuronGenerator;
-using cnnnet.Lib.AxonGuidanceForces;
+using cnnnet.Lib.GuidanceForces;
 using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
@@ -144,8 +144,8 @@ namespace cnnnet.Lib
 
             var axonGuidanceForces = new AxonGuidanceForceBase[]
                 {
-                new UndesirabilityMapAxonGuidanceForce(),
-                new DesirabilityMapAxonGuidanceForce()
+                new UndesirabilityMapAxonGuidanceForce(this),
+                new DesirabilityMapAxonGuidanceForce(this)
                 };
 
             #region Generate Random Neurons
