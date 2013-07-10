@@ -42,7 +42,8 @@ namespace cnnnet.Lib.GuidanceForces
                     // only check in the desired radius
                     var distance = 0.0d;
                     if ((x == location.X && y == location.Y)
-                        || (distance = Extensions.GetDistance(location.X, location.Y, x, y)) > GuidanceForceRange /* this ensures that we only check within the range */)
+                        /* this ensures that we only check within the range */
+                        || (distance = Extensions.GetDistance(location.X, location.Y, x, y)) > GuidanceForceRange)
                     {
                         continue;
                     }

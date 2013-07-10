@@ -46,7 +46,7 @@ namespace cnnnet.Lib
                 npMaxNeuronMoveDistance.Value = _cnnNet.MaxNeuronMoveDistance;
                 npMinDistanceBetweenNeurons.Value = _cnnNet.MinDistanceBetweenNeurons;
                 npNeuronCount.Value = _cnnNet.NeuronCount;
-                npNeuronDesirabilityPlainRange.Value = _cnnNet.NeuronHigherDesirabilitySearchPlainRange;
+                npNeuronDesirabilityPlainRange.Value = _cnnNet.SomaGuidanceForceSearchPlainRange;
                 npNeuronInfluenceRange.Value = _cnnNet.NeuronDesirabilityInfluenceRange;
             }
         }
@@ -63,7 +63,7 @@ namespace cnnnet.Lib
             _cnnNet.MaxNeuronMoveDistance = (int)npMaxNeuronMoveDistance.Value;
             _cnnNet.MinDistanceBetweenNeurons = (int)npMinDistanceBetweenNeurons.Value;
             _cnnNet.NeuronCount = (int)npNeuronCount.Value;
-            _cnnNet.NeuronHigherDesirabilitySearchPlainRange = (int)npNeuronDesirabilityPlainRange.Value;
+            _cnnNet.SomaGuidanceForceSearchPlainRange = (int)npNeuronDesirabilityPlainRange.Value;
             _cnnNet.NeuronDesirabilityInfluenceRange = (int)npNeuronInfluenceRange.Value;
         }
 

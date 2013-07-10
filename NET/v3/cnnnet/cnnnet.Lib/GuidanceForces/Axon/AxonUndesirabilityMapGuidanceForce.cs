@@ -7,7 +7,7 @@ using System.Text;
 
 namespace cnnnet.Lib.GuidanceForces
 {
-    public class UndesirabilityMapAxonGuidanceForce : AxonGuidanceForceBase
+    public class AxonUndesirabilityMapGuidanceForce : AxonGuidanceForceBase
     {
         #region Methods
 
@@ -26,7 +26,7 @@ namespace cnnnet.Lib.GuidanceForces
 
         #region Instance
 
-        public UndesirabilityMapAxonGuidanceForce(CnnNet network)
+        public AxonUndesirabilityMapGuidanceForce(CnnNet network)
             : base(network)
         {
 

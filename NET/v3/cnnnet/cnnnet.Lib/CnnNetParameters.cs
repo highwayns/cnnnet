@@ -27,12 +27,12 @@ namespace cnnnet.Lib
         /// <summary>
         /// The range around a neuron searched for higher desirability
         /// </summary>
-        public int NeuronHigherDesirabilitySearchPlainRange = 20;
+        public int SomaGuidanceForceSearchPlainRange = 20;
 
         /// <summary>
         /// The minimum distance allowed between neurons
         /// </summary>
-        public int MinDistanceBetweenNeurons = 20;
+        public int MinDistanceBetweenNeurons = 10;
 
         /// <summary>
         /// How many input neurons we should generate

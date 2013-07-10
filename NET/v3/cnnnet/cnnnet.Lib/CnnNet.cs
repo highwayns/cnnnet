@@ -1,5 +1,6 @@
 ﻿using cnnnet.Lib.ActiveNeuronGenerator;
 using cnnnet.Lib.GuidanceForces;
+using cnnnet.Lib.GuidanceForces.Soma;
 using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
@@ -144,8 +145,14 @@ namespace cnnnet.Lib
 
             var axonGuidanceForces = new AxonGuidanceForceBase[]
                 {
-                new UndesirabilityMapAxonGuidanceForce(this),
-                new DesirabilityMapAxonGuidanceForce(this)
+                new AxonUndesirabilityMapGuidanceForce(this),
+                new AxonDesirabilityMapGuidanceForce(this)
+                };
+
+            var somaGuidanceForces = new SomaGuidanceForceBase[]
+                {
+                new SomaDesirabilityMapGuidanceForce(this),
+                //new SomaUndesirabilityMapGuidanceForce(this)
                 };
 
             #region Generate Random Neurons
@@ -153,7 +160,7 @@ namespace cnnnet.Lib
             var neurons = new List<Neuron>();
             for (int i = 0; i < NeuronCount + InputNeuronCount; i++)
             {
-                var neuron = new Neuron(i, this, axonGuidanceForces, i >= NeuronCount);
+                var neuron = new Neuron(i, this, axonGuidanceForces, somaGuidanceForces, i >= NeuronCount);
 
                 do
                 {
@@ -161,6 +168,7 @@ namespace cnnnet.Lib
                 }
                 while (neurons.Any(n => n.PosX == neuron.PosX && n.PosY == neuron.PosY));
 
+                neuron.ResetMovedDistance();
                 neurons.Add(neuron);
                 NeuronPositionMap[neuron.PosY, neuron.PosX] = neuron;
             }

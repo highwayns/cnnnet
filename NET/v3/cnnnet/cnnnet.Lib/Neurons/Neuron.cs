@@ -1,4 +1,5 @@
 ﻿using cnnnet.Lib.GuidanceForces;
+using cnnnet.Lib.GuidanceForces.Soma;
 using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
@@ -21,8 +22,10 @@ namespace cnnnet.Lib.Neurons
         protected double _movedDistance;
         protected int _posX;
         protected int _posY;
-        protected IEnumerable<AxonGuidanceForceBase> AxonGuidanceForces;
         private bool _hasAxonReachedFinalPosition;
+
+        protected IEnumerable<AxonGuidanceForceBase> AxonGuidanceForces;
+        protected IEnumerable<SomaGuidanceForceBase> SomaGuidanceForces;
 
         #endregion Fields
 
@@ -125,12 +128,22 @@ namespace cnnnet.Lib.Neurons
             set;
         }
 
+        public double MovedDistance
+        {
+            get
+            {
+                return _movedDistance;
+            }
+        }
+
         #endregion Properties
 
         #region Methods
 
         public void MoveTo(int newPosY, int newPosX)
         {
+            _movedDistance += Extensions.GetDistance(newPosX, newPosY, _posX, _posY);
+
             _network.NeuronPositionMap[PosY, PosX] = null;
             _network.NeuronPositionMap[newPosY, newPosX] = this;
 
@@ -164,7 +177,7 @@ namespace cnnnet.Lib.Neurons
                 bool movedToHigherDesirability = false;
                 if (_movedDistance < _network.MaxNeuronMoveDistance)
                 {
-                    movedToHigherDesirability = ProcessMoveToHigherDesirability();
+                    movedToHigherDesirability = ProcessGuideSoma();
                 }
 
                 HasSomaReachedFinalPosition = _movedDistance > _network.MaxNeuronMoveDistance
@@ -220,89 +233,32 @@ namespace cnnnet.Lib.Neurons
                 _network.NeuronUndesirabilityMaxInfluence * Math.Max(1, _iterationsSinceLastActivation / _network.NeuronUndesirabilityMaxIterationsSinceLastActivation));
         }
 
-        /// <summary>
-        /// Remember to optimize this by using spiral matrix processing
-        /// http://pastebin.com/4EYJvv5X
-        /// </summary>
-        /// <param name="referenceY"></param>
-        /// <param name="referenceX"></param>
-        /// <returns></returns>
-        protected double GetDistanceToNearestNeuron(int referenceY, int referenceX)
-        {
-            double minDistance = _network.NeuronDesirabilityInfluenceRange + 1;
-
-            int xMin = Math.Max(referenceX - _network.MinDistanceBetweenNeurons, 0);
-            int xMax = Math.Min(referenceX + _network.MinDistanceBetweenNeurons, _network.Width - 1);
-            int yMin = Math.Max(referenceY - _network.MinDistanceBetweenNeurons, 0);
-            int yMax = Math.Min(referenceY + _network.MinDistanceBetweenNeurons, _network.Height - 1);
-
-            for (int y = yMin; y <= yMax; y++)
-            {
-                for (int x = xMin; x < xMax; x++)
-                {
-                    if (_network.NeuronPositionMap[y, x] != null
-                        && _network.NeuronPositionMap[y, x] != this)
-                    {
-                        var distance = Extensions.GetDistance(referenceX, referenceY, x, y);
-                        if (minDistance > distance)
-                        {
-                            minDistance = distance;
-                        }
-                    }
-                }
-            }
-
-            return minDistance;
-        }
+        
 
         protected virtual void OnMoveToInternal(int newPosY, int newPosX)
         {
         }
 
-        protected bool ProcessMoveToHigherDesirability()
+        protected bool ProcessGuideSoma()
         {
+            Point lastMaxLocation = AxonWaypoints.Last();
+
+            Point maxLocation;
+            double maxScore;
+            SomaGuidanceForces.Select(somaGuidanceForce => somaGuidanceForce.GetScore(this)).Sum().
+                GetMaxAndLocation(out maxLocation, out maxScore);
+
+            maxLocation = new Point
+                (Math.Min(Math.Max(maxLocation.X - _network.SomaGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), _network.Width - 1),
+                Math.Min(Math.Max(maxLocation.Y - _network.SomaGuidanceForceSearchPlainRange + lastMaxLocation.Y, 0), _network.Height - 1));
+
             bool result = false;
 
-            int minCoordX = Math.Max(PosX - _network.NeuronHigherDesirabilitySearchPlainRange, 0);
-            int maxCoordX = Math.Min(PosX + _network.NeuronHigherDesirabilitySearchPlainRange, _network.Width - 1);
+            double lastMaxLocationScore = SomaGuidanceForces.Select(somaGuidanceForce => somaGuidanceForce.ComputeScoreAtLocation(lastMaxLocation.X, lastMaxLocation.Y, this)).Sum();
 
-            int minCoordY = Math.Max(PosY - _network.NeuronHigherDesirabilitySearchPlainRange, 0);
-            int maxCoordY = Math.Min(PosY + _network.NeuronHigherDesirabilitySearchPlainRange, _network.Height - 1);
-
-            int maxDesirabX = PosX;
-            int maxDesirabY = PosY;
-            double maxDesirabMovedDistance = 0;
-            double maxDesirability = _network.NeuronDesirabilityMap[PosY, PosX];
-
-            for (int y = minCoordY; y < maxCoordY; y++)
+            if (maxScore > lastMaxLocationScore)
             {
-                for (int x = minCoordX; x < maxCoordX; x++)
-                {
-                    if (x == PosX && y == PosY)
-                    {
-                        continue;
-                    }
-
-                    if (_network.NeuronDesirabilityMap[y, x] > maxDesirability
-                        && Extensions.GetNeuronAt(y, x, _network) == null
-                        && _movedDistance + Extensions.GetDistance(PosX, PosY, x, y) < _network.MaxNeuronMoveDistance
-                        && GetDistanceToNearestNeuron(y, x) >= _network.MinDistanceBetweenNeurons
-                        && Extensions.GetDistance(PosX, PosY, x, y) <= _network.NeuronHigherDesirabilitySearchPlainRange /* this ensures that we only check within the range */)
-                    {
-                        maxDesirabX = x;
-                        maxDesirabY = y;
-                        maxDesirability = _network.NeuronDesirabilityMap[y, x];
-                        maxDesirabMovedDistance = Extensions.GetDistance(PosX, PosY, x, y);
-                    }
-                }
-            }
-
-            if (PosX != maxDesirabX
-                || PosY != maxDesirabY)
-            {
-                MoveTo(maxDesirabY, maxDesirabX);
-                _movedDistance += maxDesirabMovedDistance;
-
+                MoveTo(maxLocation.Y, maxLocation.X);
                 result = true;
             }
 
@@ -413,11 +369,19 @@ namespace cnnnet.Lib.Neurons
             }
         }
 
+        public void ResetMovedDistance()
+        {
+            _movedDistance = 0;
+        }
+
         #endregion Methods
 
         #region Instance
 
-        public Neuron(int id, CnnNet cnnNet, IEnumerable<AxonGuidanceForceBase> axonGuidanceForces, bool isInputNeuron = false)
+        public Neuron(int id, CnnNet cnnNet, 
+            IEnumerable<AxonGuidanceForceBase> axonGuidanceForces, 
+            IEnumerable<SomaGuidanceForceBase> somaGuidanceForces,
+            bool isInputNeuron = false)
         {
             _id = id;
             _network = cnnNet;
@@ -426,6 +390,7 @@ namespace cnnnet.Lib.Neurons
                 new Point(PosX, PosY)
             };
             AxonGuidanceForces = axonGuidanceForces;
+            SomaGuidanceForces = somaGuidanceForces;
 
             HasSomaReachedFinalPosition = isInputNeuron;
             IsInputNeuron = isInputNeuron;
