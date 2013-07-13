@@ -18,17 +18,15 @@ namespace cnnnet.Lib.GuidanceForces
 
         #region Methods
 
-        public double[,] GetScore(Neuron neuron)
+        public double[,] GetScore(int refY, int refX, Neuron neuron)
         {
             var result = GetInitialisedResult();
 
-            var location = neuron.AxonWaypoints.Last();
+            int minCoordX = Math.Max(refX - GuidanceForceRange, 0);
+            int maxCoordX = Math.Min(refX + GuidanceForceRange, Network.Width - 1);
 
-            int minCoordX = Math.Max(location.X - GuidanceForceRange, 0);
-            int maxCoordX = Math.Min(location.X + GuidanceForceRange, Network.Width - 1);
-
-            int minCoordY = Math.Max(location.Y - GuidanceForceRange, 0);
-            int maxCoordY = Math.Min(location.Y + GuidanceForceRange, Network.Height - 1);
+            int minCoordY = Math.Max(refY - GuidanceForceRange, 0);
+            int maxCoordY = Math.Min(refY + GuidanceForceRange, Network.Height - 1);
 
             for (int y = minCoordY; y < maxCoordY; y++)
             {
@@ -41,9 +39,9 @@ namespace cnnnet.Lib.GuidanceForces
 
                     // only check in the desired radius
                     var distance = 0.0d;
-                    if ((x == location.X && y == location.Y)
+                    if ((x == refX && y == refY)
                         /* this ensures that we only check within the range */
-                        || (distance = Extensions.GetDistance(location.X, location.Y, x, y)) > GuidanceForceRange)
+                        || (distance = Extensions.GetDistance(refX, refY, x, y)) > GuidanceForceRange)
                     {
                         continue;
                     }
@@ -86,13 +84,13 @@ namespace cnnnet.Lib.GuidanceForces
 
         private double[,] GetInitialisedResult()
         {
-            var result = new double[2 * GuidanceForceRange, 2 * GuidanceForceRange];
+            var result = new double[2 * GuidanceForceRange + 1, 2 * GuidanceForceRange + 1];
 
             for (int y = 0; y < result.GetLength(0); y++)
             {
                 for (int x = 0; x < result.GetLength(1); x++)
                 {
-                    result[y, x] = -1000;
+                    result[y, x] = -99999;
                 }
             }
 

@@ -156,7 +156,6 @@ namespace cnnnet.Lib.Neurons
         public void OnMoveTo(int newPosY, int newPosX)
         {
             AxonWaypoints[0] = new Point(newPosX, newPosY);
-            OnMoveToInternal(newPosY, newPosX);
         }
 
         public void Process()
@@ -233,28 +232,20 @@ namespace cnnnet.Lib.Neurons
                 _network.NeuronUndesirabilityMaxInfluence * Math.Max(1, _iterationsSinceLastActivation / _network.NeuronUndesirabilityMaxIterationsSinceLastActivation));
         }
 
-        
-
-        protected virtual void OnMoveToInternal(int newPosY, int newPosX)
-        {
-        }
-
         protected bool ProcessGuideSoma()
         {
-            Point lastMaxLocation = AxonWaypoints.Last();
-
             Point maxLocation;
             double maxScore;
-            SomaGuidanceForces.Select(somaGuidanceForce => somaGuidanceForce.GetScore(this)).Sum().
+            SomaGuidanceForces.Select(somaGuidanceForce => somaGuidanceForce.GetScore(PosY, PosX, this)).Sum().
                 GetMaxAndLocation(out maxLocation, out maxScore);
 
             maxLocation = new Point
-                (Math.Min(Math.Max(maxLocation.X - _network.SomaGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), _network.Width - 1),
-                Math.Min(Math.Max(maxLocation.Y - _network.SomaGuidanceForceSearchPlainRange + lastMaxLocation.Y, 0), _network.Height - 1));
+                (Math.Min(Math.Max(maxLocation.X - _network.SomaGuidanceForceSearchPlainRange + PosX, 0), _network.Width - 1),
+                Math.Min(Math.Max(maxLocation.Y - _network.SomaGuidanceForceSearchPlainRange + PosY, 0), _network.Height - 1));
 
             bool result = false;
 
-            double lastMaxLocationScore = SomaGuidanceForces.Select(somaGuidanceForce => somaGuidanceForce.ComputeScoreAtLocation(lastMaxLocation.X, lastMaxLocation.Y, this)).Sum();
+            double lastMaxLocationScore = SomaGuidanceForces.Select(somaGuidanceForce => somaGuidanceForce.ComputeScoreAtLocation(PosX, PosY, this)).Sum();
 
             if (maxScore > lastMaxLocationScore)
             {
@@ -265,23 +256,14 @@ namespace cnnnet.Lib.Neurons
             return result;
         }
 
-        private double DistanceFromPreviousWaypoints(int y, int x)
-        {
-            if (AxonWaypoints.Count == 0)
-            {
-                return float.MaxValue;
-            }
-
-            return AxonWaypoints.Select(waypoint => Extensions.GetDistance(x, y, waypoint.X, waypoint.Y)).Min();
-        }
-
         private bool ProcessGuideAxon()
         {
             Point lastMaxLocation = AxonWaypoints.Last();
 
             Point maxLocation;
             double maxScore;
-            AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.GetScore(this)).Sum().
+            AxonGuidanceForces.Select
+                (axonGuidanceForce => axonGuidanceForce.GetScore(lastMaxLocation.Y, lastMaxLocation.X, this)).Sum().
                 GetMaxAndLocation(out maxLocation, out maxScore);
 
             maxLocation = new Point
