@@ -29,7 +29,9 @@ namespace cnnnet.ViewerWpf
 
         private Thread _networkProcessThread;
         private CnnNet _network;
-        private ViewerDesirability _viewerDesirability;
+
+        private ViewerManager _viewerManager;
+        private bool _closeRequested;
 
         #endregion
 
@@ -38,16 +40,26 @@ namespace cnnnet.ViewerWpf
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
             _network = new CnnNet(NetworkWidth, NetworkHeight);
-            _viewerDesirability = new ViewerDesirability(_network);
 
-            _viewerDesirability.Start();
-            img.Source = _viewerDesirability.WriteableBitmap;
+            _viewerManager = new ViewerManager(_network);
+            _viewerManager.RegisterViewer(new ViewerDesirability(_network));
+            _viewerManager.RegisterViewer(new ViewerUndesirability(_network));
+
+            _viewerManager.Start();
+
+            img.Source = _viewerManager.WriteableBitmap;
             _networkProcessThread.Start();
+        }
+
+        private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _closeRequested = true;
+            _viewerManager.Stop();
         }
 
         private void NetworkProcessThreadStart()
         {
-            while (true)
+            while (_closeRequested == false)
             {
                 _network.Process();
             }

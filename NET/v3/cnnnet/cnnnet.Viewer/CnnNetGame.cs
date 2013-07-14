@@ -32,8 +32,8 @@ namespace cnnnet.Viewer
         private const int ColorIndexBlue = 2;
 #pragma warning restore 169
 
-        private const int Width = 400;
-        private const int Height = 300;
+        private const int Width = 800;
+        private const int Height = 600;
 
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;

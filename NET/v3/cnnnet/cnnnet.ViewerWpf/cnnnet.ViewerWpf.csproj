@@ -59,7 +59,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Viewer.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="ViewerManager.cs" />
+    <Compile Include="ViewerUndesirability.cs" />
+    <Compile Include="ViewerBase.cs" />
     <Compile Include="ViewerDesirability.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

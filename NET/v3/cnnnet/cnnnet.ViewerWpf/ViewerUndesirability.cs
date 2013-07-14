@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace cnnnet.ViewerWpf
 {
-    public class ViewerDesirability : ViewerBase
+    public class ViewerUndesirability : ViewerBase
     {
         #region Fields
         
@@ -21,13 +21,13 @@ namespace cnnnet.ViewerWpf
 
         public override byte[,] GetData()
         {
-            var desirabilityMap = (double[,])_network.NeuronDesirabilityMap.Clone();
+            var desirabilityMap = (double[,])_network.NeuronUndesirabilityMap.Clone();
 
             for (int y = 0; y < _network.Height; y++)
             {
                 for (int x = 0; x < _network.Width; x++)
                 {
-                    data[y, x * 3 + Constants.ColorGreenIndex] = (byte)(desirabilityMap[y, x] * 255);
+                    data[y, x * 3 + Constants.ColorRedIndex] = (byte)(desirabilityMap[y, x] * 255);
                 }
             }
 
@@ -38,7 +38,7 @@ namespace cnnnet.ViewerWpf
 
         #region Instance
 
-        public ViewerDesirability(CnnNet network)
+        public ViewerUndesirability(CnnNet network)
         {
             _network = network;
             data = new byte[_network.Height, _network.Width * 3];
