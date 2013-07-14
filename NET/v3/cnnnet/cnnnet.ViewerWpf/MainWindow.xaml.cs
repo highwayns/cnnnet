@@ -72,6 +72,8 @@ namespace cnnnet.ViewerWpf
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
+            var mousePosition = Mouse.GetPosition(image);
+
             // Wrap updates in a GetContext call, to prevent invalidation and nested locking/unlocking during this block
             // NOTE: This is not strictly necessary for the SL version as this is a WPF feature, however we include it here for completeness and to show
             // a similar API to WPF
@@ -81,7 +83,8 @@ namespace cnnnet.ViewerWpf
 
                 double elapsed = (DateTime.Now - lastUpdate).TotalSeconds;
                 lastUpdate = DateTime.Now;
-                _viewerManager.Update(elapsed);
+                _viewerManager.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
+                    Mouse.LeftButton == MouseButtonState.Pressed);
 
                 double timeNow = _stopwatch.ElapsedMilliseconds;
                 double elapsedMilliseconds = timeNow - _lastTime;

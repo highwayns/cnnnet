@@ -1,4 +1,6 @@
 ﻿using cnnnet.Lib;
+using cnnnet.Lib.Neurons;
+using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,9 @@ namespace cnnnet.ViewerWpf
     public class ViewerManager
     {
         #region Fields
+
+        private Neuron _neuronSelected;
+        private Neuron _neuronHover;
 
         private CnnNet _network;
         private readonly List<ViewerBase> _viewers;
@@ -51,13 +56,32 @@ namespace cnnnet.ViewerWpf
             _viewers.Add(viewer);
         }
 
-        public void Update(double elapsed)
+        public void Update(double elapsed, int mousePosX, int mousePosY, bool leftButtonPressed)
         {
             using (_writableBitmap.GetBitmapContext())
+            using (Resources.NeuronActive.GetBitmapContext())
+            using (Resources.NeuronHover.GetBitmapContext())
             using (Resources.NeuronIdle.GetBitmapContext())
+            using (Resources.NeuronInputActive.GetBitmapContext())
+            using (Resources.NeuronInputIdle.GetBitmapContext())
+            using (Resources.NeuronSelected.GetBitmapContext())
             {
                 UpdateBackground();
+                UpdateHoverAndSelectedNeuron(mousePosX, mousePosY, leftButtonPressed);
                 UpdateNeurons();
+            }
+        }
+
+        private void UpdateHoverAndSelectedNeuron(int mousePosX, int mousePosY, bool leftButtonPressed)
+        {
+            _neuronHover = Extensions.GetClosestNeuronsWithinRange(mousePosX, mousePosY, _network, 10);
+
+            if (_neuronHover != null)
+            {
+                if (leftButtonPressed)
+                {
+                    _neuronSelected = _neuronHover;
+                }
             }
         }
 
@@ -65,10 +89,37 @@ namespace cnnnet.ViewerWpf
         {
             foreach (var neuron in _network.Neurons)
             {
+                #region Draw Soma
+
                 _neuronIconDestRect.X = neuron.PosX;
                 _neuronIconDestRect.Y = neuron.PosY;
 
-                _writableBitmap.Blit(_neuronIconDestRect, Resources.NeuronIdle, _neuronIconSourceRect);
+                var neuronIcon = neuron.IsActive
+                                      ? neuron.IsInputNeuron ? Resources.NeuronInputActive : Resources.NeuronActive
+                                      : neuron.IsInputNeuron ? Resources.NeuronInputIdle : Resources.NeuronIdle;
+
+                _writableBitmap.Blit(_neuronIconDestRect, neuronIcon, _neuronIconSourceRect);
+
+                if (neuron == _neuronSelected)
+                {
+                    _writableBitmap.Blit(_neuronIconDestRect, Resources.NeuronSelected, _neuronIconSourceRect);
+                } 
+                else if (neuron == _neuronHover)
+                {
+                    _writableBitmap.Blit(_neuronIconDestRect, Resources.NeuronHover, _neuronIconSourceRect);
+                }
+                
+
+                #endregion
+
+                #region Draw Axon
+
+                _writableBitmap.DrawPolyline
+                    (neuron.AxonWaypoints.SelectMany
+                    (axonWaypoint => new[] { axonWaypoint.X, axonWaypoint.Y }).ToArray(),
+                    neuron == _neuronSelected ? Colors.Blue : Colors.White);
+
+                #endregion
             }
         }
 
