@@ -13,6 +13,11 @@ namespace cnnnet.ViewerWpf
 {
     public abstract class ViewerBase
     {
+        public abstract int BytesPerPixel
+        {
+            get;
+        }
+
         public abstract byte[,] GetData();
     }
 }

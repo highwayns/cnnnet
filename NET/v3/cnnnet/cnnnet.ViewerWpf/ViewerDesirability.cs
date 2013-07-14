@@ -17,6 +17,18 @@ namespace cnnnet.ViewerWpf
 
         #endregion
 
+        #region Properties
+        
+        public override int BytesPerPixel
+        {
+            get
+            { 
+                return 3;
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         public override byte[,] GetData()
