@@ -18,9 +18,6 @@ namespace cnnnet.ViewerWpf
         private CnnNet _network;
         private readonly List<ViewerBase> _viewers;
 
-        private Thread _updaterThread;
-        private bool _updaterThreadStop;
-
         private WriteableBitmap _writableBitmap;
         private byte[] bitmapData;
 
@@ -43,67 +40,10 @@ namespace cnnnet.ViewerWpf
 
         #region Methods
 
-        /// <summary>
-        /// Starts the rendering rutine
-        /// </summary>
-        public void Start()
+        public void Update(double elapsed)
         {
-            var thread = _updaterThread;
-
-            #region State Check
-
-            if (thread != null)
-            {
-                throw new InvalidOperationException("The viewer is already started");
-            }
-
-            #endregion
-
-            thread = new Thread(new ThreadStart(Update));
-            thread.IsBackground = true;
-            thread.Start();
-
-            _updaterThread = thread;
-        }
-
-        /// <summary>
-        /// Ends the rendering rutine
-        /// </summary>
-        public void Stop()
-        {
-            var thread = _updaterThread;
-
-            #region State Check
-
-            if (thread == null)
-            {
-                throw new InvalidOperationException("The viewer is already stoped");
-            }
-
-            #endregion
-
-            _updaterThreadStop = true;
-        }
-
-        /// <summary>
-        /// _updaterThread starting point
-        /// </summary>
-        private void Update()
-        {
-            try
-            {
-                while (_updaterThreadStop == false)
-                {
-                    UpdateBackground();
-                    UpdateNeurons();
-                }
-
-                _updaterThreadStop = false;
-                _updaterThread = null;
-            }
-            catch
-            {
-            }
+            UpdateBackground();
+            UpdateNeurons();
         }
 
         private void UpdateNeurons()

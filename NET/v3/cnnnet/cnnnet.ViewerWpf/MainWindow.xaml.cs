@@ -1,6 +1,7 @@
 ﻿using cnnnet.Lib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,6 +34,11 @@ namespace cnnnet.ViewerWpf
         private ViewerManager _viewerManager;
         private bool _closeRequested;
 
+        private DateTime lastUpdate = DateTime.Now;
+        private Stopwatch _stopwatch = Stopwatch.StartNew();
+        private double _lowestFrameTime;
+        private double _lastTime;
+
         #endregion
 
         #region Methods
@@ -45,16 +51,15 @@ namespace cnnnet.ViewerWpf
             _viewerManager.RegisterViewer(new ViewerDesirability(_network));
             _viewerManager.RegisterViewer(new ViewerUndesirability(_network));
 
-            _viewerManager.Start();
+            image.Source = _viewerManager.WriteableBitmap;
+            CompositionTarget.Rendering += OnCompositionTargetRendering;
 
-            img.Source = _viewerManager.WriteableBitmap;
             _networkProcessThread.Start();
         }
 
         private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _closeRequested = true;
-            _viewerManager.Stop();
         }
 
         private void NetworkProcessThreadStart()
@@ -62,6 +67,27 @@ namespace cnnnet.ViewerWpf
             while (_closeRequested == false)
             {
                 _network.Process();
+            }
+        }
+
+        private void OnCompositionTargetRendering(object sender, EventArgs e)
+        {
+            // Wrap updates in a GetContext call, to prevent invalidation and nested locking/unlocking during this block
+            // NOTE: This is not strictly necessary for the SL version as this is a WPF feature, however we include it here for completeness and to show
+            // a similar API to WPF
+            using (_viewerManager.WriteableBitmap.GetBitmapContext())
+            {
+                _viewerManager.WriteableBitmap.Clear(Colors.Black);
+
+                double elapsed = (DateTime.Now - lastUpdate).TotalSeconds;
+                lastUpdate = DateTime.Now;
+                _viewerManager.Update(elapsed);
+
+                double timeNow = _stopwatch.ElapsedMilliseconds;
+                double elapsedMilliseconds = timeNow - _lastTime;
+                _lowestFrameTime = Math.Min(_lowestFrameTime, elapsedMilliseconds);
+                FpsCounter.Text = string.Format("FPS: {0:0.0} / Max: {1:0.0}", 1000.0 / elapsedMilliseconds, 1000.0 / _lowestFrameTime);
+                _lastTime = timeNow;
             }
         }
 
