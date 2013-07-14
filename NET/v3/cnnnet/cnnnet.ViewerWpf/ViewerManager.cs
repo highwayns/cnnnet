@@ -19,10 +19,11 @@ namespace cnnnet.ViewerWpf
         private readonly List<ViewerBase> _viewers;
 
         private WriteableBitmap _writableBitmap;
-        private byte[] bitmapData;
+        private byte[] _bitmapData;
 
         private readonly int _stride;
         private readonly int _bytesPerPixel;
+        private Int32Rect _sourceRect;
 
         #endregion
 
@@ -42,17 +43,20 @@ namespace cnnnet.ViewerWpf
 
         public void Update(double elapsed)
         {
-            UpdateBackground();
-            UpdateNeurons();
+            using (_writableBitmap.GetBitmapContext())
+            using (Resources.NeuronIdle.GetBitmapContext())
+            {
+                UpdateBackground();
+                UpdateNeurons();
+            }
         }
 
         private void UpdateNeurons()
         {
             foreach (var neuron in _network.Neurons)
             {
-                _writableBitmap.Dispatcher.Invoke
-                    (() => _writableBitmap.Blit(new Rect(neuron.PosX, neuron.PosY, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight), Resources.NeuronIdle,
-                    new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight)));
+                _writableBitmap.Blit(new Rect(neuron.PosX, neuron.PosY, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight), Resources.NeuronIdle,
+                    new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight));
             }
         }
 
@@ -70,25 +74,21 @@ namespace cnnnet.ViewerWpf
                 {
                     int bitmapDataIndex = (y * _network.Width + x) * _bytesPerPixel;
 
-                    bitmapData[bitmapDataIndex + Constants.ColorRedIndex] = 0;
-                    bitmapData[bitmapDataIndex + Constants.ColorGreenIndex] = 0;
-                    bitmapData[bitmapDataIndex + Constants.ColorBlueIndex] = 0;
+                    _bitmapData[bitmapDataIndex + Constants.ColorRedIndex] = 0;
+                    _bitmapData[bitmapDataIndex + Constants.ColorGreenIndex] = 0;
+                    _bitmapData[bitmapDataIndex + Constants.ColorBlueIndex] = 0;
 
                     foreach (var viewerWithData in viewersWithData)
                     {
-                        bitmapData[bitmapDataIndex + Constants.ColorRedIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorRedIndex];
-                        bitmapData[bitmapDataIndex + Constants.ColorGreenIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorGreenIndex];
-                        bitmapData[bitmapDataIndex + Constants.ColorBlueIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorBlueIndex];
+                        _bitmapData[bitmapDataIndex + Constants.ColorRedIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorRedIndex];
+                        _bitmapData[bitmapDataIndex + Constants.ColorGreenIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorGreenIndex];
+                        _bitmapData[bitmapDataIndex + Constants.ColorBlueIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorBlueIndex];
                     }
                 }
-            }
+            };
 
-            _writableBitmap.Dispatcher.Invoke(() =>
-                _writableBitmap.ForEach((x, y, color) =>
-                Color.FromArgb((byte)255,
-                (byte)(bitmapData[(y * _network.Width + x) * _bytesPerPixel + Constants.ColorRedIndex]),
-                (byte)(bitmapData[(y * _network.Width + x) * _bytesPerPixel + Constants.ColorGreenIndex]),
-                (byte)(bitmapData[(y * _network.Width + x) * _bytesPerPixel + Constants.ColorBlueIndex]))));
+            _writableBitmap.WritePixels(_sourceRect, _bitmapData, _stride, 0);
+            
         }
 
         public void RegisterViewer(ViewerBase viewer)
@@ -109,7 +109,8 @@ namespace cnnnet.ViewerWpf
             _bytesPerPixel = (_writableBitmap.Format.BitsPerPixel + 7) / 8;
             _stride = _writableBitmap.PixelWidth * _bytesPerPixel;
 
-            bitmapData = new byte[_network.Height * _network.Width * _bytesPerPixel];
+            _bitmapData = new byte[_network.Height * _network.Width * _bytesPerPixel];
+            _sourceRect = new Int32Rect(0, 0, _writableBitmap.PixelWidth, _writableBitmap.PixelHeight);
         }
 
         #endregion
