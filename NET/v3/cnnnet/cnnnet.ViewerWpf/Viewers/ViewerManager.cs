@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace cnnnet.ViewerWpf
+namespace cnnnet.ViewerWpf.Viewers
 {
     public class ViewerManager
     {
@@ -91,12 +91,12 @@ namespace cnnnet.ViewerWpf
             {
                 #region Draw Soma
 
-                _neuronIconDestRect.X = neuron.PosX;
-                _neuronIconDestRect.Y = neuron.PosY;
-
                 var neuronIcon = neuron.IsActive
                                       ? neuron.IsInputNeuron ? Resources.NeuronInputActive : Resources.NeuronActive
                                       : neuron.IsInputNeuron ? Resources.NeuronInputIdle : Resources.NeuronIdle;
+
+                _neuronIconDestRect.X = neuron.PosX - neuronIcon.PixelWidth / 2;
+                _neuronIconDestRect.Y = neuron.PosY - neuronIcon.PixelHeight / 2;
 
                 _writableBitmap.Blit(_neuronIconDestRect, neuronIcon, _neuronIconSourceRect);
 

@@ -1,4 +1,5 @@
 ﻿using cnnnet.Lib;
+using cnnnet.ViewerWpf.Viewers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,8 +54,6 @@ namespace cnnnet.ViewerWpf
 
             image.Source = _viewerManager.WriteableBitmap;
             CompositionTarget.Rendering += OnCompositionTargetRendering;
-
-            _networkProcessThread.Start();
         }
 
         private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -68,6 +67,8 @@ namespace cnnnet.ViewerWpf
             {
                 _network.Process();
             }
+
+            _closeRequested = false;
         }
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
@@ -94,6 +95,38 @@ namespace cnnnet.ViewerWpf
             }
         }
 
+        private void OnButtonStartClick(object sender, RoutedEventArgs e)
+        {
+            _networkProcessThread = new Thread(NetworkProcessThreadStart);
+            _networkProcessThread.IsBackground = true;
+            _networkProcessThread.Start();
+        }
+
+        private void OnButtonStopClick(object sender, RoutedEventArgs e)
+        {
+            _closeRequested = true;
+        }
+
+        private void OnButtonNextClick(object sender, RoutedEventArgs e)
+        {
+            _network.Process();
+        }
+
+        private void OnButtonResetClick(object sender, RoutedEventArgs e)
+        {
+            _network.GenerateNetwork();
+        }
+
+        private void OnCboxNeuronDesirabilityMapCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void OnCboxNeuronUndesirabilityMapCheckedChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         #endregion
 
         #region Instance
@@ -101,9 +134,6 @@ namespace cnnnet.ViewerWpf
         public MainWindow()
         {
             InitializeComponent();
-
-            _networkProcessThread = new Thread(NetworkProcessThreadStart);
-            _networkProcessThread.IsBackground = true;
         }
 
         #endregion

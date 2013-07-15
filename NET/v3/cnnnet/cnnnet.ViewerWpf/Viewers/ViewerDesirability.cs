@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace cnnnet.ViewerWpf
+namespace cnnnet.ViewerWpf.Viewers
 {
-    public class ViewerUndesirability : ViewerBase
+    public class ViewerDesirability : ViewerBase
     {
         #region Fields
         
@@ -17,43 +17,29 @@ namespace cnnnet.ViewerWpf
 
         #endregion
 
-        #region Properties
-
-        public override int BytesPerPixel
-        {
-            get
-            {
-                return 3;
-            }
-        }
-
-        #endregion
-
         #region Methods
 
-        public override byte[,] GetData()
+        protected override void UpdateDataInternal(ref byte[,] data)
         {
-            var desirabilityMap = (double[,])_network.NeuronUndesirabilityMap.Clone();
+            var desirabilityMap = (double[,])_network.NeuronDesirabilityMap.Clone();
 
             for (int y = 0; y < _network.Height; y++)
             {
                 for (int x = 0; x < _network.Width; x++)
                 {
-                    data[y, x * 3 + Constants.ColorRedIndex] = (byte)(desirabilityMap[y, x] * 255);
+                    data[y, x * 3 + Constants.ColorGreenIndex] = (byte)(desirabilityMap[y, x] * 255);
                 }
             }
-
-            return data;
         }
 
         #endregion
 
         #region Instance
 
-        public ViewerUndesirability(CnnNet network)
+        public ViewerDesirability(CnnNet network)
+            : base(network.Width, network.Height, 3, true)
         {
             _network = network;
-            data = new byte[_network.Height, _network.Width * 3];
         }
 
         #endregion
