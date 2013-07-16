@@ -39,11 +39,40 @@ namespace cnnnet.ViewerWpf.Viewers
 
         #region Properties
 
+        public event EventHandler<NeuronChangedEventArgs> NeuronSelectedChanged;
+        public event EventHandler<NeuronChangedEventArgs> NeuronHoverChanged;
+
         public WriteableBitmap WriteableBitmap
         {
             get
             {
                 return _writableBitmap;
+            }
+        }
+
+        public Neuron NeuronSelected
+        {
+            get
+            {
+                return _neuronSelected;
+            }
+            private set
+            {
+                _neuronSelected = value;
+                OnNeuronSelectedChanged(value);
+            }
+        }
+
+        public Neuron NeuronHover
+        {
+            get
+            {
+                return _neuronHover;
+            }
+            private set
+            {
+                _neuronHover = value;
+                OnNeuronHoverChanged(value);
             }
         }
 
@@ -74,13 +103,13 @@ namespace cnnnet.ViewerWpf.Viewers
 
         private void UpdateHoverAndSelectedNeuron(int mousePosX, int mousePosY, bool leftButtonPressed)
         {
-            _neuronHover = Extensions.GetClosestNeuronsWithinRange(mousePosX, mousePosY, _network, 10);
+            NeuronHover = Extensions.GetClosestNeuronsWithinRange(mousePosX, mousePosY, _network, 10);
 
-            if (_neuronHover != null)
+            if (NeuronHover != null)
             {
                 if (leftButtonPressed)
                 {
-                    _neuronSelected = _neuronHover;
+                    NeuronSelected = NeuronHover;
                 }
             }
         }
@@ -100,11 +129,11 @@ namespace cnnnet.ViewerWpf.Viewers
 
                 _writableBitmap.Blit(_neuronIconDestRect, neuronIcon, _neuronIconSourceRect);
 
-                if (neuron == _neuronSelected)
+                if (neuron == NeuronSelected)
                 {
                     _writableBitmap.Blit(_neuronIconDestRect, Resources.NeuronSelected, _neuronIconSourceRect);
                 } 
-                else if (neuron == _neuronHover)
+                else if (neuron == NeuronHover)
                 {
                     _writableBitmap.Blit(_neuronIconDestRect, Resources.NeuronHover, _neuronIconSourceRect);
                 }
@@ -117,7 +146,7 @@ namespace cnnnet.ViewerWpf.Viewers
                 _writableBitmap.DrawPolyline
                     (neuron.AxonWaypoints.SelectMany
                     (axonWaypoint => new[] { axonWaypoint.X, axonWaypoint.Y }).ToArray(),
-                    neuron == _neuronSelected ? Colors.Blue : Colors.White);
+                    neuron == NeuronSelected ? Colors.Blue : Colors.White);
 
                 #endregion
             }
@@ -168,6 +197,24 @@ namespace cnnnet.ViewerWpf.Viewers
             }
             catch
             {
+            }
+        }
+
+        private void OnNeuronSelectedChanged(Neuron value)
+        {
+            var handler = NeuronSelectedChanged;
+            if (handler != null)
+            {
+                handler(this, new NeuronChangedEventArgs(value));
+            }
+        }
+
+        private void OnNeuronHoverChanged(Neuron value)
+        {
+            var handler = NeuronHoverChanged;
+            if (handler != null)
+            {
+                handler(this, new NeuronChangedEventArgs(value));
             }
         }
 

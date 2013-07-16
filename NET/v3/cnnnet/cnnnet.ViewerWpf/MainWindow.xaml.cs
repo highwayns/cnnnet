@@ -33,6 +33,9 @@ namespace cnnnet.ViewerWpf
         private CnnNet _network;
 
         private ViewerManager _viewerManager;
+        private ViewerDesirability _viewerDesirability;
+        private ViewerUndesirability _viewerUndesirability;
+
         private bool _closeRequested;
 
         private DateTime lastUpdate = DateTime.Now;
@@ -49,11 +52,22 @@ namespace cnnnet.ViewerWpf
             _network = new CnnNet(NetworkWidth, NetworkHeight);
 
             _viewerManager = new ViewerManager(_network);
-            _viewerManager.RegisterViewer(new ViewerDesirability(_network));
-            _viewerManager.RegisterViewer(new ViewerUndesirability(_network));
+
+            _viewerDesirability = new ViewerDesirability(_network);
+            _viewerUndesirability = new ViewerUndesirability(_network);
+
+            _viewerManager.RegisterViewer(_viewerDesirability);
+            _viewerManager.RegisterViewer(_viewerUndesirability);
+            _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
             image.Source = _viewerManager.WriteableBitmap;
             CompositionTarget.Rendering += OnCompositionTargetRendering;
+        }
+
+        private void OnViewerManagerNeuronSelectedChanged(object sender, NeuronChangedEventArgs e)
+        {
+            labelId.Content = e.Neuron.Id;
+            labelLocation.Content = string.Format("X:{0} Y:{1}", e.Neuron.PosX, e.Neuron.PosY);
         }
 
         private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -159,12 +173,24 @@ namespace cnnnet.ViewerWpf
 
         private void OnCboxNeuronDesirabilityMapCheckedChanged(object sender, RoutedEventArgs e)
         {
-            
+            if (_viewerDesirability == null)
+            {
+                return;
+            }
+
+            _viewerDesirability.IsEnabled = cboxNeuronDesirabilityMap.IsChecked.HasValue
+                && cboxNeuronDesirabilityMap.IsChecked.Value;
         }
 
         private void OnCboxNeuronUndesirabilityMapCheckedChanged(object sender, RoutedEventArgs e)
         {
+            if (_viewerUndesirability == null)
+            {
+                return;
+            }
 
+            _viewerUndesirability.IsEnabled = cboxNeuronUndesirabilityMap.IsChecked.HasValue
+                && cboxNeuronUndesirabilityMap.IsChecked.Value;
         }
 
         #endregion
