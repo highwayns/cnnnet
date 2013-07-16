@@ -97,22 +97,62 @@ namespace cnnnet.ViewerWpf
 
         private void OnButtonStartClick(object sender, RoutedEventArgs e)
         {
+            OnStart();
+        }
+
+        private void OnButtonStopClick(object sender, RoutedEventArgs e)
+        {
+            OnStop();
+        }
+
+        private void OnButtonNextClick(object sender, RoutedEventArgs e)
+        {
+            OnNext();
+        }
+
+        private void OnButtonResetClick(object sender, RoutedEventArgs e)
+        {
+            OnReset();
+        }
+
+        private void OnStart()
+        {
+            ButtonStart.IsEnabled = false;
+            ButtonStop.IsEnabled = true;
+            ButtonNext.IsEnabled = false;
+            ButtonReset.IsEnabled = false;
+
             _networkProcessThread = new Thread(NetworkProcessThreadStart);
             _networkProcessThread.IsBackground = true;
             _networkProcessThread.Start();
         }
 
-        private void OnButtonStopClick(object sender, RoutedEventArgs e)
+        private void OnStop()
         {
+            ButtonStart.IsEnabled = true;
+            ButtonStop.IsEnabled = false;
+            ButtonNext.IsEnabled = true;
+            ButtonReset.IsEnabled = true;
+
             _closeRequested = true;
         }
 
-        private void OnButtonNextClick(object sender, RoutedEventArgs e)
+        private void OnNext()
         {
+            ButtonStart.IsEnabled = false;
+            ButtonStop.IsEnabled = false;
+            ButtonNext.IsEnabled = false;
+            ButtonReset.IsEnabled = false;
+
             _network.Process();
+
+            ButtonStart.IsEnabled = true;
+            ButtonStop.IsEnabled = false;
+            ButtonNext.IsEnabled = true;
+            ButtonReset.IsEnabled = true;
         }
 
-        private void OnButtonResetClick(object sender, RoutedEventArgs e)
+        private void OnReset()
         {
             _network.GenerateNetwork();
         }
