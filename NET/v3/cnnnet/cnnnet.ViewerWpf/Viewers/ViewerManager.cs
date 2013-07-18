@@ -76,6 +76,12 @@ namespace cnnnet.ViewerWpf.Viewers
             }
         }
 
+        public List<ViewerBase> DisplayedViewers
+        {
+            get;
+            private set;
+        }
+
         #endregion
 
         #region Methods
@@ -83,6 +89,7 @@ namespace cnnnet.ViewerWpf.Viewers
         public void RegisterViewer(ViewerBase viewer)
         {
             _viewers.Add(viewer);
+            DisplayedViewers.Add(viewer);
         }
 
         public void Update(double elapsed, int mousePosX, int mousePosY, bool leftButtonPressed)
@@ -165,11 +172,13 @@ namespace cnnnet.ViewerWpf.Viewers
                 {
                     byte[] tmpBitmapData = new byte[_network.Height * _network.Width * _bytesPerPixel];
 
-                    var viewersWithData = _viewers.Select(viewer => new
-                    {
-                        Viewer = viewer,
-                        Data = viewer.GetData()
-                    }).ToArray();
+                    var viewersWithData = _viewers.
+                        Where(viewer => DisplayedViewers.Contains(viewer)).
+                        Select(viewer => new
+                        {
+                            Viewer = viewer,
+                            Data = viewer.GetData()
+                        }).ToArray();
 
                     for (int y = 0; y < _network.Height; y++)
                     {
@@ -226,6 +235,7 @@ namespace cnnnet.ViewerWpf.Viewers
         {
             _network = network;
             _viewers = new List<ViewerBase>();
+            DisplayedViewers = new List<ViewerBase>();
             _writableBitmap = BitmapFactory.New(_network.Width, _network.Height);
 
             _bytesPerPixel = (_writableBitmap.Format.BitsPerPixel + 7) / 8;

@@ -60,7 +60,7 @@ namespace cnnnet.ViewerWpf
             _viewerManager.RegisterViewer(_viewerUndesirability);
             _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
-            image.Source = _viewerManager.WriteableBitmap;
+            imageNetwork.Source = _viewerManager.WriteableBitmap;
             CompositionTarget.Rendering += OnCompositionTargetRendering;
         }
 
@@ -87,7 +87,7 @@ namespace cnnnet.ViewerWpf
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
-            var mousePosition = Mouse.GetPosition(image);
+            var mousePosition = Mouse.GetPosition(imageNetwork);
 
             // Wrap updates in a GetContext call, to prevent invalidation and nested locking/unlocking during this block
             // NOTE: This is not strictly necessary for the SL version as this is a WPF feature, however we include it here for completeness and to show
@@ -178,8 +178,7 @@ namespace cnnnet.ViewerWpf
                 return;
             }
 
-            _viewerDesirability.IsEnabled = cboxNeuronDesirabilityMap.IsChecked.HasValue
-                && cboxNeuronDesirabilityMap.IsChecked.Value;
+            ChangeViewerVisibility(cboxNeuronDesirabilityMap.IsChecked, _viewerDesirability);
         }
 
         private void OnCboxNeuronUndesirabilityMapCheckedChanged(object sender, RoutedEventArgs e)
@@ -189,8 +188,24 @@ namespace cnnnet.ViewerWpf
                 return;
             }
 
-            _viewerUndesirability.IsEnabled = cboxNeuronUndesirabilityMap.IsChecked.HasValue
-                && cboxNeuronUndesirabilityMap.IsChecked.Value;
+            ChangeViewerVisibility(cboxNeuronUndesirabilityMap.IsChecked, _viewerUndesirability);
+        }
+
+        private void ChangeViewerVisibility(bool? display, ViewerBase viewer)
+        {
+            switch (display.HasValue && display.Value)
+            {
+                case true:
+                    {
+                        _viewerManager.DisplayedViewers.Add(viewer);
+                        break;
+                    }
+                case false:
+                    {
+                        _viewerManager.DisplayedViewers.Remove(viewer);
+                        break;
+                    }
+            }
         }
 
         #endregion

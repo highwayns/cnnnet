@@ -13,7 +13,6 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Fields
         
         private CnnNet _network;
-        private byte[,] data;
 
         #endregion
 
