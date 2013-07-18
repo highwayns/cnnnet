@@ -35,6 +35,7 @@ namespace cnnnet.ViewerWpf
         private ViewerManager _viewerManager;
         private ViewerDesirability _viewerDesirability;
         private ViewerUndesirability _viewerUndesirability;
+        private ViewerAxonTerminalGuidanceForces _viewerAxonTerminalGuidanceForces;
 
         private bool _closeRequested;
 
@@ -55,6 +56,7 @@ namespace cnnnet.ViewerWpf
 
             _viewerDesirability = new ViewerDesirability(_network);
             _viewerUndesirability = new ViewerUndesirability(_network);
+            _viewerAxonTerminalGuidanceForces = new ViewerAxonTerminalGuidanceForces();
 
             _viewerManager.RegisterViewer(_viewerDesirability);
             _viewerManager.RegisterViewer(_viewerUndesirability);

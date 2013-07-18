@@ -47,6 +47,7 @@
     <Compile Include="CnnNet.cs" />
     <Compile Include="CnnNetParameters.cs" />
     <Compile Include="GuidanceForces\GuidanceForceBase.cs" />
+    <Compile Include="GuidanceForces\GuidanceForceScoreAvailableEventArgs.cs" />
     <Compile Include="GuidanceForces\Soma\SomaDesirabilityMapGuidanceForce.cs" />
     <Compile Include="GuidanceForces\Soma\SomaGuidanceForceBase.cs" />
     <Compile Include="GuidanceForces\Soma\SomaUndesirabilityMapGuidanceForce.cs" />

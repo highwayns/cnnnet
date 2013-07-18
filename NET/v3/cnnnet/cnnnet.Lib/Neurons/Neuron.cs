@@ -3,6 +3,7 @@ using cnnnet.Lib.GuidanceForces.Soma;
 using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 
@@ -24,9 +25,6 @@ namespace cnnnet.Lib.Neurons
         protected int _posY;
         private bool _hasAxonReachedFinalPosition;
 
-        protected IEnumerable<AxonGuidanceForceBase> AxonGuidanceForces;
-        protected IEnumerable<SomaGuidanceForceBase> SomaGuidanceForces;
-
         #endregion Fields
 
         #region Properties
@@ -37,6 +35,18 @@ namespace cnnnet.Lib.Neurons
             {
                 return _network;
             }
+        }
+
+        public ReadOnlyCollection<AxonGuidanceForceBase> AxonGuidanceForces
+        {
+            get;
+            private set;
+        }
+
+        public ReadOnlyCollection<SomaGuidanceForceBase> SomaGuidanceForces
+        {
+            get;
+            private set;
         }
 
         public bool HasAxonReachedFinalPosition
@@ -371,8 +381,8 @@ namespace cnnnet.Lib.Neurons
             {
                 new Point(PosX, PosY)
             };
-            AxonGuidanceForces = axonGuidanceForces;
-            SomaGuidanceForces = somaGuidanceForces;
+            AxonGuidanceForces = new ReadOnlyCollection<AxonGuidanceForceBase>(axonGuidanceForces.ToList());
+            SomaGuidanceForces = new ReadOnlyCollection<SomaGuidanceForceBase>(somaGuidanceForces.ToList());
 
             HasSomaReachedFinalPosition = isInputNeuron;
             IsInputNeuron = isInputNeuron;

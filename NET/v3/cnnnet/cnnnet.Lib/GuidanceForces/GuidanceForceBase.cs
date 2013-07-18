@@ -16,6 +16,12 @@ namespace cnnnet.Lib.GuidanceForces
 
         #endregion
 
+        #region Properties
+
+        public event EventHandler<GuidanceForceScoreAvailableEventArgs> ScoreAvailableEvent;
+
+        #endregion
+
         #region Methods
 
         public double[,] GetScore(int refY, int refX, Neuron neuron)
@@ -55,7 +61,18 @@ namespace cnnnet.Lib.GuidanceForces
                 }
             }
 
+            InvokeScoreAvailableEvent(result);
+
             return result;
+        }
+
+        private void InvokeScoreAvailableEvent(double[,] result)
+        {
+            var handler = ScoreAvailableEvent;
+            if (handler != null)
+            {
+                handler(this, new GuidanceForceScoreAvailableEventArgs(result));
+            }
         }
 
         /// <summary>
