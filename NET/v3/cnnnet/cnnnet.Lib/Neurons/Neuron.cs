@@ -37,6 +37,8 @@ namespace cnnnet.Lib.Neurons
             }
         }
 
+        public event EventHandler<NeuronAxonGuidanceForcesScoreEventArgs> AxonGuidanceForcesScoreEvent;
+
         public ReadOnlyCollection<AxonGuidanceForceBase> AxonGuidanceForces
         {
             get;
@@ -272,9 +274,14 @@ namespace cnnnet.Lib.Neurons
 
             Point maxLocation;
             double maxScore;
-            AxonGuidanceForces.Select
-                (axonGuidanceForce => axonGuidanceForce.GetScore(lastMaxLocation.Y, lastMaxLocation.X, this)).Sum().
-                GetMaxAndLocation(out maxLocation, out maxScore);
+            var guidanceForceScores =
+                AxonGuidanceForces.Select
+                (axonGuidanceForce => new GuidanceForceScoreEventArgs(axonGuidanceForce, 
+                    lastMaxLocation.Y, lastMaxLocation.X, this, 
+                    axonGuidanceForce.GetScore(lastMaxLocation.Y, lastMaxLocation.X, this))).ToArray();
+
+            guidanceForceScores.Select(guidanceForceScore => guidanceForceScore.Score).
+                Sum().GetMaxAndLocation(out maxLocation, out maxScore);
 
             maxLocation = new Point
                 (Math.Min(Math.Max(maxLocation.X - _network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), _network.Width - 1),
@@ -291,7 +298,18 @@ namespace cnnnet.Lib.Neurons
                 result = true;
             }
 
+            InvokeAxonGuidanceForcesScoreEvent(guidanceForceScores);
+
             return result;
+        }
+
+        private void InvokeAxonGuidanceForcesScoreEvent(IEnumerable<GuidanceForceScoreEventArgs> scores)
+        {
+            var handler = AxonGuidanceForcesScoreEvent;
+            if (handler != null)
+            {
+                handler(this, new NeuronAxonGuidanceForcesScoreEventArgs(scores));
+            }
         }
 
         /// <summary>

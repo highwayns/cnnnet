@@ -18,7 +18,7 @@ namespace cnnnet.Lib.GuidanceForces
 
         #region Properties
 
-        public event EventHandler<GuidanceForceScoreAvailableEventArgs> ScoreAvailableEvent;
+        public event EventHandler<GuidanceForceScoreEventArgs> ScoreAvailableEvent;
 
         #endregion
 
@@ -61,17 +61,17 @@ namespace cnnnet.Lib.GuidanceForces
                 }
             }
 
-            InvokeScoreAvailableEvent(result);
+            InvokeScoreAvailableEvent(refY, refX, neuron, result);
 
             return result;
         }
 
-        private void InvokeScoreAvailableEvent(double[,] result)
+        private void InvokeScoreAvailableEvent(int refY, int refX, Neuron neuron, double[,] score)
         {
             var handler = ScoreAvailableEvent;
             if (handler != null)
             {
-                handler(this, new GuidanceForceScoreAvailableEventArgs(result));
+                handler(this, new GuidanceForceScoreEventArgs(this, refY, refX, neuron, score));
             }
         }
 

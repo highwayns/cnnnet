@@ -56,7 +56,7 @@ namespace cnnnet.ViewerWpf.Viewers
                 ForEach(guidanceForce => guidanceForce.ScoreAvailableEvent -= OnGuidanceForceScoreAvailableEvent);
         }
 
-        private void OnGuidanceForceScoreAvailableEvent(object sender, GuidanceForceScoreAvailableEventArgs e)
+        private void OnGuidanceForceScoreAvailableEvent(object sender, GuidanceForceScoreEventArgs e)
         {
             
         }
