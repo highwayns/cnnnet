@@ -23,7 +23,7 @@ namespace cnnnet.ViewerWpf
         private Thread _networkProcessThread;
         private CnnNet _network;
 
-        private ViewerManager _viewerManager;
+        private ViewerManagerNetwork _viewerManager;
         private ViewerDesirability _viewerDesirability;
         private ViewerUndesirability _viewerUndesirability;
         private ViewerAxonTerminalGuidanceForces _viewerAxonTerminalGuidanceForces;
@@ -43,7 +43,7 @@ namespace cnnnet.ViewerWpf
         {
             _network = new CnnNet(NetworkWidth, NetworkHeight);
 
-            _viewerManager = new ViewerManager(_network);
+            _viewerManager = new ViewerManagerNetwork(_network);
 
             _viewerDesirability = new ViewerDesirability(_network);
             _viewerUndesirability = new ViewerUndesirability(_network);
