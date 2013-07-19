@@ -1,9 +1,6 @@
 ﻿using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace cnnnet.Lib.GuidanceForces.Soma
 {
@@ -31,6 +28,7 @@ namespace cnnnet.Lib.GuidanceForces.Soma
         /// </summary>
         /// <param name="referenceY"></param>
         /// <param name="referenceX"></param>
+        /// <param name="neuron"></param>
         /// <returns></returns>
         private double GetDistanceToNearestNeuron(int referenceY, int referenceX, Neuron neuron)
         {

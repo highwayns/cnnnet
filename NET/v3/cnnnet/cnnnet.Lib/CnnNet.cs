@@ -1,5 +1,5 @@
 ﻿using cnnnet.Lib.ActiveNeuronGenerator;
-using cnnnet.Lib.GuidanceForces;
+using cnnnet.Lib.GuidanceForces.Axon;
 using cnnnet.Lib.GuidanceForces.Soma;
 using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
@@ -26,7 +26,7 @@ namespace cnnnet.Lib
         public Neuron[,] NeuronPositionMap;
         public double[,] NeuronDesirabilityMap;
         public double[,] NeuronUndesirabilityMap;
-        public NeuronAxonWaypoint[,] NeuronAxonWaypoints;
+        public NeuronAxonWaypoint[,] NeuronAxonWayPoints;
 
         /// <summary>
         /// Neuron activity recorded from the last 'NeuronActivityHistoryLength' iterations
@@ -141,7 +141,7 @@ namespace cnnnet.Lib
             NeuronDesirabilityMap = new double[Height, Width];
             NeuronUndesirabilityMap = new double[Height, Width];
             NeuronPositionMap = new Neuron[Height, Width];
-            NeuronAxonWaypoints = new NeuronAxonWaypoint[Height, Width];
+            NeuronAxonWayPoints = new NeuronAxonWaypoint[Height, Width];
 
             var axonGuidanceForces = new AxonGuidanceForceBase[]
                 {
@@ -151,7 +151,7 @@ namespace cnnnet.Lib
 
             var somaGuidanceForces = new SomaGuidanceForceBase[]
                 {
-                new SomaDesirabilityMapGuidanceForce(this),
+                new SomaDesirabilityMapGuidanceForce(this)
                 //new SomaUndesirabilityMapGuidanceForce(this)
                 };
 
@@ -183,14 +183,14 @@ namespace cnnnet.Lib
             _iteration = 0;
         }
 
-        public void RegisterAxonWaypoints(Neuron neuron, IEnumerable<Point> axonWaypoints)
+        public void RegisterAxonWayPoints(Neuron neuron, IEnumerable<Point> axonWayPoints)
         {
-            var axonWaypointsList = axonWaypoints.ToList();
+            var axonWayPointsList = axonWayPoints.ToList();
 
-            for (int axonWaypointIndex = 0; axonWaypointIndex < axonWaypointsList.Count; axonWaypointIndex++)
+            for (int axonWayPointIndex = 0; axonWayPointIndex < axonWayPointsList.Count; axonWayPointIndex++)
             {
-                var axonWaypoint = axonWaypointsList[axonWaypointIndex];
-                NeuronAxonWaypoints[axonWaypoint.Y, axonWaypoint.X] = new NeuronAxonWaypoint(axonWaypointIndex,neuron, axonWaypoint);
+                var axonWayPoint = axonWayPointsList[axonWayPointIndex];
+                NeuronAxonWayPoints[axonWayPoint.Y, axonWayPoint.X] = new NeuronAxonWaypoint(axonWayPointIndex,neuron, axonWayPoint);
             }
         }
 

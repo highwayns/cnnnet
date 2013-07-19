@@ -36,18 +36,18 @@ namespace cnnnet.Lib.Utils
         {
             var result = new List<Neuron>();
 
-            int minCoordX = Math.Max(posX - range, 0);
-            int maxCoordX = Math.Min(posX + range, network.Width - 1);
+            int minX = Math.Max(posX - range, 0);
+            int maxX = Math.Min(posX + range, network.Width - 1);
 
-            int minCoordY = Math.Max(posY - range, 0);
-            int maxCoordY = Math.Min(posY + range, network.Height - 1);
+            int minY = Math.Max(posY - range, 0);
+            int maxY = Math.Min(posY + range, network.Height - 1);
 
-            for (int y = minCoordY; y < maxCoordY; y++)
+            for (int y = minY; y < maxY; y++)
             {
-                for (int x = minCoordX; x < maxCoordX; x++)
+                for (int x = minX; x < maxX; x++)
                 {
                     if ((x == posX && y == posY)
-                        || Extensions.GetDistance(posX, posY, x, y) > range)
+                        || GetDistance(posX, posY, x, y) > range)
                     {
                         continue;
                     }
@@ -68,20 +68,20 @@ namespace cnnnet.Lib.Utils
         {
             Neuron result = null;
 
-            int minCoordX = Math.Max(posX - range, 0);
-            int maxCoordX = Math.Min(posX + range, network.Width - 1);
+            int minX = Math.Max(posX - range, 0);
+            int maxX = Math.Min(posX + range, network.Width - 1);
 
-            int minCoordY = Math.Max(posY - range, 0);
-            int maxCoordY = Math.Min(posY + range, network.Height - 1);
+            int minY = Math.Max(posY - range, 0);
+            int maxY = Math.Min(posY + range, network.Height - 1);
 
             double minDistance = double.MaxValue;
-            double distance;
 
-            for (int y = minCoordY; y < maxCoordY; y++)
+            for (int y = minY; y < maxY; y++)
             {
-                for (int x = minCoordX; x < maxCoordX; x++)
+                for (int x = minX; x < maxX; x++)
                 {
-                    if ((distance = Extensions.GetDistance(posX, posY, x, y)) > range
+                    double distance;
+                    if ((distance = GetDistance(posX, posY, x, y)) > range
                         || distance > minDistance)
                     {
                         continue;
@@ -102,18 +102,18 @@ namespace cnnnet.Lib.Utils
 
         public static Neuron[] GetNeuronsWithAxonTerminalWithinRange(int posX, int posY, CnnNet network, int range)
         {
-            int minCoordX = Math.Max(posX - range, 0);
-            int maxCoordX = Math.Min(posX + range, network.Width - 1);
+            int minX = Math.Max(posX - range, 0);
+            int maxX = Math.Min(posX + range, network.Width - 1);
 
-            int minCoordY = Math.Max(posY - range, 0);
-            int maxCoordY = Math.Min(posY + range, network.Height - 1);
+            int minY = Math.Max(posY - range, 0);
+            int maxY = Math.Min(posY + range, network.Height - 1);
 
             return network.Neurons.Where
                 (neuron => neuron.PosX != posX
                            && neuron.PosY != posY
                            && neuron.HasAxonReachedFinalPosition
-                           && minCoordX <= neuron.AxonTerminal.X && neuron.AxonTerminal.X <= maxCoordX
-                           && minCoordY <= neuron.AxonTerminal.Y && neuron.AxonTerminal.Y <= maxCoordY
+                           && minX <= neuron.AxonTerminal.X && neuron.AxonTerminal.X <= maxX
+                           && minY <= neuron.AxonTerminal.Y && neuron.AxonTerminal.Y <= maxY
                            && GetDistance(neuron.AxonTerminal.X, neuron.AxonTerminal.Y, posX, posY) <= range).ToArray();
         }
 
@@ -138,9 +138,10 @@ namespace cnnnet.Lib.Utils
 
         public static double[,] Sum(this IEnumerable<double[,]> maps)
         {
-            var result = (double[,])maps.ElementAt(0).Clone();
+            var mapsList = maps.ToList();
 
-            foreach (var map in maps.Skip(1))
+            var result = (double[,])mapsList.ElementAt(0).Clone();
+            foreach (var map in mapsList.Skip(1))
             {
                 for (int y = 0; y < map.GetLength(0); y++)
                 {

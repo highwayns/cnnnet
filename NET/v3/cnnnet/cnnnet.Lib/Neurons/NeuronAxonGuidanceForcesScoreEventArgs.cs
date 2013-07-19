@@ -1,8 +1,6 @@
 ﻿using cnnnet.Lib.GuidanceForces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace cnnnet.Lib.Neurons
 {

@@ -23,7 +23,7 @@ namespace cnnnet.Lib
 
         private readonly Timer _timer;
 
-        // holds the number of Process calls handeled in the unit of time (1000 ms)
+        // holds the number of Process calls handled in the unit of time (1000 ms)
         private int _numberOfPerformedSteps;
 
         #endregion Fields

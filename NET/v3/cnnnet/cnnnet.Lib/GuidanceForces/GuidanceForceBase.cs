@@ -1,9 +1,6 @@
 ﻿using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace cnnnet.Lib.GuidanceForces
 {
@@ -26,17 +23,17 @@ namespace cnnnet.Lib.GuidanceForces
 
         public double[,] GetScore(int refY, int refX, Neuron neuron)
         {
-            var result = GetInitialisedResult();
+            var result = GetInitializationResult();
 
-            int minCoordX = Math.Max(refX - GuidanceForceRange, 0);
-            int maxCoordX = Math.Min(refX + GuidanceForceRange, Network.Width - 1);
+            int minX = Math.Max(refX - GuidanceForceRange, 0);
+            int maxX = Math.Min(refX + GuidanceForceRange, Network.Width - 1);
 
-            int minCoordY = Math.Max(refY - GuidanceForceRange, 0);
-            int maxCoordY = Math.Min(refY + GuidanceForceRange, Network.Height - 1);
+            int minY = Math.Max(refY - GuidanceForceRange, 0);
+            int maxY = Math.Min(refY + GuidanceForceRange, Network.Height - 1);
 
-            for (int y = minCoordY; y < maxCoordY; y++)
+            for (int y = minY; y < maxY; y++)
             {
-                for (int x = minCoordX; x < maxCoordX; x++)
+                for (int x = minX; x < maxX; x++)
                 {
                     if (PreCheckLocation(x, y, neuron) == false)
                     {
@@ -44,10 +41,9 @@ namespace cnnnet.Lib.GuidanceForces
                     }
 
                     // only check in the desired radius
-                    var distance = 0.0d;
                     if ((x == refX && y == refY)
                         /* this ensures that we only check within the range */
-                        || (distance = Extensions.GetDistance(refX, refY, x, y)) > GuidanceForceRange)
+                        || (Extensions.GetDistance(refX, refY, x, y)) > GuidanceForceRange)
                     {
                         continue;
                     }
@@ -57,7 +53,7 @@ namespace cnnnet.Lib.GuidanceForces
                         continue;
                     }
 
-                    result[y - minCoordY, x - minCoordX] = ComputeScoreAtLocation(x, y, neuron);
+                    result[y - minY, x - minX] = ComputeScoreAtLocation(x, y, neuron);
                 }
             }
 
@@ -80,6 +76,7 @@ namespace cnnnet.Lib.GuidanceForces
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        /// <param name="neuron">The neuron context to check</param>
         /// <returns></returns>
         protected virtual bool PreCheckLocation(int x, int y, Neuron neuron)
         {
@@ -91,6 +88,7 @@ namespace cnnnet.Lib.GuidanceForces
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        /// <param name="neuron">The neuron context to check</param>
         /// <returns></returns>
         protected virtual bool PostCheckLocation(int x, int y, Neuron neuron)
         {
@@ -99,7 +97,7 @@ namespace cnnnet.Lib.GuidanceForces
 
         public abstract double ComputeScoreAtLocation(int x, int y, Neuron neuron);
 
-        private double[,] GetInitialisedResult()
+        private double[,] GetInitializationResult()
         {
             var result = new double[2 * GuidanceForceRange + 1, 2 * GuidanceForceRange + 1];
 

@@ -1,11 +1,7 @@
 ﻿using cnnnet.Lib.Neurons;
-using cnnnet.Lib.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace cnnnet.Lib.GuidanceForces
+namespace cnnnet.Lib.GuidanceForces.Axon
 {
     public class AxonUndesirabilityMapGuidanceForce : AxonGuidanceForceBase
     {

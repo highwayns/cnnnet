@@ -31,9 +31,9 @@
             
             <GroupBox Header="Display Settings" Grid.Row="1" Margin="10,0">
                 <Grid>
-                    <CheckBox x:Name="cboxNeuronDesirabilityMap" Content="Neuron Desirability Map" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="OnCboxNeuronDesirabilityMapCheckedChanged" Unchecked="OnCboxNeuronDesirabilityMapCheckedChanged"/>
-                    <CheckBox x:Name="cboxNeuronDesirabilityRange" Content="Neuron Desirability Range" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="cboxNeuronUndesirabilityMap" Content="Neuron Undesirability Map" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" IsChecked="True" Checked="OnCboxNeuronUndesirabilityMapCheckedChanged" Unchecked="OnCboxNeuronUndesirabilityMapCheckedChanged"/>
+                    <CheckBox x:Name="CboxNeuronDesirabilityMap" Content="Neuron Desirability Map" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="OnCboxNeuronDesirabilityMapCheckedChanged" Unchecked="OnCboxNeuronDesirabilityMapCheckedChanged"/>
+                    <CheckBox x:Name="CboxNeuronDesirabilityRange" Content="Neuron Desirability Range" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="CboxNeuronUndesirabilityMap" Content="Neuron Undesirability Map" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" IsChecked="True" Checked="OnCboxNeuronUndesirabilityMapCheckedChanged" Unchecked="OnCboxNeuronUndesirabilityMapCheckedChanged"/>
                 </Grid>
             </GroupBox>
 
@@ -45,10 +45,10 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     
-                    <Label x:Name="labelId" Grid.Row="0" Content="&lt;ID&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,4,0,0"/>
-                    <Label x:Name="labelLocation" Grid.Row="0" Content="&lt;LOCATION&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="53,4,0,0"/>
+                    <Label x:Name="LabelId" Grid.Row="0" Content="&lt;ID&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,4,0,0"/>
+                    <Label x:Name="LabelLocation" Grid.Row="0" Content="&lt;LOCATION&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="53,4,0,0"/>
 
-                    <Image x:Name="imageAxonTerminalGuidanceForces" Width="100" Height="100"/>
+                    <Image x:Name="ImageAxonTerminalGuidanceForces" Width="100" Height="100"/>
                 </Grid>
             </GroupBox>
 
@@ -56,7 +56,7 @@
 
         <Grid Width="800" Height="600" Grid.Column="1">
             <Border Width="800" Height="600" Background="Black">
-                <Image x:Name="imageNetwork" Width="800" Height="600"/>
+                <Image x:Name="ImageNetwork" Width="800" Height="600"/>
             </Border>
 
             <Border Margin="10,10" Background="#55FFFFFF" VerticalAlignment="Top" HorizontalAlignment="Left">

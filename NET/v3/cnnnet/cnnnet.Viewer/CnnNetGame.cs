@@ -220,10 +220,10 @@ namespace cnnnet.Viewer
 
                 #region Draw Axon
 
-                for (int i = 1; i < neuron.AxonWaypoints.Count; i++)
+                for (int i = 1; i < neuron.AxonWayPoints.Count; i++)
                 {
-                    var startPos = new Vector2(neuron.AxonWaypoints[i - 1].X, neuron.AxonWaypoints[i - 1].Y);
-                    var endPos = new Vector2(neuron.AxonWaypoints[i].X, neuron.AxonWaypoints[i].Y);
+                    var startPos = new Vector2(neuron.AxonWayPoints[i - 1].X, neuron.AxonWayPoints[i - 1].Y);
+                    var endPos = new Vector2(neuron.AxonWayPoints[i].X, neuron.AxonWayPoints[i].Y);
 
                     _textureBlank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
                     _textureBlank.SetData(new[] { Color.White });
@@ -232,7 +232,7 @@ namespace cnnnet.Viewer
 
                 #endregion
 
-                var axonLastWayPoint = neuron.AxonWaypoints.LastOrDefault();
+                var axonLastWayPoint = neuron.AxonWayPoints.LastOrDefault();
 
                 if (neuron.IsInputNeuron)
                 {

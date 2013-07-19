@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace cnnnet.Lib
+﻿namespace cnnnet.Lib
 {
     public partial class CnnNet
     {
@@ -79,7 +74,7 @@ namespace cnnnet.Lib
         /// <summary>
         /// The minimum distance allowed between the current found waypoint and previous waypoints
         /// </summary>
-        public int AxonMinDistanceToPreviousWaypoints = 1;
+        public int AxonMinDistanceToPreviousWayPoints = 1;
 
         public int NeuronIsActiveMinimumActivityScore = 3;
 

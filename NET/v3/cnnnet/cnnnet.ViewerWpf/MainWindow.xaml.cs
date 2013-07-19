@@ -1,28 +1,19 @@
 ﻿using cnnnet.Lib;
 using cnnnet.ViewerWpf.Viewers;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace cnnnet.ViewerWpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         #region Fields
 
@@ -39,8 +30,8 @@ namespace cnnnet.ViewerWpf
 
         private bool _closeRequested;
 
-        private DateTime lastUpdate = DateTime.Now;
-        private Stopwatch _stopwatch = Stopwatch.StartNew();
+        private DateTime _lastUpdate = DateTime.Now;
+        private readonly Stopwatch _stopWatch = Stopwatch.StartNew();
         private double _lowestFrameTime;
         private double _lastTime;
 
@@ -62,14 +53,14 @@ namespace cnnnet.ViewerWpf
             _viewerManager.RegisterViewer(_viewerUndesirability);
             _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
-            imageNetwork.Source = _viewerManager.WriteableBitmap;
+            ImageNetwork.Source = _viewerManager.WriteableBitmap;
             CompositionTarget.Rendering += OnCompositionTargetRendering;
         }
 
         private void OnViewerManagerNeuronSelectedChanged(object sender, NeuronChangedEventArgs e)
         {
-            labelId.Content = e.Neuron.Id;
-            labelLocation.Content = string.Format("X:{0} Y:{1}", e.Neuron.PosX, e.Neuron.PosY);
+            LabelId.Content = e.Neuron.Id;
+            LabelLocation.Content = string.Format("X:{0} Y:{1}", e.Neuron.PosX, e.Neuron.PosY);
         }
 
         private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -89,7 +80,7 @@ namespace cnnnet.ViewerWpf
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
-            var mousePosition = Mouse.GetPosition(imageNetwork);
+            var mousePosition = Mouse.GetPosition(ImageNetwork);
 
             // Wrap updates in a GetContext call, to prevent invalidation and nested locking/unlocking during this block
             // NOTE: This is not strictly necessary for the SL version as this is a WPF feature, however we include it here for completeness and to show
@@ -98,12 +89,12 @@ namespace cnnnet.ViewerWpf
             {
                 _viewerManager.WriteableBitmap.Clear(Colors.Black);
 
-                double elapsed = (DateTime.Now - lastUpdate).TotalSeconds;
-                lastUpdate = DateTime.Now;
+                double elapsed = (DateTime.Now - _lastUpdate).TotalSeconds;
+                _lastUpdate = DateTime.Now;
                 _viewerManager.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
                     Mouse.LeftButton == MouseButtonState.Pressed);
 
-                double timeNow = _stopwatch.ElapsedMilliseconds;
+                double timeNow = _stopWatch.ElapsedMilliseconds;
                 double elapsedMilliseconds = timeNow - _lastTime;
                 _lowestFrameTime = Math.Min(_lowestFrameTime, elapsedMilliseconds);
                 FpsCounter.Text = string.Format("FPS: {0:0.0} / Max: {1:0.0}", 1000.0 / elapsedMilliseconds, 1000.0 / _lowestFrameTime);
@@ -138,8 +129,10 @@ namespace cnnnet.ViewerWpf
             ButtonNext.IsEnabled = false;
             ButtonReset.IsEnabled = false;
 
-            _networkProcessThread = new Thread(NetworkProcessThreadStart);
-            _networkProcessThread.IsBackground = true;
+            _networkProcessThread = new Thread(NetworkProcessThreadStart)
+            {
+                IsBackground = true
+            };
             _networkProcessThread.Start();
         }
 
@@ -180,7 +173,7 @@ namespace cnnnet.ViewerWpf
                 return;
             }
 
-            ChangeViewerVisibility(cboxNeuronDesirabilityMap.IsChecked, _viewerDesirability);
+            ChangeViewerVisibility(CboxNeuronDesirabilityMap.IsChecked, _viewerDesirability);
         }
 
         private void OnCboxNeuronUndesirabilityMapCheckedChanged(object sender, RoutedEventArgs e)
@@ -190,7 +183,7 @@ namespace cnnnet.ViewerWpf
                 return;
             }
 
-            ChangeViewerVisibility(cboxNeuronUndesirabilityMap.IsChecked, _viewerUndesirability);
+            ChangeViewerVisibility(CboxNeuronUndesirabilityMap.IsChecked, _viewerUndesirability);
         }
 
         private void ChangeViewerVisibility(bool? display, ViewerBase viewer)
