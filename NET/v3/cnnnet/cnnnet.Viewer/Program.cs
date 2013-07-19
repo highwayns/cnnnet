@@ -1,8 +1,7 @@
 ﻿#region Using Statements
-using Microsoft.Xna.Framework;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
+
 #endregion
 
 namespace cnnnet.Viewer
@@ -25,7 +24,9 @@ namespace cnnnet.Viewer
                 {
                     game.Run();
                 }
+                // ReSharper disable EmptyGeneralCatchClause
                 catch
+                // ReSharper restore EmptyGeneralCatchClause
                 {
                 }
             }

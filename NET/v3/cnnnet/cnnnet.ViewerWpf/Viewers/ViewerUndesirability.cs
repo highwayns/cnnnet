@@ -1,10 +1,4 @@
 ﻿using cnnnet.Lib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace cnnnet.ViewerWpf.Viewers
 {
@@ -12,7 +6,7 @@ namespace cnnnet.ViewerWpf.Viewers
     {
         #region Fields
         
-        private CnnNet _network;
+        private readonly CnnNet _network;
 
         #endregion
 

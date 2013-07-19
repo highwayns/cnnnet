@@ -4,9 +4,7 @@ using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -20,20 +18,20 @@ namespace cnnnet.ViewerWpf.Viewers
         private Neuron _neuronSelected;
         private Neuron _neuronHover;
 
-        private CnnNet _network;
+        private readonly CnnNet _network;
         private readonly List<ViewerBase> _viewers;
 
-        private WriteableBitmap _writableBitmap;
+        private readonly WriteableBitmap _writableBitmap;
         private byte[] _bitmapData;
 
         private readonly int _stride;
         private readonly int _bytesPerPixel;
 
-        private Int32Rect _writableBitmapSourceRect;
+        private readonly Int32Rect _writableBitmapSourceRect;
         private Rect _neuronIconDestRect;
-        private Rect _neuronIconSourceRect;
+        private readonly Rect _neuronIconSourceRect;
 
-        private Thread _preRenderThread;
+        private readonly Thread _preRenderThread;
 
         #endregion
 
@@ -170,7 +168,7 @@ namespace cnnnet.ViewerWpf.Viewers
             {
                 while (true)
                 {
-                    byte[] tmpBitmapData = new byte[_network.Height * _network.Width * _bytesPerPixel];
+                    var tmpBitmapData = new byte[_network.Height * _network.Width * _bytesPerPixel];
 
                     var viewersWithData = _viewers.
                         Where(viewer => DisplayedViewers.Contains(viewer)).
@@ -197,14 +195,16 @@ namespace cnnnet.ViewerWpf.Viewers
                                 tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorBlueIndex];
                             }
                         }
-                    };
+                    }
 
                     _bitmapData = tmpBitmapData;
 
                     Thread.Sleep(30);
                 }
             }
-            catch
+            // ReSharper disable EmptyGeneralCatchClause
+            catch (Exception)
+            // ReSharper restore EmptyGeneralCatchClause
             {
             }
         }
@@ -247,8 +247,10 @@ namespace cnnnet.ViewerWpf.Viewers
             _neuronIconDestRect = new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight);
             _neuronIconSourceRect = new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight);
 
-            _preRenderThread = new Thread(PreRender);
-            _preRenderThread.IsBackground = true;
+            _preRenderThread = new Thread(PreRender)
+            {
+                IsBackground = true
+            };
             _preRenderThread.Start();
         }
 

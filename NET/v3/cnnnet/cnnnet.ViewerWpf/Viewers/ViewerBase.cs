@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-
-namespace cnnnet.ViewerWpf.Viewers
+﻿namespace cnnnet.ViewerWpf.Viewers
 {
     public abstract class ViewerBase
     {
@@ -51,7 +40,7 @@ namespace cnnnet.ViewerWpf.Viewers
 
         #region Instance
 
-        public ViewerBase(int width, int height, int bytesPerPixel, bool isEnabled)
+        protected ViewerBase(int width, int height, int bytesPerPixel, bool isEnabled)
         {
             Width = width;
             Height = height;

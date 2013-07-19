@@ -1,15 +1,12 @@
 ﻿#region Using Statements
 
+using System.Globalization;
 using cnnnet.Lib;
 using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -59,8 +56,6 @@ namespace cnnnet.Viewer
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
 
             IsMouseVisible = true;
@@ -87,15 +82,6 @@ namespace cnnnet.Viewer
         }
 
         /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
-
-        /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
@@ -104,8 +90,6 @@ namespace cnnnet.Viewer
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
@@ -183,7 +167,7 @@ namespace cnnnet.Viewer
             if (_neuronSelected != null)
             {
                 GameUtils.DrawTexture(_spriteBatch, _resources.NeuronHover, _neuronSelected.PosX, _neuronSelected.PosY);
-                _formNetworkControl.InvokeEx(form => form.lbNeuronId.Text = _neuronSelected.Id.ToString());
+                _formNetworkControl.InvokeEx(form => form.lbNeuronId.Text = _neuronSelected.Id.ToString(CultureInfo.InvariantCulture));
                 _formNetworkControl.InvokeEx(form => form.lbNeuronLocation.Text = string.Format("X = {0} Y = {1}", _neuronSelected.PosX, _neuronSelected.PosY));
                 _formNetworkControl.InvokeEx(form => _neuronSelected.BreakOnProcessCall = form.cboxBreakOnceOnNeuronProcess.Checked);
             }
@@ -232,7 +216,7 @@ namespace cnnnet.Viewer
 
                 #endregion
 
-                var axonLastWayPoint = neuron.AxonWayPoints.LastOrDefault();
+                var axonLastWayPoint = neuron.AxonWayPoints.Last();
 
                 if (neuron.IsInputNeuron)
                 {
@@ -248,7 +232,6 @@ namespace cnnnet.Viewer
         #region Instance
 
         public CnnNetGame()
-            : base()
         {
             _graphics = new GraphicsDeviceManager(this)
             {

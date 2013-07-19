@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace cnnnet.Viewer
 {
@@ -11,7 +7,7 @@ namespace cnnnet.Viewer
     {
         #region Fields
 
-        private ContentManager _contentManager;
+        private readonly ContentManager _contentManager;
 
         public readonly Texture2D NeuronIdle;
         public readonly Texture2D NeuronActive;

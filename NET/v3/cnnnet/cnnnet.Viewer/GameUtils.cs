@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace cnnnet.Viewer
 {
@@ -16,7 +13,7 @@ namespace cnnnet.Viewer
 
             var data = new Color[outerRadius * outerRadius];
 
-            // Colour the entire texture transparent first.
+            // Color the entire texture transparent first.
             for (int i = 0; i < data.Length; i++)
                 data[i] = Color.Transparent;
 
