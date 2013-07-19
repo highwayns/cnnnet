@@ -51,7 +51,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WriteableBitmapEx.Wpf">
-      <HintPath>..\packages\WriteableBitmapEx.1.0.8.0\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
+      <HintPath>..\Libs\WriteableBitmapEx\WPF\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
