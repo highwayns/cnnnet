@@ -1,4 +1,5 @@
 ﻿using cnnnet.Lib;
+using cnnnet.ViewerWpf.ViewerManagers;
 using cnnnet.ViewerWpf.Viewers;
 using System;
 using System.Diagnostics;
@@ -26,6 +27,8 @@ namespace cnnnet.ViewerWpf
         private ViewerManagerNetwork _viewerManager;
         private ViewerDesirability _viewerDesirability;
         private ViewerUndesirability _viewerUndesirability;
+
+        private ViewerManagerAxonTerminal _viewerManagerAxonTerminal;
         private ViewerAxonTerminalGuidanceForces _viewerAxonTerminalGuidanceForces;
 
         private bool _closeRequested;
@@ -44,16 +47,15 @@ namespace cnnnet.ViewerWpf
             _network = new CnnNet(NetworkWidth, NetworkHeight);
 
             _viewerManager = new ViewerManagerNetwork(_network);
-
-            _viewerDesirability = new ViewerDesirability(_network);
-            _viewerUndesirability = new ViewerUndesirability(_network);
-            _viewerAxonTerminalGuidanceForces = new ViewerAxonTerminalGuidanceForces();
-
-            _viewerManager.RegisterViewer(_viewerDesirability);
-            _viewerManager.RegisterViewer(_viewerUndesirability);
+            _viewerManager.RegisterViewer(_viewerDesirability = new ViewerDesirability(_network));
+            _viewerManager.RegisterViewer(_viewerUndesirability = new ViewerUndesirability(_network));
             _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
+            _viewerManagerAxonTerminal = new ViewerManagerAxonTerminal(_network);
+            _viewerManagerAxonTerminal.RegisterViewer(_viewerAxonTerminalGuidanceForces = new ViewerAxonTerminalGuidanceForces());
+
             ImageNetwork.Source = _viewerManager.WriteableBitmap;
+            ImageAxonTerminalGuidanceForces.Source = _viewerManagerAxonTerminal.WriteableBitmap;
             CompositionTarget.Rendering += OnCompositionTargetRendering;
         }
 
@@ -61,6 +63,7 @@ namespace cnnnet.ViewerWpf
         {
             LabelId.Content = e.Neuron.Id;
             LabelLocation.Content = string.Format("X:{0} Y:{1}", e.Neuron.PosX, e.Neuron.PosY);
+            _viewerAxonTerminalGuidanceForces.Neuron = e.Neuron;
         }
 
         private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -85,21 +88,28 @@ namespace cnnnet.ViewerWpf
             // Wrap updates in a GetContext call, to prevent invalidation and nested locking/unlocking during this block
             // NOTE: This is not strictly necessary for the SL version as this is a WPF feature, however we include it here for completeness and to show
             // a similar API to WPF
+            double elapsed = (DateTime.Now - _lastUpdate).TotalSeconds;
+            _lastUpdate = DateTime.Now;
+
             using (_viewerManager.WriteableBitmap.GetBitmapContext())
             {
                 _viewerManager.WriteableBitmap.Clear(Colors.Black);
-
-                double elapsed = (DateTime.Now - _lastUpdate).TotalSeconds;
-                _lastUpdate = DateTime.Now;
                 _viewerManager.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
                     Mouse.LeftButton == MouseButtonState.Pressed);
-
-                double timeNow = _stopWatch.ElapsedMilliseconds;
-                double elapsedMilliseconds = timeNow - _lastTime;
-                _lowestFrameTime = Math.Min(_lowestFrameTime, elapsedMilliseconds);
-                FpsCounter.Text = string.Format("FPS: {0:0.0} / Max: {1:0.0}", 1000.0 / elapsedMilliseconds, 1000.0 / _lowestFrameTime);
-                _lastTime = timeNow;
             }
+
+            using (_viewerManagerAxonTerminal.WriteableBitmap.GetBitmapContext())
+            {
+                _viewerManagerAxonTerminal.WriteableBitmap.Clear(Colors.Black);
+                _viewerManagerAxonTerminal.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
+                    Mouse.LeftButton == MouseButtonState.Pressed);
+            }
+
+            double timeNow = _stopWatch.ElapsedMilliseconds;
+            double elapsedMilliseconds = timeNow - _lastTime;
+            _lowestFrameTime = Math.Min(_lowestFrameTime, elapsedMilliseconds);
+            FpsCounter.Text = string.Format("FPS: {0:0.0} / Max: {1:0.0}", 1000.0 / elapsedMilliseconds, 1000.0 / _lowestFrameTime);
+            _lastTime = timeNow;
         }
 
         private void OnButtonStartClick(object sender, RoutedEventArgs e)

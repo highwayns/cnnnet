@@ -62,10 +62,11 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ViewerManagers\ViewerManagerAxonTerminal.cs" />
     <Compile Include="Viewers\NeuronChangedEventArgs.cs" />
     <Compile Include="Viewers\ViewerAxonTerminalGuidanceForces.cs" />
-    <Compile Include="Viewers\ViewerManagerBase.cs" />
-    <Compile Include="Viewers\ViewerManagerNetwork.cs" />
+    <Compile Include="ViewerManagers\ViewerManagerBase.cs" />
+    <Compile Include="ViewerManagers\ViewerManagerNetwork.cs" />
     <Compile Include="Viewers\ViewerUndesirability.cs" />
     <Compile Include="Viewers\ViewerBase.cs" />
     <Compile Include="Viewers\ViewerDesirability.cs" />
@@ -136,6 +137,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

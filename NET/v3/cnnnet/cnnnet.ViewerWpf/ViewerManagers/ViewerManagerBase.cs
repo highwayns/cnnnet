@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using cnnnet.ViewerWpf.Viewers;
 
-namespace cnnnet.ViewerWpf.Viewers
+namespace cnnnet.ViewerWpf.ViewerManagers
 {
     public abstract class ViewerManagerBase
     {
@@ -47,7 +48,6 @@ namespace cnnnet.ViewerWpf.Viewers
         public void Update(double elapsed, int mousePosX, int mousePosY, bool leftButtonPressed)
         {
             using (WriteableBitmap.GetBitmapContext())
-            
             {
                 UpdateBackground();
                 UpdateInternal(elapsed, mousePosX, mousePosY, leftButtonPressed);
