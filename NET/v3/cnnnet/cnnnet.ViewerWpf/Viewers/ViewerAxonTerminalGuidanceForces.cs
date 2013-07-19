@@ -1,6 +1,7 @@
 ﻿using cnnnet.Lib.GuidanceForces;
 using cnnnet.Lib.Neurons;
 using System.Linq;
+using cnnnet.Lib.Utils;
 
 namespace cnnnet.ViewerWpf.Viewers
 {
@@ -9,6 +10,7 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Fields
         
         private Neuron _neuron;
+        private NeuronAxonGuidanceForcesScoreEventArgs _latestNeuronAxonGuidanceForcesScores;
 
         #endregion
 
@@ -22,15 +24,15 @@ namespace cnnnet.ViewerWpf.Viewers
             }
             set
             {
-                UnsubscribeFromGuidanceForces(_neuron);
+                UnsubscribeFromNeuronEvents(_neuron);
                 _neuron = value;
-                SubscribeToGuidanceForces(_neuron);
+                SubscribeToNeuronEvents(_neuron);
 
                 IsEnabled = _neuron != null;
             }
         }
 
-        private void SubscribeToGuidanceForces(Neuron neuron)
+        private void SubscribeToNeuronEvents(Neuron neuron)
         {
             if (neuron == null)
             {
@@ -39,9 +41,10 @@ namespace cnnnet.ViewerWpf.Viewers
 
             neuron.AxonGuidanceForces.ToList().
                 ForEach(guidanceForce => guidanceForce.ScoreAvailableEvent += OnGuidanceForceScoreAvailableEvent);
+            neuron.AxonGuidanceForcesScoreEvent += OnNeuronAxonGuidanceForcesScoreAvailable;
         }
 
-        private void UnsubscribeFromGuidanceForces(Neuron neuron)
+        private void UnsubscribeFromNeuronEvents(Neuron neuron)
         {
             if (neuron == null)
             {
@@ -50,11 +53,16 @@ namespace cnnnet.ViewerWpf.Viewers
 
             neuron.AxonGuidanceForces.ToList().
                 ForEach(guidanceForce => guidanceForce.ScoreAvailableEvent -= OnGuidanceForceScoreAvailableEvent);
+            neuron.AxonGuidanceForcesScoreEvent -= OnNeuronAxonGuidanceForcesScoreAvailable;
         }
 
         private void OnGuidanceForceScoreAvailableEvent(object sender, GuidanceForceScoreEventArgs e)
         {
-            
+        }
+
+        private void OnNeuronAxonGuidanceForcesScoreAvailable(object sender, NeuronAxonGuidanceForcesScoreEventArgs e)
+        {
+            _latestNeuronAxonGuidanceForcesScores = e;
         }
 
         #endregion
@@ -63,7 +71,25 @@ namespace cnnnet.ViewerWpf.Viewers
 
         protected override void UpdateDataInternal(ref byte[,] data)
         {
-            
+            if (_latestNeuronAxonGuidanceForcesScores == null)
+            {
+                return;
+            }
+
+            double[,] scoresSum = _latestNeuronAxonGuidanceForcesScores.Scores.Select(item => item.Score).Sum();
+
+            int dataMinX = (Width - data.GetLength(1))/2;
+            int dataMaxX = dataMinX + data.GetLength(1);
+            int dataMinY = (Height - data.GetLength(0)) / 2;
+            int dataMaxY = dataMinY + data.GetLength(0);
+
+            for (int y = dataMinY; y < dataMaxY; y++)
+            {
+                for (int x = dataMinX; x < dataMaxX; x++)
+                {
+                    data[y, x * 3 + Constants.ColorGreenIndex] = (byte)(scoresSum[y - dataMinY, x - dataMinX] * 255);
+                }
+            }
         }
 
         #endregion
