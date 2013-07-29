@@ -44,11 +44,18 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    
-                    <Label x:Name="LabelId" Grid.Row="0" Content="&lt;ID&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,4,0,0"/>
-                    <Label x:Name="LabelLocation" Grid.Row="0" Content="&lt;LOCATION&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="53,4,0,0"/>
 
-                    <Image x:Name="ImageAxonTerminalGuidanceForces" Width="100" Height="100"/>
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+                        <Label x:Name="LabelId" Content="&lt;ID&gt;" />
+                        <Label x:Name="LabelLocation" Content="&lt;LOCATION&gt;" />
+                    </StackPanel>
+
+                    <Border 
+                        Grid.Row="1"
+                        Width="100" Height="100" Background="Black"
+                        HorizontalAlignment="Left">
+                        <Image x:Name="ImageAxonTerminalGuidanceForces" Width="100" Height="100"/>
+                    </Border>
                 </Grid>
             </GroupBox>
 

@@ -46,6 +46,7 @@
     <Compile Include="GuidanceForces\Axon\AxonFollowExistingGuidanceForce.cs" />
     <Compile Include="CnnNet.cs" />
     <Compile Include="CnnNetParameters.cs" />
+    <Compile Include="GuidanceForces\Axon\AxonGuidanceForcesSumEventArgs.cs" />
     <Compile Include="GuidanceForces\GuidanceForceBase.cs" />
     <Compile Include="GuidanceForces\GuidanceForceScoreEventArgs.cs" />
     <Compile Include="GuidanceForces\Soma\SomaDesirabilityMapGuidanceForce.cs" />

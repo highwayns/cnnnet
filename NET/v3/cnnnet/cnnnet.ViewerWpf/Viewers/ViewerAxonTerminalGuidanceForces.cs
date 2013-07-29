@@ -2,6 +2,7 @@
 using cnnnet.Lib.Neurons;
 using System.Linq;
 using cnnnet.Lib.Utils;
+using cnnnet.Lib.GuidanceForces.Axon;
 
 namespace cnnnet.ViewerWpf.Viewers
 {
@@ -10,7 +11,8 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Fields
         
         private Neuron _neuron;
-        private NeuronAxonGuidanceForcesScoreEventArgs _latestNeuronAxonGuidanceForcesScores;
+        private AxonGuidanceForcesSumEventArgs _latestGuidanceForceScore;
+        private NeuronAxonGuidanceForcesScoreEventArgs _latestNeuronAxonGuidanceForcesScore;
 
         #endregion
 
@@ -42,6 +44,7 @@ namespace cnnnet.ViewerWpf.Viewers
             neuron.AxonGuidanceForces.ToList().
                 ForEach(guidanceForce => guidanceForce.ScoreAvailableEvent += OnGuidanceForceScoreAvailableEvent);
             neuron.AxonGuidanceForcesScoreEvent += OnNeuronAxonGuidanceForcesScoreAvailable;
+            neuron.AxonGuidanceForcesSumEvent += OnNeuronAxonGuidanceForcesSumEvent;
         }
 
         private void UnsubscribeFromNeuronEvents(Neuron neuron)
@@ -54,6 +57,7 @@ namespace cnnnet.ViewerWpf.Viewers
             neuron.AxonGuidanceForces.ToList().
                 ForEach(guidanceForce => guidanceForce.ScoreAvailableEvent -= OnGuidanceForceScoreAvailableEvent);
             neuron.AxonGuidanceForcesScoreEvent -= OnNeuronAxonGuidanceForcesScoreAvailable;
+            neuron.AxonGuidanceForcesSumEvent -= OnNeuronAxonGuidanceForcesSumEvent;
         }
 
         private void OnGuidanceForceScoreAvailableEvent(object sender, GuidanceForceScoreEventArgs e)
@@ -62,7 +66,12 @@ namespace cnnnet.ViewerWpf.Viewers
 
         private void OnNeuronAxonGuidanceForcesScoreAvailable(object sender, NeuronAxonGuidanceForcesScoreEventArgs e)
         {
-            _latestNeuronAxonGuidanceForcesScores = e;
+            _latestNeuronAxonGuidanceForcesScore = e;
+        }
+
+        private void OnNeuronAxonGuidanceForcesSumEvent(object sender, AxonGuidanceForcesSumEventArgs e)
+        {
+            _latestGuidanceForceScore = e;
         }
 
         #endregion
@@ -71,12 +80,12 @@ namespace cnnnet.ViewerWpf.Viewers
 
         protected override void UpdateDataInternal(ref byte[,] data)
         {
-            if (_latestNeuronAxonGuidanceForcesScores == null)
+            if (_latestGuidanceForceScore == null)
             {
                 return;
             }
 
-            double[,] scoresSum = _latestNeuronAxonGuidanceForcesScores.Scores.Select(item => item.Score).Sum();
+            double[,] scoresSum = _latestGuidanceForceScore.Score;
 
             int dataMinX = (Width - data.GetLength(1))/2;
             int dataMaxX = dataMinX + data.GetLength(1);
@@ -97,7 +106,7 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Instance
         
         public ViewerAxonTerminalGuidanceForces()
-            : base(51, 51, 3, false)
+            : base(51, 51, 3, true)
         {
 
         }

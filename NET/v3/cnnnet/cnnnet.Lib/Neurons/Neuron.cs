@@ -34,6 +34,7 @@ namespace cnnnet.Lib.Neurons
         }
 
         public event EventHandler<NeuronAxonGuidanceForcesScoreEventArgs> AxonGuidanceForcesScoreEvent;
+        public event EventHandler<AxonGuidanceForcesSumEventArgs> AxonGuidanceForcesSumEvent;
 
         public ReadOnlyCollection<AxonGuidanceForceBase> AxonGuidanceForces
         {
@@ -266,8 +267,8 @@ namespace cnnnet.Lib.Neurons
                     lastMaxLocation.Y, lastMaxLocation.X, this, 
                     axonGuidanceForce.GetScore(lastMaxLocation.Y, lastMaxLocation.X, this))).ToArray();
 
-            guidanceForceScores.Select(guidanceForceScore => guidanceForceScore.Score).
-                Sum().GetMaxAndLocation(out maxLocation, out maxScore);
+            var guidanceForceScoresSum = guidanceForceScores.Select(guidanceForceScore => guidanceForceScore.Score).Sum();
+            guidanceForceScoresSum.GetMaxAndLocation(out maxLocation, out maxScore);
 
             maxLocation = new Point
                 (Math.Min(Math.Max(maxLocation.X - Network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), Network.Width - 1),
@@ -285,16 +286,26 @@ namespace cnnnet.Lib.Neurons
             }
 
             InvokeAxonGuidanceForcesScoreEvent(guidanceForceScores);
+            InvokeAxonGuidanceForcesSumEvent(guidanceForceScoresSum);
 
             return result;
         }
 
-        private void InvokeAxonGuidanceForcesScoreEvent(IEnumerable<GuidanceForceScoreEventArgs> scores)
+        private void InvokeAxonGuidanceForcesScoreEvent(IEnumerable<GuidanceForceScoreEventArgs> args)
         {
             var handler = AxonGuidanceForcesScoreEvent;
             if (handler != null)
             {
-                handler(this, new NeuronAxonGuidanceForcesScoreEventArgs(scores));
+                handler(this, new NeuronAxonGuidanceForcesScoreEventArgs(args));
+            }
+        }
+
+        private void InvokeAxonGuidanceForcesSumEvent(double[,] score)
+        {
+            var handler = AxonGuidanceForcesSumEvent;
+            if (handler != null)
+            {
+                handler(this, new AxonGuidanceForcesSumEventArgs(this, AxonWayPoints.Last().Y, AxonWayPoints.Last().X, score));
             }
         }
 

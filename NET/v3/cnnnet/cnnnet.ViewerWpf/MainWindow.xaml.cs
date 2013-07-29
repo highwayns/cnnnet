@@ -93,14 +93,12 @@ namespace cnnnet.ViewerWpf
 
             using (_viewerManager.WriteableBitmap.GetBitmapContext())
             {
-                _viewerManager.WriteableBitmap.Clear(Colors.Black);
                 _viewerManager.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
                     Mouse.LeftButton == MouseButtonState.Pressed);
             }
 
             using (_viewerManagerAxonTerminal.WriteableBitmap.GetBitmapContext())
             {
-                _viewerManagerAxonTerminal.WriteableBitmap.Clear(Colors.Black);
                 _viewerManagerAxonTerminal.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
                     Mouse.LeftButton == MouseButtonState.Pressed);
             }
