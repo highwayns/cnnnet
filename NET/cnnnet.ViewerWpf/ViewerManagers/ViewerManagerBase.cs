@@ -90,6 +90,8 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
                             foreach (var viewerWithData in viewersWithData)
                             {
+                                // TODO: correct error here
+
                                 tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorRedIndex];
                                 tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorGreenIndex];
                                 tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorBlueIndex];
@@ -123,6 +125,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
             _viewers = new List<ViewerBase>();
             DisplayedViewers = new List<ViewerBase>();
+
             WriteableBitmap = BitmapFactory.New(Width, Height);
             Debug.Assert(Constants.BytesPerPixel == (WriteableBitmap.Format.BitsPerPixel + 7) / 8);
 
