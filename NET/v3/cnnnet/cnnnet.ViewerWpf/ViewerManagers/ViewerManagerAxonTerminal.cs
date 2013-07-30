@@ -1,5 +1,4 @@
-﻿using System;
-using cnnnet.Lib;
+﻿using cnnnet.Lib;
 
 namespace cnnnet.ViewerWpf.ViewerManagers
 {

@@ -1,7 +1,6 @@
 ﻿using cnnnet.Lib.GuidanceForces;
 using cnnnet.Lib.Neurons;
 using System.Linq;
-using cnnnet.Lib.Utils;
 using cnnnet.Lib.GuidanceForces.Axon;
 
 namespace cnnnet.ViewerWpf.Viewers
@@ -11,8 +10,7 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Fields
         
         private Neuron _neuron;
-        private AxonGuidanceForcesSumEventArgs _latestGuidanceForceScore;
-        private NeuronAxonGuidanceForcesScoreEventArgs _latestNeuronAxonGuidanceForcesScore;
+        private AxonGuidanceForcesSumEventArgs _latestAxonGuidanceForcesSum;
 
         #endregion
 
@@ -43,7 +41,6 @@ namespace cnnnet.ViewerWpf.Viewers
 
             neuron.AxonGuidanceForces.ToList().
                 ForEach(guidanceForce => guidanceForce.ScoreAvailableEvent += OnGuidanceForceScoreAvailableEvent);
-            neuron.AxonGuidanceForcesScoreEvent += OnNeuronAxonGuidanceForcesScoreAvailable;
             neuron.AxonGuidanceForcesSumEvent += OnNeuronAxonGuidanceForcesSumEvent;
         }
 
@@ -56,7 +53,6 @@ namespace cnnnet.ViewerWpf.Viewers
 
             neuron.AxonGuidanceForces.ToList().
                 ForEach(guidanceForce => guidanceForce.ScoreAvailableEvent -= OnGuidanceForceScoreAvailableEvent);
-            neuron.AxonGuidanceForcesScoreEvent -= OnNeuronAxonGuidanceForcesScoreAvailable;
             neuron.AxonGuidanceForcesSumEvent -= OnNeuronAxonGuidanceForcesSumEvent;
         }
 
@@ -64,14 +60,9 @@ namespace cnnnet.ViewerWpf.Viewers
         {
         }
 
-        private void OnNeuronAxonGuidanceForcesScoreAvailable(object sender, NeuronAxonGuidanceForcesScoreEventArgs e)
-        {
-            _latestNeuronAxonGuidanceForcesScore = e;
-        }
-
         private void OnNeuronAxonGuidanceForcesSumEvent(object sender, AxonGuidanceForcesSumEventArgs e)
         {
-            _latestGuidanceForceScore = e;
+            _latestAxonGuidanceForcesSum = e;
         }
 
         #endregion
@@ -80,12 +71,12 @@ namespace cnnnet.ViewerWpf.Viewers
 
         protected override void UpdateDataInternal(ref byte[,] data)
         {
-            if (_latestGuidanceForceScore == null)
+            if (_latestAxonGuidanceForcesSum == null)
             {
                 return;
             }
 
-            double[,] scoresSum = _latestGuidanceForceScore.Score;
+            double[,] scoresSum = _latestAxonGuidanceForcesSum.Score;
 
             int dataMinX = (Width - data.GetLength(1))/2;
             int dataMaxX = dataMinX + data.GetLength(1);
