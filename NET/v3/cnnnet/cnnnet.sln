@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cnnnet.Viewer", "cnnnet.Viewer\cnnnet.Viewer.csproj", "{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cnnnet.Lib", "cnnnet.Lib\cnnnet.Lib.csproj", "{9D20CE51-39C3-4E23-BDF0-85B59CB3EE22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cnnnet.ViewerWpf", "cnnnet.ViewerWpf\cnnnet.ViewerWpf.csproj", "{AD5FC2FF-7611-499E-88CA-F0E2AA7DAEC5}"
@@ -17,16 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Debug|x86.ActiveCfg = Debug|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Debug|x86.Build.0 = Debug|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Release|Any CPU.ActiveCfg = Release|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Release|Mixed Platforms.Build.0 = Release|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Release|x86.ActiveCfg = Release|x86
-		{7AA3B4A6-B3EA-4FF3-B891-D2F67921725D}.Release|x86.Build.0 = Release|x86
 		{9D20CE51-39C3-4E23-BDF0-85B59CB3EE22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9D20CE51-39C3-4E23-BDF0-85B59CB3EE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D20CE51-39C3-4E23-BDF0-85B59CB3EE22}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
