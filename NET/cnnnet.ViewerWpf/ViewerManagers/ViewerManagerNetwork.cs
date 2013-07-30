@@ -13,7 +13,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
     public class ViewerManagerNetwork : ViewerManagerBase
     {
         #region Fields
-        
+
+        private readonly CnnNet _network;
+
         private Neuron _neuronSelected;
         private Neuron _neuronHover;
 
@@ -92,7 +94,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         private void UpdateHoverAndSelectedNeuron(int mousePosX, int mousePosY, bool leftButtonPressed)
         {
-            NeuronHover = Extensions.GetClosestNeuronsWithinRange(mousePosX, mousePosY, Network, 10);
+            NeuronHover = Extensions.GetClosestNeuronsWithinRange(mousePosX, mousePosY, _network, 10);
 
             if (NeuronHover != null)
             {
@@ -105,7 +107,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         private void UpdateNeurons()
         {
-            foreach (var neuron in Network.Neurons)
+            foreach (var neuron in _network.Neurons)
             {
                 #region Draw Soma
 
@@ -146,8 +148,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
         #region Instance
 
         public ViewerManagerNetwork(CnnNet network)
-            : base(network)
+            : base(network.Width, network.Height)
         {
+            _network = network;
             _neuronIconDestRect = new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight);
             _neuronIconSourceRect = new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight);
         }

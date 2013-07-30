@@ -1,6 +1,6 @@
-﻿using cnnnet.Lib;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -15,7 +15,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         public readonly WriteableBitmap WriteableBitmap;
 
-        protected readonly CnnNet Network;
+        protected readonly int Width;
+        protected readonly int Height;
+
         private readonly List<ViewerBase> _viewers;
         private byte[] _bitmapData;
 
@@ -67,7 +69,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
             {
                 while (true)
                 {
-                    var tmpBitmapData = new byte[Network.Height * Network.Width * _bytesPerPixel];
+                    var tmpBitmapData = new byte[Height * Width * _bytesPerPixel];
 
                     var viewersWithData = _viewers.
                         Where(viewer => DisplayedViewers.Contains(viewer)).
@@ -77,11 +79,11 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                             Data = viewer.GetData()
                         }).ToArray();
 
-                    for (int y = 0; y < Network.Height; y++)
+                    for (int y = 0; y < Height; y++)
                     {
-                        for (int x = 0; x < Network.Width; x++)
+                        for (int x = 0; x < Width; x++)
                         {
-                            int bitmapDataIndex = (y * Network.Width + x) * _bytesPerPixel;
+                            int bitmapDataIndex = (y * Width + x) * _bytesPerPixel;
 
                             tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] = 0;
                             tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] = 0;
@@ -102,9 +104,12 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                 }
             }
             // ReSharper disable EmptyGeneralCatchClause
-            catch (Exception)
+            #pragma warning disable 168
+            catch (Exception ex)
+            #pragma warning restore 168
             // ReSharper restore EmptyGeneralCatchClause
             {
+                Debugger.Break();
             }
         }
 
@@ -112,17 +117,19 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         #region Instance
 
-        protected ViewerManagerBase(CnnNet network)
+        protected ViewerManagerBase(int width, int height)
         {
-            Network = network;
+            Width = width;
+            Height = height;
+
             _viewers = new List<ViewerBase>();
             DisplayedViewers = new List<ViewerBase>();
-            WriteableBitmap = BitmapFactory.New(Network.Width, Network.Height);
+            WriteableBitmap = BitmapFactory.New(Width, Height);
 
             _bytesPerPixel = (WriteableBitmap.Format.BitsPerPixel + 7) / 8;
             _stride = WriteableBitmap.PixelWidth * _bytesPerPixel;
 
-            _bitmapData = new byte[Network.Height * Network.Width * _bytesPerPixel];
+            _bitmapData = new byte[Height * Width * _bytesPerPixel];
 
             _writableBitmapSourceRect = new Int32Rect(0, 0, WriteableBitmap.PixelWidth, WriteableBitmap.PixelHeight);
             
