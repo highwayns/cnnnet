@@ -18,9 +18,6 @@ namespace cnnnet.ViewerWpf
     {
         #region Fields
 
-        private const int NetworkWidth = 800;
-        private const int NetworkHeight = 600;
-
         private Thread _networkProcessThread;
         private CnnNet _network;
 
@@ -44,7 +41,7 @@ namespace cnnnet.ViewerWpf
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            _network = new CnnNet(NetworkWidth, NetworkHeight);
+            _network = new CnnNet(Constants.NetworkWidth, Constants.NetworkHeight);
 
             _viewerManager = new ViewerManagerNetwork(_network);
             _viewerManager.RegisterViewer(_viewerDesirability = new ViewerDesirability(_network));
