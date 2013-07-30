@@ -4,8 +4,8 @@
     {
         #region Fields
         
-        protected readonly int Width;
-        protected readonly int Height;
+        public readonly int Width;
+        public readonly int Height;
 
         #endregion
 

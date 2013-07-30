@@ -78,23 +78,59 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                             Data = viewer.GetData()
                         }).ToArray();
 
+                    int middleWidth = Width / 2 - 1;
+                    int middleHeight = Height / 2 - 1;
+
                     for (int y = 0; y < Height; y++)
                     {
                         for (int x = 0; x < Width; x++)
                         {
                             int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
-
-                            tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] = 0;
-                            tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] = 0;
-                            tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] = 0;
-
-                            foreach (var viewerWithData in viewersWithData)
+                            try
                             {
-                                // TODO: correct error here
+                                tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] = 0;
+                                tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] = 0;
+                                tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] = 0;
 
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorRedIndex];
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorGreenIndex];
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorBlueIndex];
+                                foreach (var viewerWithData in viewersWithData)
+                                {
+                                    // TODO: correct error here
+                                    int viewerRangeX = viewerWithData.Viewer.Width / 2;
+                                    int viewerRangeY = viewerWithData.Viewer.Height / 2;
+
+                                    if (middleWidth - viewerRangeX <= x && x <= middleWidth + viewerRangeX
+                                        && middleHeight - viewerRangeY <= y && y <= middleHeight + viewerRangeY)
+                                    {
+                                        int viewerX = x - (Width / 2 - viewerRangeX);
+                                        int viewerY = y - (Height / 2 - viewerRangeY);
+
+                                        try
+                                        {
+                                            tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] =
+                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + Constants.ColorRedIndex], 255);
+                                            tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] =
+                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + Constants.ColorGreenIndex], 255);
+                                            tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] =
+                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + Constants.ColorBlueIndex], 255);
+                                        }
+                                        // ReSharper disable EmptyGeneralCatchClause
+#pragma warning disable 168
+                                        catch (Exception ex)
+#pragma warning restore 168
+                                        // ReSharper restore EmptyGeneralCatchClause
+                                        {
+                                            Debugger.Break();
+                                        }
+                                    }
+                                }
+                            }
+                            // ReSharper disable EmptyGeneralCatchClause
+#pragma warning disable 168
+                            catch (Exception ex)
+#pragma warning restore 168
+                            // ReSharper restore EmptyGeneralCatchClause
+                            {
+                                Debugger.Break();
                             }
                         }
                     }
