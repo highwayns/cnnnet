@@ -14,8 +14,8 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         #region Instance
 
-        public ViewerManagerAxonTerminal(CnnNet network)
-            : base(100, 100)
+        public ViewerManagerAxonTerminal()
+            : base(Constants.AxonGuidanceForcesWidth, Constants.AxonGuidanceForcesHeight)
         {
         }
 

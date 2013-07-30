@@ -22,7 +22,6 @@ namespace cnnnet.ViewerWpf.ViewerManagers
         private byte[] _bitmapData;
 
         private readonly int _stride;
-        private readonly int _bytesPerPixel;
 
         private readonly Int32Rect _writableBitmapSourceRect;
         private readonly Thread _preRenderThread;
@@ -69,7 +68,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
             {
                 while (true)
                 {
-                    var tmpBitmapData = new byte[Height * Width * _bytesPerPixel];
+                    var tmpBitmapData = new byte[Height * Width * Constants.BytesPerPixel];
 
                     var viewersWithData = _viewers.
                         Where(viewer => DisplayedViewers.Contains(viewer)).
@@ -83,7 +82,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                     {
                         for (int x = 0; x < Width; x++)
                         {
-                            int bitmapDataIndex = (y * Width + x) * _bytesPerPixel;
+                            int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
 
                             tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] = 0;
                             tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] = 0;
@@ -91,9 +90,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
                             foreach (var viewerWithData in viewersWithData)
                             {
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorRedIndex];
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorGreenIndex];
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] += viewerWithData.Data[y, x * viewerWithData.Viewer.BytesPerPixel + Constants.ColorBlueIndex];
+                                tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorRedIndex];
+                                tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorGreenIndex];
+                                tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] += viewerWithData.Data[y, x * Constants.BytesPerPixel + Constants.ColorBlueIndex];
                             }
                         }
                     }
@@ -125,11 +124,10 @@ namespace cnnnet.ViewerWpf.ViewerManagers
             _viewers = new List<ViewerBase>();
             DisplayedViewers = new List<ViewerBase>();
             WriteableBitmap = BitmapFactory.New(Width, Height);
+            Debug.Assert(Constants.BytesPerPixel == (WriteableBitmap.Format.BitsPerPixel + 7) / 8);
 
-            _bytesPerPixel = (WriteableBitmap.Format.BitsPerPixel + 7) / 8;
-            _stride = WriteableBitmap.PixelWidth * _bytesPerPixel;
-
-            _bitmapData = new byte[Height * Width * _bytesPerPixel];
+            _stride = WriteableBitmap.PixelWidth * Constants.BytesPerPixel;
+            _bitmapData = new byte[Height * Width * Constants.BytesPerPixel];
 
             _writableBitmapSourceRect = new Int32Rect(0, 0, WriteableBitmap.PixelWidth, WriteableBitmap.PixelHeight);
             

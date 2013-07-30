@@ -30,7 +30,7 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Instance
 
         public ViewerDesirability(CnnNet network)
-            : base(network.Width, network.Height, 3, true)
+            : base(network.Width, network.Height, true)
         {
             _network = network;
         }

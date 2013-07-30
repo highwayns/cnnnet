@@ -6,7 +6,6 @@
         
         protected readonly int Width;
         protected readonly int Height;
-        public readonly int BytesPerPixel;
 
         #endregion
 
@@ -24,7 +23,7 @@
 
         public byte[,] GetData()
         {
-            var data = new byte[Height, Width * BytesPerPixel];
+            var data = new byte[Height, Width * Constants.BytesPerPixel];
 
             if (IsEnabled)
             {
@@ -40,11 +39,10 @@
 
         #region Instance
 
-        protected ViewerBase(int width, int height, int bytesPerPixel, bool isEnabled)
+        protected ViewerBase(int width, int height, bool isEnabled)
         {
             Width = width;
             Height = height;
-            BytesPerPixel = bytesPerPixel;
             IsEnabled = isEnabled;
         }
 
