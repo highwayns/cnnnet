@@ -20,7 +20,7 @@ namespace cnnnet.ViewerWpf.Viewers
             {
                 for (int x = 0; x < _network.Width; x++)
                 {
-                    data[y, x * 3 + Constants.ColorRedIndex] = (byte)(desirabilityMap[y, x] * 255);
+                    data[y, x * Constants.BytesPerPixel + Constants.ColorRedIndex] = (byte)(desirabilityMap[y, x] * 255);
                 }
             }
         }
