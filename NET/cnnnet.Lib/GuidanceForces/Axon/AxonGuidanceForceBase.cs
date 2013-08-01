@@ -21,7 +21,8 @@ namespace cnnnet.Lib.GuidanceForces.Axon
                 return float.MaxValue;
             }
 
-            return neuron.AxonWayPoints.Select(wayPoint => Extensions.GetDistance(x, y, wayPoint.X, wayPoint.Y)).Min();
+            return neuron.AxonWayPoints.
+                Select(wayPoint => Extensions.GetDistance(x, y, wayPoint.X, wayPoint.Y)).Min();
         }
 
         #endregion
@@ -31,7 +32,6 @@ namespace cnnnet.Lib.GuidanceForces.Axon
         protected AxonGuidanceForceBase(CnnNet network)
             : base(network.AxonGuidanceForceSearchPlainRange, network)
         {
-
         }
 
         #endregion

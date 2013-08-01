@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ViewerWpf="clr-namespace:cnnnet.ViewerWpf"
         Title="MainWindow"
         Loaded="OnWindowLoaded"
-        Closing="OnWindowClosing" WindowStartupLocation="CenterScreen">
+        Closing="OnWindowClosing" 
+        WindowStartupLocation="CenterScreen"
+        x:Name="this">
     <Grid x:Name="LayoutRoot">
 
         <Grid.ColumnDefinitions>
@@ -13,6 +15,7 @@
         
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -37,7 +40,16 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Selected Neuron" Grid.Row="2" Margin="10,0">
+            <GroupBox Header="Neuron Settings" Grid.Row="2" Margin="10,0">
+                <Grid>
+                    <CheckBox x:Name="CboxNeuronBreakOnProcess" Content="Break On Process" 
+                              HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" 
+                              IsChecked="{Binding ElementName=this, Path=SelectedNeuron.BreakOnProcessCall}" 
+                              Checked="OnCboxNeuronBreakOnProcessCheckedChanged"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Selected Neuron" Grid.Row="3" Margin="10,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -46,8 +58,17 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
-                        <Label x:Name="LabelId" Content="&lt;ID&gt;" />
-                        <Label x:Name="LabelLocation" Content="&lt;LOCATION&gt;" />
+                        <TextBlock x:Name="LabelId" Text="{Binding ElementName=this, Path=SelectedNeuron.Id, StringFormat='Id={0}', FallbackValue=&lt;ID&gt;}" 
+                                   Margin="10"/>
+                        <TextBlock x:Name="LabelLocation" DataContext="{Binding ElementName=this, Path=SelectedNeuron}"
+                                   Margin="10">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="X={0} Y={1}" FallbackValue="&lt;LOCATION&gt;">
+                                    <Binding Path="PosX" />
+                                    <Binding Path="PosY" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
 
                     <Border 

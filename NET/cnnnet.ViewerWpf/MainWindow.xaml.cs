@@ -1,8 +1,11 @@
 ﻿using cnnnet.Lib;
+using cnnnet.Lib.Neurons;
 using cnnnet.ViewerWpf.ViewerManagers;
 using cnnnet.ViewerWpf.Viewers;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -14,12 +17,13 @@ namespace cnnnet.ViewerWpf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : INotifyPropertyChanged
     {
         #region Fields
 
         private Thread _networkProcessThread;
         private CnnNet _network;
+        private Neuron _selectedNeuron;
 
         private ViewerManagerNetwork _viewerManager;
         private ViewerDesirability _viewerDesirability;
@@ -34,6 +38,30 @@ namespace cnnnet.ViewerWpf
         private readonly Stopwatch _stopWatch = Stopwatch.StartNew();
         private double _lowestFrameTime;
         private double _lastTime;
+
+        #endregion
+
+        #region Properties
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Neuron SelectedNeuron
+        {
+            get
+            {
+                return _selectedNeuron;
+            }
+            private set
+            {
+                if (_selectedNeuron == value)
+                {
+                    return;
+                }
+
+                _selectedNeuron = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         #endregion
 
@@ -59,8 +87,7 @@ namespace cnnnet.ViewerWpf
 
         private void OnViewerManagerNeuronSelectedChanged(object sender, NeuronChangedEventArgs e)
         {
-            LabelId.Content = e.Neuron.Id;
-            LabelLocation.Content = string.Format("X:{0} Y:{1}", e.Neuron.PosX, e.Neuron.PosY);
+            SelectedNeuron = e.Neuron;
             _viewerAxonTerminalGuidanceForces.Neuron = e.Neuron;
         }
 
@@ -192,6 +219,11 @@ namespace cnnnet.ViewerWpf
             ChangeViewerVisibility(CboxNeuronUndesirabilityMap.IsChecked, _viewerUndesirability);
         }
 
+        private void OnCboxNeuronBreakOnProcessCheckedChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void ChangeViewerVisibility(bool? display, ViewerBase viewer)
         {
             switch (display.HasValue && display.Value)
@@ -206,6 +238,15 @@ namespace cnnnet.ViewerWpf
                         _viewerManager.DisplayedViewers.Remove(viewer);
                         break;
                     }
+            }
+        }
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

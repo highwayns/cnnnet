@@ -105,7 +105,7 @@ namespace cnnnet.Lib.GuidanceForces
             {
                 for (int x = 0; x < result.GetLength(1); x++)
                 {
-                    result[y, x] = -99999;
+                    result[y, x] = 0;
                 }
             }
 
