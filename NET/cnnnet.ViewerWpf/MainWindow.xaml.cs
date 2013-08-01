@@ -49,7 +49,8 @@ namespace cnnnet.ViewerWpf
             _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
             _viewerManagerAxonTerminal = new ViewerManagerAxonTerminal();
-            _viewerManagerAxonTerminal.RegisterViewer(_viewerAxonTerminalGuidanceForces = new ViewerAxonTerminalGuidanceForces());
+            _viewerAxonTerminalGuidanceForces = new ViewerAxonTerminalGuidanceForces();
+            //_viewerManagerAxonTerminal.RegisterViewer(_viewerAxonTerminalGuidanceForces);
 
             ImageNetwork.Source = _viewerManager.WriteableBitmap;
             ImageAxonTerminalGuidanceForces.Source = _viewerManagerAxonTerminal.WriteableBitmap;

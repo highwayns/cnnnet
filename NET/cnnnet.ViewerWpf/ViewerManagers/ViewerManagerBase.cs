@@ -114,9 +114,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                                                 (byte)Math.Min(tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + Constants.ColorBlueIndex], 255);
                                         }
                                         // ReSharper disable EmptyGeneralCatchClause
-#pragma warning disable 168
+                                        #pragma warning disable 168
                                         catch (Exception ex)
-#pragma warning restore 168
+                                        #pragma warning restore 168
                                         // ReSharper restore EmptyGeneralCatchClause
                                         {
                                             Debugger.Break();
@@ -125,9 +125,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                                 }
                             }
                             // ReSharper disable EmptyGeneralCatchClause
-#pragma warning disable 168
+                            #pragma warning disable 168
                             catch (Exception ex)
-#pragma warning restore 168
+                            #pragma warning restore 168
                             // ReSharper restore EmptyGeneralCatchClause
                             {
                                 Debugger.Break();
