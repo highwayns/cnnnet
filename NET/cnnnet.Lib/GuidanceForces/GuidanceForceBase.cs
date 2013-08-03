@@ -1,6 +1,7 @@
 ﻿using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
+using System.Diagnostics.Contracts;
 
 namespace cnnnet.Lib.GuidanceForces
 {
@@ -8,8 +9,11 @@ namespace cnnnet.Lib.GuidanceForces
     {
         #region Fields
 
-        protected readonly int GuidanceForceRange;
-        protected readonly CnnNet Network;
+        public readonly int GuidanceForceRange;
+        public readonly CnnNet Network;
+
+        public readonly int GuidanceForceWidth;
+        public readonly int GuidanceForceHeight;
 
         #endregion
 
@@ -99,11 +103,11 @@ namespace cnnnet.Lib.GuidanceForces
 
         private double[,] GetInitializationResult()
         {
-            var result = new double[2 * GuidanceForceRange + 1, 2 * GuidanceForceRange + 1];
+            var result = new double[GuidanceForceHeight, GuidanceForceWidth];
 
-            for (int y = 0; y < result.GetLength(0); y++)
+            for (int y = 0; y < GuidanceForceHeight; y++)
             {
-                for (int x = 0; x < result.GetLength(1); x++)
+                for (int x = 0; x < GuidanceForceWidth; x++)
                 {
                     result[y, x] = 0;
                 }
@@ -118,8 +122,12 @@ namespace cnnnet.Lib.GuidanceForces
 
         protected GuidanceForceBase(int guidanceForceRange, CnnNet network)
         {
+            Contract.Requires<ArgumentOutOfRangeException>(guidanceForceRange > 0);
+            Contract.Requires<ArgumentNullException>(network != null);
+
             GuidanceForceRange = guidanceForceRange;
             Network = network;
+            GuidanceForceHeight = GuidanceForceWidth = 2 * GuidanceForceRange + 1;
         }
 
         #endregion

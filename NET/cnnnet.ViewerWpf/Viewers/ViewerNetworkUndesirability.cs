@@ -2,7 +2,7 @@
 
 namespace cnnnet.ViewerWpf.Viewers
 {
-    public class ViewerUndesirability : ViewerBase
+    public class ViewerNetworkUndesirability : ViewerBase
     {
         #region Fields
         
@@ -29,7 +29,7 @@ namespace cnnnet.ViewerWpf.Viewers
 
         #region Instance
 
-        public ViewerUndesirability(CnnNet network)
+        public ViewerNetworkUndesirability(CnnNet network)
             : base(network.Width, network.Height, true)
         {
             _network = network;

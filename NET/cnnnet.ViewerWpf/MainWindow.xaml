@@ -76,16 +76,16 @@
                             <Border Margin="10" Background="Black">
                                 <Image
                                     x:Name="ImageAxonTerminalGuidanceForces"
-                                    Width="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesWidth}}"
-                                    Height="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesHeight}}"
+                                    Width="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesImageWidth}}"
+                                    Height="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesImageHeight}}"
                                     ToolTip="Axon Terminal Guidance Forces"/>
                             </Border>
 
                             <Border Margin="10" Background="Black">
                                 <Image
                                     x:Name="ImageSomaDesirabilityMapGuidanceForce"
-                                    Width="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesWidth}}"
-                                    Height="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesHeight}}"
+                                    Width="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesImageWidth}}"
+                                    Height="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesImageHeight}}"
                                     ToolTip="Soma Desirability Map Guidance Force"/>
                             </Border>
                         </StackPanel>

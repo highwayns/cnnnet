@@ -2,7 +2,7 @@
 
 namespace cnnnet.ViewerWpf.Viewers
 {
-    public class ViewerDesirability : ViewerBase
+    public class ViewerNetworkDesirability : ViewerBase
     {
         #region Fields
         
@@ -29,7 +29,7 @@ namespace cnnnet.ViewerWpf.Viewers
 
         #region Instance
 
-        public ViewerDesirability(CnnNet network)
+        public ViewerNetworkDesirability(CnnNet network)
             : base(network.Width, network.Height, true)
         {
             _network = network;

@@ -15,7 +15,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
         #region Instance
 
         public ViewerManagerAxonTerminal()
-            : base(Constants.AxonGuidanceForcesWidth, Constants.AxonGuidanceForcesHeight)
+            : base(Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight)
         {
         }
 

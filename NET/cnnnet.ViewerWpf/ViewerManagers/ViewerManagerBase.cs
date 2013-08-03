@@ -55,8 +55,18 @@ namespace cnnnet.ViewerWpf.ViewerManagers
             }
         }
 
+        /// <summary>
+        /// Perform any other desired transformation on the WriteableBitmap
+        /// </summary>
+        /// <param name="elapsed"></param>
+        /// <param name="mousePosX"></param>
+        /// <param name="mousePosY"></param>
+        /// <param name="leftButtonPressed"></param>
         protected abstract void UpdateInternal(double elapsed, int mousePosX, int mousePosY, bool leftButtonPressed);
 
+        /// <summary>
+        /// Write the pixels computed in the PreRender method from the registered viewers
+        /// </summary>
         private void UpdateBackground()
         {
             WriteableBitmap.WritePixels(_writableBitmapSourceRect, _bitmapData, _stride, 0);

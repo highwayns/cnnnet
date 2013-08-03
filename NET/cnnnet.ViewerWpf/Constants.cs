@@ -5,8 +5,8 @@
         public const int NetworkWidth = 800;
         public const int NetworkHeight = 600;
 
-        public const int AxonGuidanceForcesWidth = 100;
-        public const int AxonGuidanceForcesHeight = 100;
+        public const int AxonGuidanceForcesImageWidth = 100;
+        public const int AxonGuidanceForcesImageHeight = 100;
 
         public const int BytesPerPixel = 4;
 

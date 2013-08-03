@@ -97,7 +97,7 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Instance
         
         public ViewerAxonTerminalGuidanceForces()
-            : base(Constants.AxonGuidanceForcesWidth, Constants.AxonGuidanceForcesHeight, true)
+            : base(Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight, true)
         {
 
         }

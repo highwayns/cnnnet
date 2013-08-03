@@ -26,8 +26,8 @@ namespace cnnnet.ViewerWpf
         private Neuron _selectedNeuron;
 
         private ViewerManagerNetwork _viewerManager;
-        private ViewerDesirability _viewerDesirability;
-        private ViewerUndesirability _viewerUndesirability;
+        private ViewerNetworkDesirability _viewerDesirability;
+        private ViewerNetworkUndesirability _viewerUndesirability;
 
         private ViewerManagerAxonTerminal _viewerManagerAxonTerminal;
         private ViewerAxonTerminalGuidanceForces _viewerAxonTerminalGuidanceForces;
@@ -63,17 +63,35 @@ namespace cnnnet.ViewerWpf
             }
         }
 
+        public CnnNet Network
+        {
+            get
+            {
+                return _network;
+            }
+            private set
+            {
+                if (_network == value)
+                {
+                    return;
+                }
+
+                _network = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Methods
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            _network = new CnnNet(Constants.NetworkWidth, Constants.NetworkHeight);
+            Network = new CnnNet(Constants.NetworkWidth, Constants.NetworkHeight);
 
-            _viewerManager = new ViewerManagerNetwork(_network);
-            _viewerManager.RegisterViewer(_viewerDesirability = new ViewerDesirability(_network));
-            _viewerManager.RegisterViewer(_viewerUndesirability = new ViewerUndesirability(_network));
+            _viewerManager = new ViewerManagerNetwork(Network);
+            _viewerManager.RegisterViewer(_viewerDesirability = new ViewerNetworkDesirability(Network));
+            _viewerManager.RegisterViewer(_viewerUndesirability = new ViewerNetworkUndesirability(Network));
             _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
             _viewerManagerAxonTerminal = new ViewerManagerAxonTerminal();
@@ -100,7 +118,7 @@ namespace cnnnet.ViewerWpf
         {
             while (_closeRequested == false)
             {
-                _network.Process();
+                Network.Process();
             }
 
             _closeRequested = false;
@@ -186,7 +204,7 @@ namespace cnnnet.ViewerWpf
             ButtonNext.IsEnabled = false;
             ButtonReset.IsEnabled = false;
 
-            _network.Process();
+            Network.Process();
 
             ButtonStart.IsEnabled = true;
             ButtonStop.IsEnabled = false;
@@ -196,7 +214,7 @@ namespace cnnnet.ViewerWpf
 
         private void OnReset()
         {
-            _network.GenerateNetwork();
+            Network.GenerateNetwork();
         }
 
         private void OnCboxNeuronDesirabilityMapCheckedChanged(object sender, RoutedEventArgs e)
