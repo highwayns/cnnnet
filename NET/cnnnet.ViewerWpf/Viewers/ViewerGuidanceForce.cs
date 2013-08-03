@@ -13,6 +13,8 @@ namespace cnnnet.ViewerWpf.Viewers
         #region Fields
         
         private readonly GuidanceForceBase _guidanceForce;
+        private readonly int _colorIndex;
+
         private GuidanceForceScoreEventArgs _latestGuidanceForceScoreEventArgs;
 
         #endregion
@@ -33,7 +35,7 @@ namespace cnnnet.ViewerWpf.Viewers
             {
                 for (int x = 0; x < _guidanceForce.GuidanceForceWidth; x++)
                 {
-                    data[y, x] = (byte)(Math.Min(Math.Max(score[y, x], 0), 1) * 255);
+                    data[y, x * 3 + _colorIndex] = (byte)(Math.Min(Math.Max(score[y, x], 0), 1) * 255);
                 }
             }
         }
@@ -47,12 +49,15 @@ namespace cnnnet.ViewerWpf.Viewers
 
         #region Instance
 
-        public ViewerGuidanceForce(GuidanceForceBase guidanceForce)
+        public ViewerGuidanceForce(GuidanceForceBase guidanceForce, int colorIndex)
             : base(guidanceForce.GuidanceForceWidth, guidanceForce.GuidanceForceHeight, true)
         {
             Contract.Requires<ArgumentNullException>(guidanceForce != null);
+            Contract.Requires<ArgumentOutOfRangeException>(0 <= colorIndex && colorIndex <= 2);
 
             _guidanceForce = guidanceForce;
+            _colorIndex = colorIndex;
+
             _guidanceForce.ScoreAvailableEvent += OnGuidanceForceScoreAvailableEvent;
         }
 

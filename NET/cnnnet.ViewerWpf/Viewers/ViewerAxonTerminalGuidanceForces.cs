@@ -87,7 +87,7 @@ namespace cnnnet.ViewerWpf.Viewers
             {
                 for (int x = dataMinX; x < dataMaxX; x++)
                 {
-                    data[y, x * 3 + Constants.ColorGreenIndex] = (byte)(scoresSum[y - dataMinY, x - dataMinX] * 255);
+                    data[y, x * 3 + ColorIndex.Green] = (byte)(scoresSum[y - dataMinY, x - dataMinX] * 255);
                 }
             }
         }

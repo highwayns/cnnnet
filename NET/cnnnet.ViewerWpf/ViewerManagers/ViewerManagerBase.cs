@@ -98,9 +98,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                             int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
                             try
                             {
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] = 0;
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] = 0;
-                                tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] = 0;
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = 0;
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = 0;
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = 0;
 
                                 foreach (var viewerWithData in viewersWithData)
                                 {
@@ -116,12 +116,12 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
                                         try
                                         {
-                                            tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] =
-                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + Constants.ColorRedIndex] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + Constants.ColorRedIndex], 255);
-                                            tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] =
-                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + Constants.ColorGreenIndex] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + Constants.ColorGreenIndex], 255);
-                                            tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] =
-                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + Constants.ColorBlueIndex] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + Constants.ColorBlueIndex], 255);
+                                            tmpBitmapData[bitmapDataIndex + ColorIndex.Red] =
+                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Red] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + ColorIndex.Red], 255);
+                                            tmpBitmapData[bitmapDataIndex + ColorIndex.Green] =
+                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Green] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + ColorIndex.Green], 255);
+                                            tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] =
+                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + ColorIndex.Blue], 255);
                                         }
                                         // ReSharper disable EmptyGeneralCatchClause
                                         #pragma warning disable 168

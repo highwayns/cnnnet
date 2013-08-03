@@ -94,6 +94,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ColorIndex.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Utils.cs" />
