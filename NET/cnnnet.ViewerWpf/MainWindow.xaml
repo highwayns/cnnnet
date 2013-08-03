@@ -71,13 +71,24 @@
                         </TextBlock>
                     </StackPanel>
 
-                    <Border 
-                        Grid.Row="1"
-                        Width="100" Height="100" Background="Black"
-                        HorizontalAlignment="Left">
-                        <Image x:Name="ImageAxonTerminalGuidanceForces" 
-                               Width="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesWidth}}"
-                               Height="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesHeight}}"/>
+                    <Border Grid.Row="1" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Margin="10" Background="Black">
+                                <Image
+                                    x:Name="ImageAxonTerminalGuidanceForces"
+                                    Width="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesWidth}}"
+                                    Height="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesHeight}}"
+                                    ToolTip="Axon Terminal Guidance Forces"/>
+                            </Border>
+
+                            <Border Margin="10" Background="Black">
+                                <Image
+                                    x:Name="ImageSomaDesirabilityMapGuidanceForce"
+                                    Width="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesWidth}}"
+                                    Height="{Binding Source={x:Static ViewerWpf:Constants.AxonGuidanceForcesHeight}}"
+                                    ToolTip="Soma Desirability Map Guidance Force"/>
+                            </Border>
+                        </StackPanel>
                     </Border>
                 </Grid>
             </GroupBox>

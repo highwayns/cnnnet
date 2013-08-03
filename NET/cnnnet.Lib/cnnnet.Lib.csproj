@@ -55,12 +55,6 @@
     <Compile Include="Neurons\NeuronAxonGuidanceForcesScoreEventArgs.cs" />
     <Compile Include="Neurons\NeuronAxonWaypoint.cs" />
     <Compile Include="Utils\Extensions.cs" />
-    <Compile Include="FormNetworkControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormNetworkControl.designer.cs">
-      <DependentUpon>FormNetworkControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="ActiveNeuronGenerator\IActiveNeuronGenerator.cs" />
     <Compile Include="GuidanceForces\Axon\AxonGuidanceForceBase.cs" />
     <Compile Include="Neurons\Neuron.cs" />
@@ -69,12 +63,6 @@
     <Compile Include="ActiveNeuronGenerator\RandomActiveNeuronGenerator.cs" />
     <Compile Include="ActiveNeuronGenerator\SequentialActiveInputNeuronGenerator.cs" />
     <Compile Include="GuidanceForces\Axon\AxonUndesirabilityMapGuidanceForce.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FormNetworkControl.resx">
-      <DependentUpon>FormNetworkControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
