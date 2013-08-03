@@ -1,4 +1,5 @@
 ﻿using cnnnet.Lib.GuidanceForces;
+using cnnnet.Lib.Neurons;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -16,6 +17,16 @@ namespace cnnnet.ViewerWpf.Viewers
         private readonly int _colorIndex;
 
         private GuidanceForceScoreEventArgs _latestGuidanceForceScoreEventArgs;
+
+        #endregion
+
+        #region Properties
+
+        public Neuron Neuron
+        {
+            get;
+            set;
+        }
 
         #endregion
 
@@ -42,7 +53,10 @@ namespace cnnnet.ViewerWpf.Viewers
 
         private void OnGuidanceForceScoreAvailableEvent(object sender, GuidanceForceScoreEventArgs e)
         {
-            _latestGuidanceForceScoreEventArgs = e;
+            if (e.Neuron == Neuron)
+            {
+                _latestGuidanceForceScoreEventArgs = e;
+            }
         }
 
         #endregion

@@ -136,6 +136,18 @@ namespace cnnnet.Lib
             }
         }
 
+        public IEnumerable<AxonGuidanceForceBase> AxonGuidanceForces
+        {
+            get;
+            private set;
+        }
+
+        public IEnumerable<SomaGuidanceForceBase> SomaGuidanceForces
+        {
+            get;
+            private set;
+        }
+
         public void GenerateNetwork()
         {
             NeuronDesirabilityMap = new double[Height, Width];
@@ -143,13 +155,13 @@ namespace cnnnet.Lib
             NeuronPositionMap = new Neuron[Height, Width];
             NeuronAxonWayPoints = new NeuronAxonWaypoint[Height, Width];
 
-            var axonGuidanceForces = new AxonGuidanceForceBase[]
+            AxonGuidanceForces = new AxonGuidanceForceBase[]
                 {
                 new AxonUndesirabilityMapGuidanceForce(this),
                 new AxonDesirabilityMapGuidanceForce(this)
                 };
 
-            var somaGuidanceForces = new SomaGuidanceForceBase[]
+            SomaGuidanceForces = new SomaGuidanceForceBase[]
                 {
                 new SomaDesirabilityMapGuidanceForce(this)
                 //new SomaUndesirabilityMapGuidanceForce(this)
@@ -160,7 +172,7 @@ namespace cnnnet.Lib
             var neurons = new List<Neuron>();
             for (int i = 0; i < NeuronCount + InputNeuronCount; i++)
             {
-                var neuron = new Neuron(i, this, axonGuidanceForces, somaGuidanceForces, i >= NeuronCount);
+                var neuron = new Neuron(i, this, AxonGuidanceForces, SomaGuidanceForces, i >= NeuronCount);
 
                 do
                 {

@@ -75,89 +75,50 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         private void PreRender()
         {
-            try
+            while (true)
             {
-                while (true)
-                {
-                    var tmpBitmapData = new byte[Height * Width * Constants.BytesPerPixel];
+                var tmpBitmapData = new byte[Height * Width * Constants.BytesPerPixel];
 
-                    var viewersWithData = _viewers.
-                        Where(viewer => DisplayedViewers.Contains(viewer)).
-                        Select(viewer => new
-                        {
-                            Viewer = viewer,
-                            Data = viewer.GetData()
-                        }).ToArray();
-
-                    int middleWidth = Width / 2 - 1;
-                    int middleHeight = Height / 2 - 1;
-
-                    for (int y = 0; y < Height; y++)
+                var viewersWithData = _viewers.
+                    Where(viewer => DisplayedViewers.Contains(viewer)).
+                    Select(viewer => new
                     {
-                        for (int x = 0; x < Width; x++)
+                        Viewer = viewer,
+                        Data = viewer.GetData()
+                    }).ToArray();
+
+                for (int y = 0; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
+
+                        tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = 0;
+                        tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = 0;
+                        tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = 0;
+
+                        foreach (var viewerWithData in viewersWithData)
                         {
-                            int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
-                            try
+                            var dataWidth = viewerWithData.Data.GetLength(1) / Constants.BytesPerPixel /* Because of color data BGRA */;
+                            var dataHeight = viewerWithData.Data.GetLength(0);
+                            var skipWidth = (Width - dataWidth) / 2;
+                            var skipHeight = (Height - dataHeight) / 2;
+                            var dataX = x - skipWidth;
+                            var dataY = y - skipHeight;
+
+                            if (0 <= dataX && dataX < dataWidth
+                                && 0 <= dataY && dataY < dataHeight)
                             {
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = 0;
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = 0;
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = 0;
-
-                                foreach (var viewerWithData in viewersWithData)
-                                {
-                                    // TODO: correct error here
-                                    int viewerRangeX = viewerWithData.Viewer.Width / 2;
-                                    int viewerRangeY = viewerWithData.Viewer.Height / 2;
-
-                                    if (middleWidth - viewerRangeX <= x && x <= middleWidth + viewerRangeX
-                                        && middleHeight - viewerRangeY <= y && y <= middleHeight + viewerRangeY)
-                                    {
-                                        int viewerX = x - (Width / 2 - viewerRangeX);
-                                        int viewerY = y - (Height / 2 - viewerRangeY);
-
-                                        try
-                                        {
-                                            tmpBitmapData[bitmapDataIndex + ColorIndex.Red] =
-                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Red] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + ColorIndex.Red], 255);
-                                            tmpBitmapData[bitmapDataIndex + ColorIndex.Green] =
-                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Green] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + ColorIndex.Green], 255);
-                                            tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] =
-                                                (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] + viewerWithData.Data[viewerY, viewerX * Constants.BytesPerPixel + ColorIndex.Blue], 255);
-                                        }
-                                        // ReSharper disable EmptyGeneralCatchClause
-                                        #pragma warning disable 168
-                                        catch (Exception ex)
-                                        #pragma warning restore 168
-                                        // ReSharper restore EmptyGeneralCatchClause
-                                        {
-                                            Debugger.Break();
-                                        }
-                                    }
-                                }
-                            }
-                            // ReSharper disable EmptyGeneralCatchClause
-                            #pragma warning disable 168
-                            catch (Exception ex)
-                            #pragma warning restore 168
-                            // ReSharper restore EmptyGeneralCatchClause
-                            {
-                                Debugger.Break();
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Red] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Red], 255);
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Green] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Green], 255);
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Blue], 255);
                             }
                         }
                     }
-
-                    _bitmapData = tmpBitmapData;
-
-                    Thread.Sleep(30);
                 }
-            }
-            // ReSharper disable EmptyGeneralCatchClause
-            #pragma warning disable 168
-            catch (Exception ex)
-            #pragma warning restore 168
-            // ReSharper restore EmptyGeneralCatchClause
-            {
-                Debugger.Break();
+
+                _bitmapData = tmpBitmapData;
+                Thread.Sleep(30);
             }
         }
 
@@ -170,11 +131,11 @@ namespace cnnnet.ViewerWpf.ViewerManagers
             Width = width;
             Height = height;
 
-            _viewers = new List<ViewerBase>();
-            DisplayedViewers = new List<ViewerBase>();
-
             WriteableBitmap = BitmapFactory.New(Width, Height);
             Debug.Assert(Constants.BytesPerPixel == (WriteableBitmap.Format.BitsPerPixel + 7) / 8);
+
+            _viewers = new List<ViewerBase>();
+            DisplayedViewers = new List<ViewerBase>();
 
             _stride = WriteableBitmap.PixelWidth * Constants.BytesPerPixel;
             _bitmapData = new byte[Height * Width * Constants.BytesPerPixel];

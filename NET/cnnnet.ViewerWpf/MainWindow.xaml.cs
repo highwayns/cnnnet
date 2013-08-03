@@ -3,6 +3,7 @@ using cnnnet.Lib.Neurons;
 using cnnnet.ViewerWpf.ViewerManagers;
 using cnnnet.ViewerWpf.Viewers;
 using System;
+using System.Linq;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -30,7 +31,7 @@ namespace cnnnet.ViewerWpf
         private ViewerNetworkUndesirability _viewerUndesirability;
 
         private ViewerManager _viewerManagerAxonTerminal;
-        private ViewerAxonTerminalGuidanceForces _viewerAxonTerminalGuidanceForces;
+        private ViewerGuidanceForce _viewerAxonTerminalGuidanceForces;
 
         private bool _closeRequested;
 
@@ -96,8 +97,8 @@ namespace cnnnet.ViewerWpf
 
             _viewerManagerAxonTerminal = new ViewerManager
                 (Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight);
-            _viewerAxonTerminalGuidanceForces = new ViewerAxonTerminalGuidanceForces();
-            //_viewerManagerAxonTerminal.RegisterViewer(_viewerAxonTerminalGuidanceForces);
+            _viewerAxonTerminalGuidanceForces = new ViewerGuidanceForce(Network.AxonGuidanceForces.ElementAt(0), ColorIndex.Green);
+            _viewerManagerAxonTerminal.RegisterViewer(_viewerAxonTerminalGuidanceForces);
 
             ImageNetwork.Source = _viewerManager.WriteableBitmap;
             ImageAxonTerminalGuidanceForces.Source = _viewerManagerAxonTerminal.WriteableBitmap;
