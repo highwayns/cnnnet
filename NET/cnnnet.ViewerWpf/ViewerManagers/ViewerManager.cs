@@ -109,9 +109,14 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                             if (0 <= dataX && dataX < dataWidth
                                 && 0 <= dataY && dataY < dataHeight)
                             {
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Red] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Red], 255);
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Green] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Green], 255);
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = (byte)Math.Min(tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Blue], 255);
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = (byte)Math.Min
+                                    (tmpBitmapData[bitmapDataIndex + ColorIndex.Red] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Red], 255);
+
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = (byte)Math.Min
+                                    (tmpBitmapData[bitmapDataIndex + ColorIndex.Green] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Green], 255);
+
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = (byte)Math.Min
+                                    (tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Blue], 255);
                             }
                         }
                     }

@@ -46,7 +46,7 @@ namespace cnnnet.ViewerWpf.Viewers
             {
                 for (int x = 0; x < _guidanceForce.GuidanceForceWidth; x++)
                 {
-                    data[y, x * 3 + _colorIndex] = (byte)(Math.Min(Math.Max(score[y, x], 0), 1) * 255);
+                    data[y, x * Constants.BytesPerPixel + _colorIndex] = (byte)(Math.Min(Math.Max(score[y, x], 0), 1) * 255);
                 }
             }
         }

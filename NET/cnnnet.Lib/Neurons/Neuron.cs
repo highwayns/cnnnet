@@ -10,6 +10,7 @@ using System.Linq;
 
 namespace cnnnet.Lib.Neurons
 {
+    [DebuggerDisplay("Id={Id} PosX={PosX} PosY={PosY}")]
     public class Neuron
     {
         #region Fields
