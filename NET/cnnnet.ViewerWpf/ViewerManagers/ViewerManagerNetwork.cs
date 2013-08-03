@@ -10,7 +10,7 @@ using cnnnet.ViewerWpf.Viewers;
 
 namespace cnnnet.ViewerWpf.ViewerManagers
 {
-    public class ViewerManagerNetwork : ViewerManagerBase
+    public class ViewerManagerNetwork : ViewerManager
     {
         #region Fields
 

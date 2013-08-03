@@ -29,7 +29,7 @@ namespace cnnnet.ViewerWpf
         private ViewerNetworkDesirability _viewerDesirability;
         private ViewerNetworkUndesirability _viewerUndesirability;
 
-        private ViewerManagerAxonTerminal _viewerManagerAxonTerminal;
+        private ViewerManager _viewerManagerAxonTerminal;
         private ViewerAxonTerminalGuidanceForces _viewerAxonTerminalGuidanceForces;
 
         private bool _closeRequested;
@@ -94,7 +94,8 @@ namespace cnnnet.ViewerWpf
             _viewerManager.RegisterViewer(_viewerUndesirability = new ViewerNetworkUndesirability(Network));
             _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
-            _viewerManagerAxonTerminal = new ViewerManagerAxonTerminal();
+            _viewerManagerAxonTerminal = new ViewerManager
+                (Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight);
             _viewerAxonTerminalGuidanceForces = new ViewerAxonTerminalGuidanceForces();
             //_viewerManagerAxonTerminal.RegisterViewer(_viewerAxonTerminalGuidanceForces);
 

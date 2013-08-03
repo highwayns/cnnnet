@@ -98,10 +98,9 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="ViewerManagers\ViewerManagerAxonTerminal.cs" />
     <Compile Include="Viewers\NeuronChangedEventArgs.cs" />
     <Compile Include="Viewers\ViewerAxonTerminalGuidanceForces.cs" />
-    <Compile Include="ViewerManagers\ViewerManagerBase.cs" />
+    <Compile Include="ViewerManagers\ViewerManager.cs" />
     <Compile Include="ViewerManagers\ViewerManagerNetwork.cs" />
     <Compile Include="Viewers\ViewerGuidanceForce.cs" />
     <Compile Include="Viewers\ViewerNetworkUndesirability.cs" />

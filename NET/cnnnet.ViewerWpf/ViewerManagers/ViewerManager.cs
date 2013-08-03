@@ -9,14 +9,13 @@ using cnnnet.ViewerWpf.Viewers;
 
 namespace cnnnet.ViewerWpf.ViewerManagers
 {
-    public abstract class ViewerManagerBase
+    public class ViewerManager
     {
         #region Fields
 
         public readonly WriteableBitmap WriteableBitmap;
-
-        protected readonly int Width;
-        protected readonly int Height;
+        public readonly int Width;
+        public readonly int Height;
 
         private readonly List<ViewerBase> _viewers;
         private byte[] _bitmapData;
@@ -62,7 +61,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
         /// <param name="mousePosX"></param>
         /// <param name="mousePosY"></param>
         /// <param name="leftButtonPressed"></param>
-        protected abstract void UpdateInternal(double elapsed, int mousePosX, int mousePosY, bool leftButtonPressed);
+        protected virtual void UpdateInternal(double elapsed, int mousePosX, int mousePosY, bool leftButtonPressed)
+        {
+        }
 
         /// <summary>
         /// Write the pixels computed in the PreRender method from the registered viewers
@@ -164,7 +165,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         #region Instance
 
-        protected ViewerManagerBase(int width, int height)
+        public ViewerManager(int width, int height)
         {
             Width = width;
             Height = height;
