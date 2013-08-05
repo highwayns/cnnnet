@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace cnnnet.ViewerWpf
 {
@@ -32,6 +34,9 @@ namespace cnnnet.ViewerWpf
 
         private ViewerManager _viewerManagerAxonTerminal;
         private ViewerGuidanceForce _viewerAxonTerminalGuidanceForces;
+
+        private ViewerManager _viewerManagerSoma;
+        private ViewerGuidanceForce _viewerSomaDesirabilityMapGuidanceForce;
 
         private bool _closeRequested;
 
@@ -90,19 +95,50 @@ namespace cnnnet.ViewerWpf
         {
             Network = new CnnNet(Constants.NetworkWidth, Constants.NetworkHeight);
 
-            _viewerManager = new ViewerManagerNetwork(Network);
-            _viewerManager.RegisterViewer(_viewerDesirability = new ViewerNetworkDesirability(Network));
-            _viewerManager.RegisterViewer(_viewerUndesirability = new ViewerNetworkUndesirability(Network));
+            #region Viewer Network
+
+            InitializeViewer(_viewerManager = new ViewerManagerNetwork(Network),
+                    new ViewerBase[]
+                    {
+                        _viewerDesirability = new ViewerNetworkDesirability(Network),
+                        _viewerUndesirability = new ViewerNetworkUndesirability(Network)
+                    },
+                    ImageNetwork);
             _viewerManager.NeuronSelectedChanged += OnViewerManagerNeuronSelectedChanged;
 
-            _viewerManagerAxonTerminal = new ViewerManager
-                (Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight);
-            _viewerAxonTerminalGuidanceForces = new ViewerGuidanceForce(Network.AxonGuidanceForces.ElementAt(0), ColorIndex.Green);
-            _viewerManagerAxonTerminal.RegisterViewer(_viewerAxonTerminalGuidanceForces);
+            #endregion
 
-            ImageNetwork.Source = _viewerManager.WriteableBitmap;
-            ImageAxonTerminalGuidanceForces.Source = _viewerManagerAxonTerminal.WriteableBitmap;
+            #region Viewer Axon Terminal Guidance Forces
+
+            InitializeViewer
+                (_viewerManagerAxonTerminal = new ViewerManager
+                    (Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight),
+                    new ViewerBase[]
+                    {
+                        _viewerAxonTerminalGuidanceForces = new ViewerGuidanceForce(Network.AxonGuidanceForces.ElementAt(0), ColorIndex.Green)
+                    }, ImageAxonTerminalGuidanceForces);
+
+            #endregion
+
+            #region Viewer Soma Guidance Forces
+
+            InitializeViewer
+                (_viewerManagerSoma = new ViewerManager
+                    (Constants.SomaGuidanceForcesImageWidth, Constants.SomaGuidanceForcesImageHeight),
+                    new ViewerBase[]
+                    {
+                        _viewerSomaDesirabilityMapGuidanceForce = new ViewerGuidanceForce(Network.SomaGuidanceForces.ElementAt(0), ColorIndex.Green)
+                    }, ImageSomaDesirabilityMapGuidanceForce);
+
+            #endregion
+
             CompositionTarget.Rendering += OnCompositionTargetRendering;
+        }
+
+        private void InitializeViewer(ViewerManager viewerManager, IEnumerable<ViewerBase> viewers, Image image)
+        {
+            viewers.ToList().ForEach(viewer => viewerManager.RegisterViewer(viewer));
+            image.Source = viewerManager.WriteableBitmap;
         }
 
         private void OnViewerManagerNeuronSelectedChanged(object sender, NeuronChangedEventArgs e)
@@ -145,6 +181,12 @@ namespace cnnnet.ViewerWpf
             using (_viewerManagerAxonTerminal.WriteableBitmap.GetBitmapContext())
             {
                 _viewerManagerAxonTerminal.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
+                    Mouse.LeftButton == MouseButtonState.Pressed);
+            }
+
+            using (_viewerManagerSoma.WriteableBitmap.GetBitmapContext())
+            {
+                _viewerManagerSoma.Update(elapsed, (int)mousePosition.X, (int)mousePosition.Y,
                     Mouse.LeftButton == MouseButtonState.Pressed);
             }
 
