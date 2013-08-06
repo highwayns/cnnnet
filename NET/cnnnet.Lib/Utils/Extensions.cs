@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace cnnnet.Lib.Utils
@@ -138,6 +139,9 @@ namespace cnnnet.Lib.Utils
 
         public static double[,] Sum(this IEnumerable<double[,]> maps)
         {
+            Contract.Requires<ArgumentNullException>(maps != null);
+            Contract.Requires<ArgumentException>(maps.Any(), "maps must contains at least one item");
+
             var mapsList = maps.ToList();
 
             var result = (double[,])mapsList.ElementAt(0).Clone();
