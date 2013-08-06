@@ -16,6 +16,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
         public readonly WriteableBitmap WriteableBitmap;
         public readonly int Width;
         public readonly int Height;
+        public readonly bool AutoContrast;
 
         private readonly List<ViewerBase> _viewers;
         private byte[] _bitmapData;
@@ -75,55 +76,105 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         private void PreRender()
         {
-            while (true)
+            try
             {
-                var tmpBitmapData = new byte[Height * Width * Constants.BytesPerPixel];
-
-                var viewersWithData = _viewers.
-                    Where(viewer => DisplayedViewers.Contains(viewer)).
-                    Select(viewer => new
-                    {
-                        Viewer = viewer,
-                        Data = viewer.GetData()
-                    }).ToArray();
-
-                for (int y = 0; y < Height; y++)
+                while (true)
                 {
-                    for (int x = 0; x < Width; x++)
-                    {
-                        int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
+                    var tmpBitmapData = new byte[Height * Width * Constants.BytesPerPixel];
 
-                        tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = 0;
-                        tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = 0;
-                        tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = 0;
-
-                        foreach (var viewerWithData in viewersWithData)
+                    var viewersWithData = _viewers.
+                        Where(viewer => DisplayedViewers.Contains(viewer)).
+                        Select(viewer => new
                         {
-                            var dataWidth = viewerWithData.Data.GetLength(1) / Constants.BytesPerPixel /* Because of color data BGRA */;
-                            var dataHeight = viewerWithData.Data.GetLength(0);
-                            var skipWidth = (Width - dataWidth) / 2;
-                            var skipHeight = (Height - dataHeight) / 2;
-                            var dataX = x - skipWidth;
-                            var dataY = y - skipHeight;
+                            Viewer = viewer,
+                            Data = viewer.GetData()
+                        }).ToArray();
 
-                            if (0 <= dataX && dataX < dataWidth
-                                && 0 <= dataY && dataY < dataHeight)
+                    byte minRed = 255;
+                    byte minGreen = 255;
+                    byte minBlue = 255;
+
+                    byte maxRed = 0;
+                    byte maxGreen = 0;
+                    byte maxBlue = 0;
+
+                    #region Calculate Bitmap
+
+                    for (int y = 0; y < Height; y++)
+                    {
+                        for (int x = 0; x < Width; x++)
+                        {
+                            int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
+
+                            tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = 0;
+                            tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = 0;
+                            tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = 0;
+
+                            foreach (var viewerWithData in viewersWithData)
                             {
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = (byte)Math.Min
-                                    (tmpBitmapData[bitmapDataIndex + ColorIndex.Red] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Red], 255);
+                                var dataWidth = viewerWithData.Data.GetLength(1) / Constants.BytesPerPixel /* Because of color data BGRA */;
+                                var dataHeight = viewerWithData.Data.GetLength(0);
+                                var skipWidth = (Width - dataWidth) / 2;
+                                var skipHeight = (Height - dataHeight) / 2;
+                                var dataX = x - skipWidth;
+                                var dataY = y - skipHeight;
 
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = (byte)Math.Min
-                                    (tmpBitmapData[bitmapDataIndex + ColorIndex.Green] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Green], 255);
+                                if (0 <= dataX && dataX < dataWidth
+                                    && 0 <= dataY && dataY < dataHeight)
+                                {
+                                    tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = (byte)Math.Min
+                                        (tmpBitmapData[bitmapDataIndex + ColorIndex.Red] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Red], 255);
 
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = (byte)Math.Min
-                                    (tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Blue], 255);
+                                    tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = (byte)Math.Min
+                                        (tmpBitmapData[bitmapDataIndex + ColorIndex.Green] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Green], 255);
+
+                                    tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = (byte)Math.Min
+                                        (tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] + viewerWithData.Data[dataY, dataX * Constants.BytesPerPixel + ColorIndex.Blue], 255);
+                                }
+                            }
+
+                            minRed = minRed < tmpBitmapData[bitmapDataIndex + ColorIndex.Red] ? minRed : tmpBitmapData[bitmapDataIndex + ColorIndex.Red];
+                            minGreen = minGreen < tmpBitmapData[bitmapDataIndex + ColorIndex.Green] ? minGreen : tmpBitmapData[bitmapDataIndex + ColorIndex.Green];
+                            minBlue = minBlue < tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] ? minBlue : tmpBitmapData[bitmapDataIndex + ColorIndex.Blue];
+
+                            maxRed = maxRed > tmpBitmapData[bitmapDataIndex + ColorIndex.Red] ? maxRed : tmpBitmapData[bitmapDataIndex + ColorIndex.Red];
+                            maxGreen = maxGreen > tmpBitmapData[bitmapDataIndex + ColorIndex.Green] ? maxGreen : tmpBitmapData[bitmapDataIndex + ColorIndex.Green];
+                            maxBlue = maxBlue > tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] ? maxBlue : tmpBitmapData[bitmapDataIndex + ColorIndex.Blue];
+                        }
+                    }
+
+                    #endregion
+
+                    #region Auto Contrast
+
+                    if (AutoContrast)
+                    {
+                        for (int y = 0; y < Height; y++)
+                        {
+                            for (int x = 0; x < Width; x++)
+                            {
+                                int bitmapDataIndex = (y * Width + x) * Constants.BytesPerPixel;
+
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] -= minRed;
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] -= minGreen;
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] -= minBlue;
+
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] *= (byte)(maxRed / 255);
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] *= (byte)(maxGreen / 255);
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] *= (byte)(maxBlue / 255);
                             }
                         }
                     }
-                }
 
-                _bitmapData = tmpBitmapData;
-                Thread.Sleep(30);
+                    #endregion
+
+                    _bitmapData = tmpBitmapData;
+                    Thread.Sleep(30);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debugger.Break();
             }
         }
 
@@ -131,10 +182,11 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
         #region Instance
 
-        public ViewerManager(int width, int height)
+        public ViewerManager(int width, int height, bool autoContrast = false)
         {
             Width = width;
             Height = height;
+            AutoContrast = autoContrast;
 
             WriteableBitmap = BitmapFactory.New(Width, Height);
             Debug.Assert(Constants.BytesPerPixel == (WriteableBitmap.Format.BitsPerPixel + 7) / 8);
