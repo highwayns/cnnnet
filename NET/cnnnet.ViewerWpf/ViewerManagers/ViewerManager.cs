@@ -159,9 +159,9 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                                 tmpBitmapData[bitmapDataIndex + ColorIndex.Green] -= minGreen;
                                 tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] -= minBlue;
 
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] *= (byte)(maxRed / 255);
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] *= (byte)(maxGreen / 255);
-                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] *= (byte)(maxBlue / 255);
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Red] = (byte)(tmpBitmapData[bitmapDataIndex + ColorIndex.Red] * 255.0f / ((float)(maxRed - minRed)));
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Green] = (byte)(tmpBitmapData[bitmapDataIndex + ColorIndex.Green] * 255.0f / ((float)(maxGreen - minGreen)));
+                                tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] = (byte)(tmpBitmapData[bitmapDataIndex + ColorIndex.Blue] * 255.0f / ((float)(maxBlue - minBlue)));
                             }
                         }
                     }
