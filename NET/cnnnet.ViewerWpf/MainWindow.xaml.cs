@@ -112,7 +112,7 @@ namespace cnnnet.ViewerWpf
 
             InitializeViewer
                 (_viewerManagerAxonTerminal = new ViewerManager
-                    (Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight),
+                    (Constants.AxonGuidanceForcesImageWidth, Constants.AxonGuidanceForcesImageHeight, true),
                     new ViewerBase[]
                     {
                         _viewerAxonTerminalGuidanceForces = new ViewerGuidanceForce(Network.AxonGuidanceForces.ElementAt(0), ColorIndex.Green)
