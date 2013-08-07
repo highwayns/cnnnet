@@ -124,7 +124,7 @@ namespace cnnnet.ViewerWpf
 
             InitializeViewer
                 (_viewerManagerSoma = new ViewerManager
-                    (Constants.SomaGuidanceForcesImageWidth, Constants.SomaGuidanceForcesImageHeight),
+                    (Constants.SomaGuidanceForcesImageWidth, Constants.SomaGuidanceForcesImageHeight, true),
                     new ViewerBase[]
                     {
                         _viewerSomaDesirabilityMapGuidanceForce = new ViewerGuidanceForce(Network.SomaGuidanceForces.ElementAt(0), ColorIndex.Green)
@@ -215,6 +215,16 @@ namespace cnnnet.ViewerWpf
         private void OnButtonResetClick(object sender, RoutedEventArgs e)
         {
             OnReset();
+        }
+
+        private void OnButtonRestartClick(object sender, RoutedEventArgs e)
+        {
+            OnRestart();
+        }
+
+        private void OnRestart()
+        {
+            Network.RestartNetwork();
         }
 
         private void OnStart()

@@ -59,6 +59,18 @@ namespace cnnnet.Lib
             get { return _iteration; }
         }
 
+        public IEnumerable<AxonGuidanceForceBase> AxonGuidanceForces
+        {
+            get;
+            private set;
+        }
+
+        public IEnumerable<SomaGuidanceForceBase> SomaGuidanceForces
+        {
+            get;
+            private set;
+        }
+
         #endregion Properties
 
         #region Methods
@@ -136,16 +148,22 @@ namespace cnnnet.Lib
             }
         }
 
-        public IEnumerable<AxonGuidanceForceBase> AxonGuidanceForces
+        private IEnumerable<SomaGuidanceForceBase> GetSomaGuidanceForces()
         {
-            get;
-            private set;
+            return new SomaGuidanceForceBase[]
+                {
+                new SomaDesirabilityMapGuidanceForce(this)
+                //new SomaUndesirabilityMapGuidanceForce(this)
+                };
         }
 
-        public IEnumerable<SomaGuidanceForceBase> SomaGuidanceForces
+        private IEnumerable<AxonGuidanceForceBase> GetAxonGuidanceForces()
         {
-            get;
-            private set;
+            return new AxonGuidanceForceBase[]
+                {
+                new AxonUndesirabilityMapGuidanceForce(this),
+                //new AxonDesirabilityMapGuidanceForce(this)
+                };
         }
 
         public void GenerateNetwork()
@@ -155,24 +173,15 @@ namespace cnnnet.Lib
             NeuronPositionMap = new Neuron[Height, Width];
             NeuronAxonWayPoints = new NeuronAxonWaypoint[Height, Width];
 
-            AxonGuidanceForces = new AxonGuidanceForceBase[]
-                {
-                new AxonUndesirabilityMapGuidanceForce(this),
-                new AxonDesirabilityMapGuidanceForce(this)
-                };
-
-            SomaGuidanceForces = new SomaGuidanceForceBase[]
-                {
-                new SomaDesirabilityMapGuidanceForce(this)
-                //new SomaUndesirabilityMapGuidanceForce(this)
-                };
+            AxonGuidanceForces = GetAxonGuidanceForces();
+            SomaGuidanceForces = GetSomaGuidanceForces();
 
             #region Generate Random Neurons
 
             var neurons = new List<Neuron>();
-            for (int i = 0; i < NeuronCount + InputNeuronCount; i++)
+            for (int index = 0; index < NeuronCount + InputNeuronCount; index++)
             {
-                var neuron = new Neuron(i, this, AxonGuidanceForces, SomaGuidanceForces, i >= NeuronCount);
+                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, index >= NeuronCount);
 
                 do
                 {
@@ -189,7 +198,40 @@ namespace cnnnet.Lib
 
             #endregion Generate Random Neurons
 
-            _neuronsInput = neurons.GetRange(NeuronCount,InputNeuronCount).ToArray();
+            _neuronsInput = neurons.GetRange(NeuronCount, InputNeuronCount).ToArray();
+
+            ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 2));
+            _iteration = 0;
+        }
+
+        public void RestartNetwork()
+        {
+            NeuronDesirabilityMap = new double[Height, Width];
+            NeuronUndesirabilityMap = new double[Height, Width];
+            NeuronPositionMap = new Neuron[Height, Width];
+            NeuronAxonWayPoints = new NeuronAxonWaypoint[Height, Width];
+
+            #region Generate Random Neurons
+
+            var oldNeurons = _neurons.ToList();
+
+            var neurons = new List<Neuron>();
+            for (int index = 0; index < oldNeurons.Count; index++)
+            {
+                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, index >= NeuronCount);
+
+                neuron.MoveTo(oldNeurons[index].PosY, oldNeurons[index].PosX);
+
+                neuron.ResetMovedDistance();
+                neurons.Add(neuron);
+                NeuronPositionMap[neuron.PosY, neuron.PosX] = neuron;
+            }
+
+            _neurons = neurons.ToArray();
+
+            #endregion Generate Random Neurons
+
+            _neuronsInput = neurons.GetRange(NeuronCount, InputNeuronCount).ToArray();
 
             ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 2));
             _iteration = 0;

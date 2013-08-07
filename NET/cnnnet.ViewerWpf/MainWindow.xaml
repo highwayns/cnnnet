@@ -25,10 +25,21 @@
 
             <GroupBox Header="Controls" Grid.Row="0" Margin="10,0">
                 <Grid>
-                    <Button x:Name="ButtonStart" Content="Start" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="75" Click="OnButtonStartClick" />
-                    <Button x:Name="ButtonStop" Content="Stop" HorizontalAlignment="Left" Margin="80,11,0,0" VerticalAlignment="Top" Width="75" Click="OnButtonStopClick" IsEnabled="False"/>
-                    <Button x:Name="ButtonReset" Content="Reset" HorizontalAlignment="Left" Margin="269,11,0,0" VerticalAlignment="Top" Width="75" Click="OnButtonResetClick"/>
-                    <Button x:Name="ButtonNext" Content="Next" HorizontalAlignment="Left" Margin="160,11,0,0" VerticalAlignment="Top" Width="75" Click="OnButtonNextClick"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <Button x:Name="ButtonStart" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonStartClick" />
+                        <Button x:Name="ButtonStop" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonStopClick" IsEnabled="False"/>
+                        <Button x:Name="ButtonNext" Content="Next" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonNextClick"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Button x:Name="ButtonRestart" Content="Restart" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonRestartClick"/>
+                        <Button x:Name="ButtonReset" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonResetClick"/>
+                    </StackPanel>
                 </Grid>
             </GroupBox>
             
