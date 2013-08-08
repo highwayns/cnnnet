@@ -160,10 +160,10 @@ namespace cnnnet.Lib
         private IEnumerable<AxonGuidanceForceBase> GetAxonGuidanceForces()
         {
             return new AxonGuidanceForceBase[]
-                {
+            {
                 new AxonUndesirabilityMapGuidanceForce(this),
-                //new AxonDesirabilityMapGuidanceForce(this)
-                };
+                new AxonDesirabilityMapGuidanceForce(this)
+            };
         }
 
         public void GenerateNetwork()

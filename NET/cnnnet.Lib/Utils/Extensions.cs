@@ -121,7 +121,7 @@ namespace cnnnet.Lib.Utils
         public static void GetMaxAndLocation(this double[,] map, out Point location, out double maxValue)
         {
             location = null;
-            maxValue = double.MinValue;
+            maxValue = 0;
 
             for (int y = 0; y < map.GetLength(0); y++)
             {

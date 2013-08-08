@@ -1,11 +1,7 @@
 ﻿using cnnnet.Lib.GuidanceForces;
 using cnnnet.Lib.Neurons;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cnnnet.ViewerWpf.Viewers
 {
@@ -16,7 +12,7 @@ namespace cnnnet.ViewerWpf.Viewers
         private readonly GuidanceForceBase _guidanceForce;
         private readonly int _colorIndex;
 
-        private GuidanceForceScoreEventArgs _latestGuidanceForceScoreEventArgs;
+        private double[,] _latestScore;
 
         #endregion
 
@@ -34,13 +30,11 @@ namespace cnnnet.ViewerWpf.Viewers
 
         protected override void UpdateDataInternal(ref byte[,] data)
         {
-            var guidanceForceScoreEventArgs = _latestGuidanceForceScoreEventArgs;
-            if (guidanceForceScoreEventArgs == null)
+            var score = _latestScore;
+            if (score == null)
             {
                 return;
             }
-
-            var score = guidanceForceScoreEventArgs.Score;
 
             for (int y = 0; y < _guidanceForce.GuidanceForceHeight; y++)
             {
@@ -53,9 +47,10 @@ namespace cnnnet.ViewerWpf.Viewers
 
         private void OnGuidanceForceScoreAvailableEvent(object sender, GuidanceForceScoreEventArgs e)
         {
-            if (e.Neuron == Neuron)
+            var neuron = e.Neuron;
+            if (neuron == Neuron)
             {
-                _latestGuidanceForceScoreEventArgs = e;
+                _latestScore = (double[,])e.Score.Clone();
             }
         }
 

@@ -11,7 +11,7 @@ namespace cnnnet.Lib.GuidanceForces.Soma
         protected override bool PreCheckLocation(int x, int y, Neuron neuron)
         {
             return base.PreCheckLocation(x, y, neuron)
-                && x != neuron.PosX && y == neuron.PosY
+                && (x != neuron.PosX || y != neuron.PosY)
                 && Extensions.GetNeuronAt(y, x, Network) == null
                 && neuron.MovedDistance + Extensions.GetDistance(neuron.PosX, neuron.PosY, x, y) < Network.MaxNeuronMoveDistance;
         }

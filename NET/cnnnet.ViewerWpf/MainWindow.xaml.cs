@@ -137,17 +137,19 @@ namespace cnnnet.ViewerWpf
 
         private void InitializeViewer(ViewerManager viewerManager, IEnumerable<ViewerBase> viewers, Image image)
         {
-            viewers.ToList().ForEach(viewer => viewerManager.RegisterViewer(viewer));
+            viewers.ToList().ForEach(viewerManager.RegisterViewer);
             image.Source = viewerManager.WriteableBitmap;
         }
 
         private void OnViewerManagerNeuronSelectedChanged(object sender, NeuronChangedEventArgs e)
         {
             SelectedNeuron = e.Neuron;
+
             _viewerAxonTerminalGuidanceForces.Neuron = e.Neuron;
+            _viewerSomaDesirabilityMapGuidanceForce.Neuron = e.Neuron;
         }
 
-        private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             _closeRequested = true;
         }
