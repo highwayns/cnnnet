@@ -1,4 +1,6 @@
 ﻿using cnnnet.Lib;
+using System;
+using System.Diagnostics.Contracts;
 
 namespace cnnnet.ViewerWpf.Viewers
 {
@@ -32,6 +34,8 @@ namespace cnnnet.ViewerWpf.Viewers
         public ViewerNetworkUndesirability(CnnNet network)
             : base(network.Width, network.Height, true)
         {
+            Contract.Requires<ArgumentNullException>(network != null);
+
             _network = network;
         }
 

@@ -7,6 +7,7 @@ using cnnnet.Lib;
 using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using cnnnet.ViewerWpf.Viewers;
+using System.Diagnostics.Contracts;
 
 namespace cnnnet.ViewerWpf.ViewerManagers
 {
@@ -150,6 +151,8 @@ namespace cnnnet.ViewerWpf.ViewerManagers
         public ViewerManagerNetwork(CnnNet network)
             : base(network.Width, network.Height)
         {
+            Contract.Requires<ArgumentNullException>(network != null);
+
             _network = network;
             _neuronIconDestRect = new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight);
             _neuronIconSourceRect = new Rect(0, 0, Resources.NeuronIdle.PixelWidth, Resources.NeuronIdle.PixelHeight);

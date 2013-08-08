@@ -1,5 +1,6 @@
 ﻿using cnnnet.Lib.Neurons;
 using System;
+using System.Diagnostics.Contracts;
 
 namespace cnnnet.ViewerWpf.Viewers
 {
@@ -19,6 +20,8 @@ namespace cnnnet.ViewerWpf.Viewers
 
         public NeuronChangedEventArgs(Neuron neuron)
         {
+            Contract.Requires<ArgumentNullException>(neuron != null);
+
             Neuron = neuron;
         }
 

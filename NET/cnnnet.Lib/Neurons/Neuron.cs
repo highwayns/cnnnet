@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace cnnnet.Lib.Neurons
@@ -35,6 +36,7 @@ namespace cnnnet.Lib.Neurons
         }
 
         public event EventHandler<NeuronAxonGuidanceForcesScoreEventArgs> AxonGuidanceForcesScoreEvent;
+
         public event EventHandler<AxonGuidanceForcesSumEventArgs> AxonGuidanceForcesSumEvent;
 
         public ReadOnlyCollection<AxonGuidanceForceBase> AxonGuidanceForces
@@ -391,6 +393,9 @@ namespace cnnnet.Lib.Neurons
             IEnumerable<SomaGuidanceForceBase> somaGuidanceForces,
             bool isInputNeuron = false)
         {
+            Contract.Requires<ArgumentException>(id >= 0);
+            Contract.Requires<ArgumentNullException>(cnnNet != null);
+
             Id = id;
             Network = cnnNet;
             AxonWayPoints = new List<Point>

@@ -172,7 +172,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                     Thread.Sleep(30);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 Debugger.Break();
             }

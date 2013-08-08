@@ -58,7 +58,7 @@
     <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
     <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -99,7 +99,6 @@
     <Compile Include="Resources.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Viewers\NeuronChangedEventArgs.cs" />
-    <Compile Include="Viewers\ViewerAxonTerminalGuidanceForces.cs" />
     <Compile Include="ViewerManagers\ViewerManager.cs" />
     <Compile Include="ViewerManagers\ViewerManagerNetwork.cs" />
     <Compile Include="Viewers\ViewerGuidanceForce.cs" />

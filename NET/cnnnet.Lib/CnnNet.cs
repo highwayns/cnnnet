@@ -5,6 +5,7 @@ using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace cnnnet.Lib
@@ -239,12 +240,16 @@ namespace cnnnet.Lib
 
         public void RegisterAxonWayPoints(Neuron neuron, IEnumerable<Point> axonWayPoints)
         {
+            Contract.Requires<ArgumentNullException>(neuron != null);
+            Contract.Requires<ArgumentNullException>(axonWayPoints != null);
+            Contract.Requires<ArgumentException>(axonWayPoints.Any());
+
             var axonWayPointsList = axonWayPoints.ToList();
 
             for (int axonWayPointIndex = 0; axonWayPointIndex < axonWayPointsList.Count; axonWayPointIndex++)
             {
                 var axonWayPoint = axonWayPointsList[axonWayPointIndex];
-                NeuronAxonWayPoints[axonWayPoint.Y, axonWayPoint.X] = new NeuronAxonWaypoint(axonWayPointIndex,neuron, axonWayPoint);
+                NeuronAxonWayPoints[axonWayPoint.Y, axonWayPoint.X] = new NeuronAxonWaypoint(axonWayPointIndex, neuron, axonWayPoint);
             }
         }
 
@@ -254,9 +259,12 @@ namespace cnnnet.Lib
 
         public CnnNet(int width, int height)
         {
-            _random = new Random();
+            Contract.Requires<ArgumentOutOfRangeException>(width > 0);
+            Contract.Requires<ArgumentOutOfRangeException>(height > 0);
+            
             Width = width;
             Height = height;
+            _random = new Random();
             NeuronActivityHistory = new List<Neuron[]>();
 
             _isProcessingSyncObject = new object();

@@ -1,4 +1,6 @@
-﻿namespace cnnnet.ViewerWpf.Viewers
+﻿using System;
+using System.Diagnostics.Contracts;
+namespace cnnnet.ViewerWpf.Viewers
 {
     public abstract class ViewerBase
     {
@@ -41,6 +43,9 @@
 
         protected ViewerBase(int width, int height, bool isEnabled)
         {
+            Contract.Requires<ArgumentOutOfRangeException>(width > 0);
+            Contract.Requires<ArgumentOutOfRangeException>(height > 0);
+
             Width = width;
             Height = height;
             IsEnabled = isEnabled;
