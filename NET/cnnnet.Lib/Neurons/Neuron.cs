@@ -16,6 +16,8 @@ namespace cnnnet.Lib.Neurons
     {
         #region Fields
 
+        private readonly Random _random;
+
         public readonly List<Point> AxonWayPoints;
         private int _activityScore;
         public Point AxonTerminal;
@@ -236,10 +238,12 @@ namespace cnnnet.Lib.Neurons
 
         protected bool ProcessGuideSoma()
         {
-            Point maxLocation;
+            IEnumerable<Point> maxLocations;
             double maxScore;
             SomaGuidanceForces.Select(somaGuidanceForce => somaGuidanceForce.GetScore(PosY, PosX, this)).Sum().
-                GetMaxAndLocation(out maxLocation, out maxScore);
+                GetMaxAndLocation(out maxLocations, out maxScore);
+
+            Point maxLocation = maxLocations.ElementAt(_random.Next(maxLocations.Count()));
 
             maxLocation = new Point
                 (Math.Min(Math.Max(maxLocation.X - Network.SomaGuidanceForceSearchPlainRange + PosX, 0), Network.Width - 1),
@@ -271,7 +275,11 @@ namespace cnnnet.Lib.Neurons
                     axonGuidanceForce.GetScore(lastMaxLocation.Y, lastMaxLocation.X, this))).ToArray();
 
             var guidanceForceScoresSum = guidanceForceScores.Select(guidanceForceScore => guidanceForceScore.Score).Sum();
-            guidanceForceScoresSum.GetMaxAndLocation(out maxLocation, out maxScore);
+
+            IEnumerable<Point> maxLocations;
+            guidanceForceScoresSum.GetMaxAndLocation(out maxLocations, out maxScore);
+
+            maxLocation = maxLocations.ElementAt(_random.Next(maxLocations.Count()));
 
             maxLocation = new Point
                 (Math.Min(Math.Max(maxLocation.X - Network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), Network.Width - 1),
@@ -407,6 +415,7 @@ namespace cnnnet.Lib.Neurons
 
             HasSomaReachedFinalPosition = isInputNeuron;
             IsInputNeuron = isInputNeuron;
+            _random = new Random();
         }
 
         #endregion Instance

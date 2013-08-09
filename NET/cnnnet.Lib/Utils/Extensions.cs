@@ -118,23 +118,29 @@ namespace cnnnet.Lib.Utils
                            && GetDistance(neuron.AxonTerminal.X, neuron.AxonTerminal.Y, posX, posY) <= range).ToArray();
         }
 
-        public static void GetMaxAndLocation(this double[,] map, out Point location, out double maxValue)
+        public static void GetMaxAndLocation(this double[,] map, out IEnumerable<Point> locations, out double maxValue)
         {
-            location = null;
+            var locationsList = new List<Point>();
             maxValue = 0;
 
             for (int y = 0; y < map.GetLength(0); y++)
             {
                 for (int x = 0; x < map.GetLength(1); x++)
                 {
-                    if (location == null
-                        || map[y, x] > maxValue)
+                    if (map[y, x] == maxValue)
                     {
-                        location = new Point(x, y);
+                        locationsList.Add(new Point(x, y));
+                    }
+                    else if (map[y, x] > maxValue)
+                    {
+                        locationsList.Clear();
+                        locationsList.Add(new Point(x, y));
                         maxValue = map[y, x];
                     }
                 }
             }
+
+            locations = locationsList.ToArray();
         }
 
         public static double[,] Sum(this IEnumerable<double[,]> maps)

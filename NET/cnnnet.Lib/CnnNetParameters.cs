@@ -27,7 +27,7 @@
         /// <summary>
         /// The minimum distance allowed between neurons
         /// </summary>
-        public int MinDistanceBetweenNeurons = 10;
+        public int MinDistanceBetweenNeurons = 15;
 
         /// <summary>
         /// How many input neurons we should generate
@@ -74,7 +74,7 @@
         /// <summary>
         /// The minimum distance allowed between the current found waypoint and previous waypoints
         /// </summary>
-        public int AxonMinDistanceToPreviousWayPoints = 1;
+        public int AxonMinDistanceToPreviousWayPoints = 5;
 
         public int NeuronIsActiveMinimumActivityScore = 3;
 
