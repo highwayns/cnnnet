@@ -39,12 +39,7 @@ namespace cnnnet.Lib.GuidanceForces
             {
                 for (int x = minX; x < maxX; x++)
                 {
-                    if (PreCheckLocation(x, y, neuron) == false)
-                    {
-                        continue;
-                    }
-
-                    // only check in the desired radius
+                    // only check  in the desired radius
                     if ((x == refX && y == refY)
                         /* this ensures that we only check within the range */
                         || (Extensions.GetDistance(refX, refY, x, y)) > GuidanceForceRange)
@@ -52,7 +47,7 @@ namespace cnnnet.Lib.GuidanceForces
                         continue;
                     }
 
-                    if (PostCheckLocation(x, y, neuron) == false)
+                    if (PreCheckLocation(x, y, neuron) == false)
                     {
                         continue;
                     }
@@ -83,18 +78,6 @@ namespace cnnnet.Lib.GuidanceForces
         /// <param name="neuron">The neuron context to check</param>
         /// <returns></returns>
         protected virtual bool PreCheckLocation(int x, int y, Neuron neuron)
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Perform SLOW checks here
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="neuron">The neuron context to check</param>
-        /// <returns></returns>
-        protected virtual bool PostCheckLocation(int x, int y, Neuron neuron)
         {
             return true;
         }

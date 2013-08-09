@@ -14,12 +14,7 @@ namespace cnnnet.Lib.GuidanceForces.Soma
             return base.PreCheckLocation(x, y, neuron)
                 && (x != neuron.PosX || y != neuron.PosY)
                 && Extensions.GetNeuronAt(y, x, Network) == null
-                && neuron.MovedDistance + Extensions.GetDistance(neuron.PosX, neuron.PosY, x, y) < Network.MaxNeuronMoveDistance;
-        }
-
-        protected override bool PostCheckLocation(int x, int y, Neuron neuron)
-        {
-            return base.PostCheckLocation(x, y, neuron)
+                && neuron.MovedDistance + Extensions.GetDistance(neuron.PosX, neuron.PosY, x, y) < Network.MaxNeuronMoveDistance
                 && GetDistanceToNearestNeuron(y, x, neuron) > Network.MinDistanceBetweenNeurons;
         }
 

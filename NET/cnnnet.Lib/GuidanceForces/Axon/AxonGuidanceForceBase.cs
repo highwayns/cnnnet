@@ -10,9 +10,9 @@ namespace cnnnet.Lib.GuidanceForces.Axon
     {
         #region Methods
 
-        protected override bool PostCheckLocation(int x, int y, Neuron neuron)
+        protected override bool PreCheckLocation(int x, int y, Neuron neuron)
         {
-            return base.PostCheckLocation(x, y, neuron)
+            return base.PreCheckLocation(x, y, neuron)
                 && GetDistanceFromPreviousWayPoints(x, y, neuron) > Network.AxonMinDistanceToPreviousWayPoints;
         }
 
