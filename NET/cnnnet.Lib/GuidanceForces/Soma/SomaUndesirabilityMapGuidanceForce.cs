@@ -1,4 +1,6 @@
 ﻿using cnnnet.Lib.Neurons;
+using System;
+using System.Diagnostics.Contracts;
 
 namespace cnnnet.Lib.GuidanceForces.Soma
 {
@@ -18,6 +20,7 @@ namespace cnnnet.Lib.GuidanceForces.Soma
         public SomaUndesirabilityMapGuidanceForce(CnnNet network)
             : base(network)
         {
+            Contract.Requires<ArgumentNullException>(network != null);
         }
 
         #endregion

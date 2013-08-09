@@ -1,6 +1,7 @@
 ﻿using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
+using System.Diagnostics.Contracts;
 
 namespace cnnnet.Lib.GuidanceForces.Soma
 {
@@ -65,6 +66,7 @@ namespace cnnnet.Lib.GuidanceForces.Soma
         protected SomaGuidanceForceBase(CnnNet network)
             : base(network.SomaGuidanceForceSearchPlainRange, network)
         {
+            Contract.Requires<ArgumentNullException>(network != null);
         }
 
         #endregion

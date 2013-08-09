@@ -1,5 +1,7 @@
 ﻿using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
+using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace cnnnet.Lib.GuidanceForces.Axon
@@ -32,6 +34,7 @@ namespace cnnnet.Lib.GuidanceForces.Axon
         protected AxonGuidanceForceBase(CnnNet network)
             : base(network.AxonGuidanceForceSearchPlainRange, network)
         {
+            Contract.Requires<ArgumentNullException>(network != null);
         }
 
         #endregion
