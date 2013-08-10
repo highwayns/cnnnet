@@ -188,7 +188,8 @@ namespace cnnnet.Lib
                 {
                     neuron.MoveTo(_random.Next(Height), _random.Next(Width));
                 }
-                while (neurons.Any(n => n.PosX == neuron.PosX && n.PosY == neuron.PosY));
+                while (neurons.Any(n => n.PosX == neuron.PosX && n.PosY == neuron.PosY)
+                    || Extensions.GetDistanceToNearestNeuron(neuron.PosY, neuron.PosX, neuron, this) <= MinDistanceBetweenNeurons);
 
                 neuron.ResetMovedDistance();
                 neurons.Add(neuron);

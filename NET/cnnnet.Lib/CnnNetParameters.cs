@@ -2,7 +2,7 @@
 {
     public partial class CnnNet
     {
-        public int NeuronCount = 150;
+        public int NeuronCount = 80;
 
         /// <summary>
         /// Desirability influence distance

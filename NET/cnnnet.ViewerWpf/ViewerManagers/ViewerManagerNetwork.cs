@@ -135,9 +135,14 @@ namespace cnnnet.ViewerWpf.ViewerManagers
 
                 #region Draw Axon
 
+                var axonWaypoints = neuron.AxonWayPoints.ToArray();
+
                 WriteableBitmap.DrawPolyline
-                    (neuron.AxonWayPoints.SelectMany
-                    (axonWaypoint => new[] { axonWaypoint.X, axonWaypoint.Y }).ToArray(),
+                    (axonWaypoints.SelectMany(axonWaypoint => new[]
+                    {
+                        axonWaypoint.X,
+                        axonWaypoint.Y
+                    }).ToArray(),
                     neuron == NeuronSelected ? Colors.Blue : Colors.White);
 
                 #endregion
