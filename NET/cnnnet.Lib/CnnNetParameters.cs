@@ -76,6 +76,8 @@
         /// </summary>
         public int AxonMinDistanceToPreviousWayPoints = 5;
 
+        
+        
         public int NeuronIsActiveMinimumActivityScore = 3;
 
         /// <summary>
@@ -83,12 +85,26 @@
         /// </summary>
         public int NeuronActivityScoreDecayAmount = 1;
 
-        public int NeuronActivityScoreMultiply = 3;
-
         /// <summary>
         /// For how many iterations do we hold the neuronal activity.
         /// This also means that only the last 10 iterations are going to be used for neuronal plasticity
         /// </summary>
         public int NeuronActivityHistoryLength = 10;
+
+        /// <summary>
+        /// For how many iterations after the neuron fires is the neuron capable of firing again
+        /// </summary>
+        public int NeuronActivityIdleIterations = 3;
+
+        /// <summary>
+        /// The minimum strength required for a synapse to pass the signal from an 
+        /// PreSynaptic neuron to a PostSynaptic neuron
+        /// </summary>
+        public double NeuronSynapseConnectedMinimumStrength = 0.2;
+
+        /// <summary>
+        /// The amount that a synapses strength can change because of plasticity
+        /// </summary>
+        public double NeuronSynapseStrengthChangeAmount = 0.1;
     }
 }

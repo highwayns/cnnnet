@@ -121,7 +121,8 @@
                     Height="{Binding Source={x:Static ViewerWpf:Constants.NetworkHeight}}"/>
             </Border>
 
-            <Border Margin="10,10" Background="#55FFFFFF" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Border Margin="10,10" Background="#55FFFFFF" VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Visibility="Collapsed">
                 <TextBlock Name="FpsCounter" FontFamily="Verdana" FontSize="14" />
             </Border>
         </Grid>

@@ -24,6 +24,7 @@ namespace cnnnet.Lib.Neurons
         protected CnnNet Network;
         protected int IterationsSinceLastActivation;
         private bool _hasAxonReachedFinalPosition;
+        private List<DendricSynapse> _synapses;
 
         #endregion Fields
 
@@ -186,17 +187,29 @@ namespace cnnnet.Lib.Neurons
                 HasSomaReachedFinalPosition = MovedDistance > Network.MaxNeuronMoveDistance
                     || (MovedDistance > 0 && movedToHigherDesirability == false);
 
+                #endregion Neuron searches for better position
+            }
+
+            if (IsActive == false)
+            {
                 IterationsSinceLastActivation++;
                 AddUndesirability();
-
-                #endregion Neuron searches for better position
+            }
+            else
+            {
+                IterationsSinceLastActivation = 0;
+                AddDesirability();
             }
         }
 
         public void SetIsActive(bool isActive)
         {
             IsActive = isActive;
-            _activityScore = 0;
+            if (isActive)
+            {
+                ActivityScore = 0;
+                IterationsSinceLastActivation = 0;
+            }
         }
 
         protected void AddDesirability()
@@ -331,20 +344,36 @@ namespace cnnnet.Lib.Neurons
 
                 if(IsActive == false)
                 {
-                    _activityScore +=
-                        Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, Network, Network.NeuronDendricTreeRange).
-                                   Count(neuronsWithAxonTerminalWithinRange => neuronsWithAxonTerminalWithinRange.WasActive)
-                        *Network.NeuronActivityScoreMultiply;
+                    #region Add new neurons to synapses
 
-                    if (_activityScore >= Network.NeuronIsActiveMinimumActivityScore)
+                    _synapses.AddRange
+                        (Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, Network, Network.NeuronDendricTreeRange).
+                        Where(neuron => _synapses.Any(synapse => synapse.PreSynapticNeuron == neuron) == false).
+                        Select(neuron => new DendricSynapse
+                            {
+                                PreSynapticNeuron = neuron,
+                                Strength = 0.0f
+                            }));
+
+                    #endregion
+
+                    // decay neuron activity score
+                    ActivityScore = Math.Max(ActivityScore - Network.NeuronActivityScoreDecayAmount, 0);
+
+                    // Filter only the connected synapses to previously active neurons
+                    var prevActiveSynapses = _synapses.Where(synapse => synapse.Strength >= Network.NeuronSynapseConnectedMinimumStrength
+                                                                        && synapse.PreSynapticNeuron.WasActive).ToList();
+
+                    // increase neuron activity by the amount of active synapses
+                    ActivityScore += prevActiveSynapses.Count();
+
+                    if (ActivityScore >= Network.NeuronIsActiveMinimumActivityScore
+                        && IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
                     {
                         // add neuron to activation list
                         SetIsActive(true);
-                    }
-                    else
-                    {
-                        // decay activity score
-                        ActivityScore = Math.Max(0, ActivityScore - Network.NeuronActivityScoreDecayAmount);
+                        ActivityScore = 0;
+                        prevActiveSynapses.ForEach(synapse => synapse.Strength += Network.NeuronSynapseStrengthChangeAmount);
                     }
                 }
 
@@ -403,6 +432,8 @@ namespace cnnnet.Lib.Neurons
         {
             Contract.Requires<ArgumentException>(id >= 0);
             Contract.Requires<ArgumentNullException>(cnnNet != null);
+            Contract.Requires<ArgumentNullException>(axonGuidanceForces != null);
+            Contract.Requires<ArgumentNullException>(somaGuidanceForces != null);
 
             Id = id;
             Network = cnnNet;
@@ -415,6 +446,8 @@ namespace cnnnet.Lib.Neurons
 
             HasSomaReachedFinalPosition = isInputNeuron;
             IsInputNeuron = isInputNeuron;
+
+            _synapses = new List<DendricSynapse>();
             _random = new Random();
         }
 
