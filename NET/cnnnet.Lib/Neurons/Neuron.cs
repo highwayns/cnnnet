@@ -86,7 +86,7 @@ namespace cnnnet.Lib.Neurons
         {
             get
             {
-                return Network.NeuronActivityHistory.Last().Contains(this);
+                return Network.NeuronActivityHistory.Any(item => item.Contains(this));
             }
         }
 
@@ -195,7 +195,7 @@ namespace cnnnet.Lib.Neurons
                 IterationsSinceLastActivation++;
                 AddUndesirability();
             }
-            else
+            else if (HasAxonReachedFinalPosition)
             {
                 IterationsSinceLastActivation = 0;
                 AddDesirability();
@@ -350,54 +350,45 @@ namespace cnnnet.Lib.Neurons
                         (Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, Network, Network.NeuronDendricTreeRange).
                         Where(neuron => _synapses.Any(synapse => synapse.PreSynapticNeuron == neuron) == false).
                         Select(neuron => new DendricSynapse
-                            {
-                                PreSynapticNeuron = neuron,
-                                Strength = 0.0f
-                            }));
+                        {
+                            PreSynapticNeuron = neuron,
+                            Strength = 0.0f
+                        }));
 
                     #endregion
 
-                    // decay neuron activity score
-                    ActivityScore = Math.Max(ActivityScore - Network.NeuronActivityScoreDecayAmount, 0);
-
-                    // Filter only the connected synapses to previously active neurons
-                    var prevActiveSynapses = _synapses.Where(synapse => synapse.Strength >= Network.NeuronSynapseConnectedMinimumStrength
-                                                                        && synapse.PreSynapticNeuron.WasActive).ToList();
-
-                    // increase neuron activity by the amount of active synapses
-                    ActivityScore += prevActiveSynapses.Count();
-
-                    if (ActivityScore >= Network.NeuronIsActiveMinimumActivityScore
-                        && IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
+                    if (IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
                     {
-                        // add neuron to activation list
-                        SetIsActive(true);
-                        ActivityScore = 0;
-                        prevActiveSynapses.ForEach(synapse => synapse.Strength += Network.NeuronSynapseStrengthChangeAmount);
+                        #region Increase Activity with active synapses count
+
+                        // Filter only the connected synapses to previously active neurons
+                        var prevConnectedActiveSynapses = _synapses.Where(synapse => synapse.Strength >= Network.NeuronSynapseConnectedMinimumStrength
+                                                                            && synapse.PreSynapticNeuron.WasActive).ToList();
+
+                        // increase neuron activity by the amount of active synapses
+                        ActivityScore = prevConnectedActiveSynapses.Count();
+
+                        #endregion
+
+                        #region Determine if neuron is active
+
+                        if (ActivityScore >= Network.NeuronIsActiveMinimumActivityScore)
+                        {
+                            // add neuron to activation list
+                            SetIsActive(true);
+                            ActivityScore = 0;
+                            prevConnectedActiveSynapses.ForEach(synapse => synapse.Strength += Network.NeuronSynapseStrengthChangeAmount);
+                        }
+
+                        #endregion
+                    }
+                    else
+                    {
+
                     }
                 }
 
                 #endregion
-
-                #region Increase region desirability if neuron fires
-
-                if (IsActive)
-                {
-                    AddDesirability();
-                    IterationsSinceLastActivation = 0;
-                }
-
-                #endregion Increase region desirability if neuron fires
-
-                #region Else increase region UN-desirability
-
-                else
-                {
-                    IterationsSinceLastActivation++;
-                    AddUndesirability();
-                }
-
-                #endregion Else increase region UN-desirability
             }
             else
             {

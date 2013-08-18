@@ -75,15 +75,8 @@
         /// The minimum distance allowed between the current found waypoint and previous waypoints
         /// </summary>
         public int AxonMinDistanceToPreviousWayPoints = 5;
-
-        
         
         public int NeuronIsActiveMinimumActivityScore = 3;
-
-        /// <summary>
-        /// The amount of activity score to decay with each iteration
-        /// </summary>
-        public int NeuronActivityScoreDecayAmount = 1;
 
         /// <summary>
         /// For how many iterations do we hold the neuronal activity.

@@ -1,0 +1,18 @@
+
+
+ - Add new synapses
+ - Decay current activity
+ - Find the previously active synapses
+ - Increase current neuron activity with the synapses found earlier
+ - Increase strength for the synapses that contributed to a spike
+
+
+
+
+
+ Synapse strength adjustment
+ 1. if neuron fires 
+	- increase the strength of the synapses that contributed to the spike (during NeuronActivityHistoryLength)
+	- decrease the strength of synapses that fire after the spike (during NeuronActivityIdleIterations)
+ 2. if neuron does NOT fire
+	- increase the strength of every synapse that fires
