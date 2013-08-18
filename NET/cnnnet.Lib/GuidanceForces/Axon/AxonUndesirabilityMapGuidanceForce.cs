@@ -10,7 +10,7 @@ namespace cnnnet.Lib.GuidanceForces.Axon
 
         public override double ComputeScoreAtLocation(int x, int y, Neuron neuron)
         {
-            return Network.NeuronUndesirabilityMap[y, x];
+            return 3 * Network.NeuronUndesirabilityMap[y, x];
         }
 
         protected override bool PreCheckLocation(int x, int y, Neuron neuron)

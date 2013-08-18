@@ -202,7 +202,7 @@ namespace cnnnet.Lib
 
             _neuronsInput = neurons.GetRange(NeuronCount, InputNeuronCount).ToArray();
 
-            ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, _neuronsInput.Length / 3));
+            ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 4));
             _iteration = 0;
         }
 
@@ -235,7 +235,7 @@ namespace cnnnet.Lib
 
             _neuronsInput = neurons.GetRange(NeuronCount, InputNeuronCount).ToArray();
 
-            ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 2));
+            ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 4));
             _iteration = 0;
         }
 

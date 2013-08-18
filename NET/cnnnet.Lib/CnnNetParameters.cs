@@ -32,13 +32,13 @@
         /// <summary>
         /// How many input neurons we should generate
         /// </summary>
-        public int InputNeuronCount = 50;
+        public int InputNeuronCount = 20;
 
         /// <summary>
         /// What is the maximum distance that a neuron can move to higher desirability (should be NeuronHigherDesirabilitySearchPlainRange?)
         /// When this distance is reached the neuron automatically sets HasReachedFinalPosition = true
         /// </summary>
-        public int MaxNeuronMoveDistance = 10;
+        public int MaxNeuronMoveDistance = 50;
 
         /// <summary>
         /// The range of the neuron dendric tree
@@ -48,7 +48,7 @@
         /// <summary>
         /// Undesirability influence distance
         /// </summary>
-        public int NeuronUndesirabilityInfluenceRange = 40;
+        public int NeuronUndesirabilityInfluenceRange = 80;
 
         /// <summary>
         /// Maximum undesirability increase
@@ -72,9 +72,9 @@
         public int AxonGuidanceForceSearchPlainRange = 20;
 
         /// <summary>
-        /// The minimum distance allowed between the current found waypoint and previous waypoints
+        /// The minimum distance allowed between the current found waypoint and other neuron waypoints
         /// </summary>
-        public int AxonMinDistanceToPreviousWayPoints = 5;
+        public int AxonMinDistanceToOtherWayPoints = 15;
         
         public int NeuronIsActiveMinimumActivityScore = 3;
 
