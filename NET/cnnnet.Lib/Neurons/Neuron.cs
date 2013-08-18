@@ -179,6 +179,7 @@ namespace cnnnet.Lib.Neurons
                 Debugger.Break();
             }
 
+            bool movedToHigherDesirability = false;
             if (HasSomaReachedFinalPosition)
             {
                 ProcessSomaHasReachedFinalPosition();
@@ -186,8 +187,7 @@ namespace cnnnet.Lib.Neurons
             else
             {
                 #region Neuron searches for better position
-
-                bool movedToHigherDesirability = false;
+                
                 if (MovedDistance < Network.MaxNeuronMoveDistance)
                 {
                     movedToHigherDesirability = ProcessGuideSoma();
@@ -199,15 +199,24 @@ namespace cnnnet.Lib.Neurons
                 #endregion Neuron searches for better position
             }
 
-            if (IsActive == false)
+            if (movedToHigherDesirability == false)
             {
-                IterationsSinceLastActivation++;
-                AddUndesirability();
-            }
-            else if (HasAxonReachedFinalPosition)
-            {
-                IterationsSinceLastActivation = 0;
-                AddDesirability();
+                if (HasSomaReachedFinalPosition == false
+                    ||
+                    (HasAxonReachedFinalPosition
+                    && IsActive == false))
+                {
+                    IterationsSinceLastActivation++;
+                    AddUndesirability();
+
+                }
+
+                if (HasAxonReachedFinalPosition
+                    && IsActive)
+                {
+                    IterationsSinceLastActivation = 0;
+                    AddDesirability();
+                }
             }
         }
 
