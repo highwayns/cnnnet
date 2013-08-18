@@ -32,13 +32,13 @@
         /// <summary>
         /// How many input neurons we should generate
         /// </summary>
-        public int InputNeuronCount = 1;
+        public int InputNeuronCount = 50;
 
         /// <summary>
         /// What is the maximum distance that a neuron can move to higher desirability (should be NeuronHigherDesirabilitySearchPlainRange?)
         /// When this distance is reached the neuron automatically sets HasReachedFinalPosition = true
         /// </summary>
-        public int MaxNeuronMoveDistance = 50;
+        public int MaxNeuronMoveDistance = 10;
 
         /// <summary>
         /// The range of the neuron dendric tree
@@ -48,7 +48,7 @@
         /// <summary>
         /// Undesirability influence distance
         /// </summary>
-        public int NeuronUndesirabilityInfluenceRange = 80;
+        public int NeuronUndesirabilityInfluenceRange = 40;
 
         /// <summary>
         /// Maximum undesirability increase
@@ -82,7 +82,7 @@
         /// For how many iterations do we hold the neuronal activity.
         /// This also means that only the last 10 iterations are going to be used for neuronal plasticity
         /// </summary>
-        public int NeuronActivityHistoryLength = 10;
+        public int NeuronActivityHistoryLength = 5;
 
         /// <summary>
         /// For how many iterations after the neuron fires is the neuron capable of firing again

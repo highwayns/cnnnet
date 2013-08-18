@@ -82,12 +82,21 @@ namespace cnnnet.Lib.Neurons
             private set;
         }
 
-        public bool WasActive
+        public bool GetWasActive(Neuron exclusiveNeuron)
         {
-            get
-            {
-                return Network.NeuronActivityHistory.Any(item => item.Contains(this));
-            }
+            return Network.NeuronActivityHistory.Any(item => item.Contains(this)
+                                                             && item.Contains(exclusiveNeuron) == false);
+        }
+
+        /// <summary>
+        /// Returns true if the neuron was active in the previous iterationsBack iterations
+        /// </summary>
+        /// <param name="iterationsBack">From 0 to NeuronActivityHistoryLength - 1. 0 for the most recent iteration (previous) and 'NeuronActivityHistoryLength - 1' for the most distant iteration </param>
+        /// <returns></returns>
+        private bool GetWasActive(int iterationsBack, Neuron exclusiveNeuron)
+        {
+            return Network.NeuronActivityHistory[iterationsBack].Contains(this)
+                && Network.NeuronActivityHistory[iterationsBack].Contains(exclusiveNeuron) == false;
         }
 
         /// <summary>
@@ -340,52 +349,74 @@ namespace cnnnet.Lib.Neurons
         {
             if (HasAxonReachedFinalPosition)
             {
+                if (IsInputNeuron)
+                {
+                    return;
+                }
+
                 #region Determine if neuron is active
 
-                if(IsActive == false)
-                {
-                    #region Add new neurons to synapses
+                SetIsActive(false);
 
-                    _synapses.AddRange
-                        (Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, Network, Network.NeuronDendricTreeRange).
-                        Where(neuron => _synapses.Any(synapse => synapse.PreSynapticNeuron == neuron) == false).
-                        Select(neuron => new DendricSynapse
-                        {
-                            PreSynapticNeuron = neuron,
-                            Strength = 0.0f
-                        }));
+                #region Add new neurons to synapses
+
+                _synapses.AddRange
+                    (Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, Network, Network.NeuronDendricTreeRange).
+                    Where(neuron => _synapses.Any(synapse => synapse.PreSynapticNeuron == neuron) == false).
+                    Select(neuron => new DendricSynapse
+                    {
+                        PreSynapticNeuron = neuron,
+                        Strength = 0.0f
+                    }));
+
+                #endregion
+
+                if (IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
+                {
+                    #region Increase ActivityScore with active synapses count
+
+                    // Filter only the connected synapses to previously active neurons
+                    var prevConnectedActiveSynapses =
+                        _synapses.Where(synapse => synapse.Strength >= Network.NeuronSynapseConnectedMinimumStrength
+                                                   && synapse.PreSynapticNeuron.GetWasActive(this)).ToList();
+
+                    // increase neuron activity by the amount of active synapses
+                    ActivityScore = prevConnectedActiveSynapses.Count();
 
                     #endregion
 
-                    if (IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
+                    #region Determine if neuron is active
+
+                    if (ActivityScore >= Network.NeuronIsActiveMinimumActivityScore)
                     {
-                        #region Increase Activity with active synapses count
-
-                        // Filter only the connected synapses to previously active neurons
-                        var prevConnectedActiveSynapses = _synapses.Where(synapse => synapse.Strength >= Network.NeuronSynapseConnectedMinimumStrength
-                                                                            && synapse.PreSynapticNeuron.WasActive).ToList();
-
-                        // increase neuron activity by the amount of active synapses
-                        ActivityScore = prevConnectedActiveSynapses.Count();
-
-                        #endregion
-
-                        #region Determine if neuron is active
-
-                        if (ActivityScore >= Network.NeuronIsActiveMinimumActivityScore)
-                        {
-                            // add neuron to activation list
-                            SetIsActive(true);
-                            ActivityScore = 0;
-                            prevConnectedActiveSynapses.ForEach(synapse => synapse.Strength += Network.NeuronSynapseStrengthChangeAmount);
-                        }
-
-                        #endregion
+                        // add neuron to activation list
+                        SetIsActive(true);
+                        ActivityScore = 0;
+                        prevConnectedActiveSynapses.ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
                     }
                     else
                     {
+                        #region increase the strength of every synapse that fires
 
+                        _synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(0, this)).ToList().
+                            ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
+
+                        #endregion
                     }
+
+                    #endregion
+                }
+                else
+                {
+                    #region decrease the strength of synapses that fire after the spike (during NeuronActivityIdleIterations)
+
+                    for (int iterationBack = 0; iterationBack < Network.NeuronActivityIdleIterations - IterationsSinceLastActivation; iterationBack++)
+                    {
+                        _synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(iterationBack, this)).ToList().
+                            ForEach(synapse => synapse.Strength = Math.Max(synapse.Strength - Network.NeuronSynapseStrengthChangeAmount, 0));
+                    }
+
+                    #endregion
                 }
 
                 #endregion
