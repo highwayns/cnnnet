@@ -170,10 +170,10 @@ namespace cnnnet.ViewerWpf
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
-            //if (_currentNetworkIterationDisplayed == true)
-            //{
-            //    return;
-            //}
+            if (_currentNetworkIterationDisplayed == true)
+            {
+                return;
+            }
 
             var mousePosition = Mouse.GetPosition(ImageNetwork);
 

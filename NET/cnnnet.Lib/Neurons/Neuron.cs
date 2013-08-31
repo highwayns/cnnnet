@@ -312,27 +312,29 @@ namespace cnnnet.Lib.Neurons
             IEnumerable<Point> maxLocations;
             guidanceForceScoresSum.GetMaxAndLocation(out maxLocations, out maxScore);
 
-            maxLocation = maxLocations.ElementAt(_random.Next(maxLocations.Count()));
-
-            maxLocation = new Point
-                (Math.Min(Math.Max(maxLocation.X - Network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), Network.Width - 1),
-                Math.Min(Math.Max(maxLocation.Y - Network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.Y, 0), Network.Height - 1));
-
             bool result = false;
-
-            double lastMaxLocationScore = AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.ComputeScoreAtLocation(lastMaxLocation.X, lastMaxLocation.Y, this)).Sum();
-
-            if (maxScore > lastMaxLocationScore
-                || AxonWayPoints.Count == 1)
+            if (maxScore > 0)
             {
-                var newAxonWaypoint = new NeuronAxonWaypoint(lastAxonWaypoint.Id + 1, this, maxLocation);
-                AxonWayPoints.Add(newAxonWaypoint);
-                Network.NeuronAxonWayPoints[maxLocation.Y, maxLocation.X] = newAxonWaypoint;
-                result = true;
-            }
+                maxLocation = maxLocations.ElementAt(_random.Next(maxLocations.Count()));
 
-            InvokeAxonGuidanceForcesScoreEvent(guidanceForceScores);
-            InvokeAxonGuidanceForcesSumEvent(guidanceForceScoresSum);
+                maxLocation = new Point
+                    (Math.Min(Math.Max(maxLocation.X - Network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.X, 0), Network.Width - 1),
+                    Math.Min(Math.Max(maxLocation.Y - Network.AxonGuidanceForceSearchPlainRange + lastMaxLocation.Y, 0), Network.Height - 1));
+
+                double lastMaxLocationScore = AxonGuidanceForces.Select(axonGuidanceForce => axonGuidanceForce.ComputeScoreAtLocation(lastMaxLocation.X, lastMaxLocation.Y, this)).Sum();
+
+                if (maxScore > lastMaxLocationScore
+                    || AxonWayPoints.Count == 1)
+                {
+                    var newAxonWaypoint = new NeuronAxonWaypoint(lastAxonWaypoint.Id + 1, this, maxLocation);
+                    AxonWayPoints.Add(newAxonWaypoint);
+                    Network.NeuronAxonWayPoints[maxLocation.Y, maxLocation.X] = newAxonWaypoint;
+                    result = true;
+                }
+
+                InvokeAxonGuidanceForcesScoreEvent(guidanceForceScores);
+                InvokeAxonGuidanceForcesSumEvent(guidanceForceScoresSum);
+            }
 
             return result;
         }
