@@ -32,7 +32,7 @@
         /// <summary>
         /// How many input neurons we should generate
         /// </summary>
-        public int InputNeuronCount = 10;
+        public int InputNeuronCount = 6;
 
         public int InputNeuronDelayIterationsBeforeExtendingAxon = 2;
 

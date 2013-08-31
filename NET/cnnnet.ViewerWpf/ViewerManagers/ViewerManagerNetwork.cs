@@ -143,7 +143,7 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                         axonWaypoint.Waypoint.X,
                         axonWaypoint.Waypoint.Y
                     }).ToArray(),
-                    neuron == NeuronSelected ? Colors.Blue : Colors.White);
+                    neuron.IsActive ? Colors.Blue : Colors.White);
 
                 #endregion
             }
