@@ -405,14 +405,21 @@ namespace cnnnet.Lib.Neurons
 
                     if (ActivityScore >= Network.NeuronIsActiveMinimumActivityScore)
                     {
-                        // add neuron to activation list
                         SetIsActive(true);
                         ActivityScore = 0;
+                        // increase the strength of every synapse that helped the neuron fire
                         prevConnectedActiveSynapses.ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
                     }
                     else
                     {
                         #region increase the strength of every synapse that fires
+
+                        /*
+                         * If the neuron doesn't fire often enough we need to do something.
+                         * So the neuron will increase the strength of every synapse that was just active (in the previous iteration).
+                         * TODO: this needs more work so we have a parameter or something similar that will
+                         * determine if a neuron fires often enough or not.
+                         */
 
                         _synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(0, this)).ToList().
                             ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
