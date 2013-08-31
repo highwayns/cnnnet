@@ -1,7 +1,8 @@
 ﻿using cnnnet.Lib.GuidanceForces;
 using cnnnet.Lib.Neurons;
+using cnnnet.Lib.Utils;
 using System;
-using System.Diagnostics.Contracts;
+
 
 namespace cnnnet.ViewerWpf.Viewers
 {

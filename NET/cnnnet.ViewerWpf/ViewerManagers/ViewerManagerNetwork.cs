@@ -7,7 +7,7 @@ using cnnnet.Lib;
 using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using cnnnet.ViewerWpf.Viewers;
-using System.Diagnostics.Contracts;
+
 
 namespace cnnnet.ViewerWpf.ViewerManagers
 {
@@ -140,8 +140,8 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                 WriteableBitmap.DrawPolyline
                     (axonWaypoints.SelectMany(axonWaypoint => new[]
                     {
-                        axonWaypoint.X,
-                        axonWaypoint.Y
+                        axonWaypoint.Waypoint.X,
+                        axonWaypoint.Waypoint.Y
                     }).ToArray(),
                     neuron == NeuronSelected ? Colors.Blue : Colors.White);
 

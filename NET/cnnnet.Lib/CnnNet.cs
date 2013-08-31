@@ -5,7 +5,6 @@ using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace cnnnet.Lib
@@ -237,21 +236,6 @@ namespace cnnnet.Lib
 
             ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 4));
             _iteration = 0;
-        }
-
-        public void RegisterAxonWayPoints(Neuron neuron, IEnumerable<Point> axonWayPoints)
-        {
-            Contract.Requires<ArgumentNullException>(neuron != null);
-            Contract.Requires<ArgumentNullException>(axonWayPoints != null);
-            Contract.Requires<ArgumentException>(axonWayPoints.Any());
-
-            var axonWayPointsList = axonWayPoints.ToList();
-
-            for (int axonWayPointIndex = 0; axonWayPointIndex < axonWayPointsList.Count; axonWayPointIndex++)
-            {
-                var axonWayPoint = axonWayPointsList[axonWayPointIndex];
-                NeuronAxonWayPoints[axonWayPoint.Y, axonWayPoint.X] = new NeuronAxonWaypoint(axonWayPointIndex, neuron, axonWayPoint);
-            }
         }
 
         #endregion Methods

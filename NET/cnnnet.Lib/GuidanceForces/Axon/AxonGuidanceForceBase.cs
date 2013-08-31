@@ -1,7 +1,7 @@
 ﻿using cnnnet.Lib.Neurons;
 using cnnnet.Lib.Utils;
 using System;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 
 namespace cnnnet.Lib.GuidanceForces.Axon
@@ -13,23 +13,18 @@ namespace cnnnet.Lib.GuidanceForces.Axon
         protected override bool PreCheckLocation(int x, int y, Neuron neuron)
         {
             return base.PreCheckLocation(x, y, neuron)
-                && GetDistanceFromPreviousWayPoints(x, y, neuron) > Network.AxonMinDistanceToOtherWayPoints;
+                && GetDistanceFromOtherWayPoints(x, y) > Network.AxonMinDistanceToOtherWayPoints;
         }
 
-        private double GetDistanceFromPreviousWayPoints(int xPos, int yPos, Neuron neuron)
+        private double GetDistanceFromOtherWayPoints(int xPos, int yPos)
         {
-            if (neuron.AxonWayPoints.Count == 0)
-            {
-                return float.MaxValue;
-            }
-
             int range = Network.AxonGuidanceForceSearchPlainRange + 1;
             double result = range;
 
             int xMin = Math.Max(xPos - range, 0);
-            int xMax = Math.Min(xPos + range, neuron.CnnNet.Width);
+            int xMax = Math.Min(xPos + range, Network.Width);
             int yMin = Math.Max(yPos - range, 0);
-            int yMax = Math.Min(yPos + range, neuron.CnnNet.Height);
+            int yMax = Math.Min(yPos + range, Network.Height);
 
             for (int y = yMin; y < yMax; y++)
             {

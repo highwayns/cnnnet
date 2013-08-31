@@ -122,7 +122,7 @@
             </Border>
 
             <Border Margin="10,10" Background="#55FFFFFF" VerticalAlignment="Top" HorizontalAlignment="Left"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
                 <TextBlock Name="FpsCounter" FontFamily="Verdana" FontSize="14" />
             </Border>
         </Grid>

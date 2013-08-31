@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 
 namespace cnnnet.Lib.Neurons
@@ -18,11 +18,11 @@ namespace cnnnet.Lib.Neurons
 
         private readonly Random _random;
 
-        public readonly List<Point> AxonWayPoints;
+        public readonly List<NeuronAxonWaypoint> AxonWayPoints;
         private int _activityScore;
         public Point AxonTerminal;
-        protected CnnNet Network;
-        protected int IterationsSinceLastActivation;
+        private CnnNet Network;
+        private int IterationsSinceLastActivation;
         private bool _hasAxonReachedFinalPosition;
         private List<DendricSynapse> _synapses;
 
@@ -60,13 +60,9 @@ namespace cnnnet.Lib.Neurons
             {
                 return _hasAxonReachedFinalPosition;
             }
-            protected set
+            private set
             {
                 _hasAxonReachedFinalPosition = value;
-                if (_hasAxonReachedFinalPosition)
-                {
-                    Network.RegisterAxonWayPoints(this, AxonWayPoints);
-                }
             }
         }
 
@@ -169,7 +165,7 @@ namespace cnnnet.Lib.Neurons
 
         public void OnMoveTo(int newPosY, int newPosX)
         {
-            AxonWayPoints[0] = new Point(newPosX, newPosY);
+            AxonWayPoints[0] = new NeuronAxonWaypoint(1, this, new Point(newPosX, newPosY));
         }
 
         public void Process()
@@ -230,7 +226,7 @@ namespace cnnnet.Lib.Neurons
             }
         }
 
-        protected void AddDesirability()
+        private void AddDesirability()
         {
             AddProportionalRangedValue
                 (AxonTerminal.X, AxonTerminal.Y,
@@ -239,7 +235,7 @@ namespace cnnnet.Lib.Neurons
                 Network.NeuronDesirabilityMaxInfluence);
         }
 
-        protected void AddProportionalRangedValue(int posX, int posY, double[,] map, int width, int height, int influencedRange, double maxValue)
+        private void AddProportionalRangedValue(int posX, int posY, double[,] map, int width, int height, int influencedRange, double maxValue)
         {
             int xMin = Math.Max(posX - influencedRange, 0);
             int xMax = Math.Min(posX + influencedRange, width);
@@ -259,7 +255,7 @@ namespace cnnnet.Lib.Neurons
             }
         }
 
-        protected void AddUndesirability()
+        private void AddUndesirability()
         {
             AddProportionalRangedValue
                 (PosX, PosY, Network.NeuronUndesirabilityMap, Network.Width, Network.Height,
@@ -267,7 +263,7 @@ namespace cnnnet.Lib.Neurons
                 Network.NeuronUndesirabilityMaxInfluence * Math.Max(1, IterationsSinceLastActivation / Network.NeuronUndesirabilityMaxIterationsSinceLastActivation));
         }
 
-        protected bool ProcessGuideSoma()
+        private bool ProcessGuideSoma()
         {
             IEnumerable<Point> maxLocations;
             double maxScore;
@@ -295,7 +291,8 @@ namespace cnnnet.Lib.Neurons
 
         private bool ProcessGuideAxon()
         {
-            Point lastMaxLocation = AxonWayPoints.Last();
+            NeuronAxonWaypoint lastAxonWaypoint = AxonWayPoints.Last();
+            Point lastMaxLocation = lastAxonWaypoint.Waypoint;
 
             Point maxLocation;
             double maxScore;
@@ -323,7 +320,9 @@ namespace cnnnet.Lib.Neurons
             if (maxScore > lastMaxLocationScore
                 || AxonWayPoints.Count == 1)
             {
-                AxonWayPoints.Add(maxLocation);
+                var newAxonWaypoint = new NeuronAxonWaypoint(lastAxonWaypoint.Id + 1, this, maxLocation);
+                AxonWayPoints.Add(newAxonWaypoint);
+                Network.NeuronAxonWayPoints[maxLocation.Y, maxLocation.X] = newAxonWaypoint;
                 result = true;
             }
 
@@ -347,7 +346,8 @@ namespace cnnnet.Lib.Neurons
             var handler = AxonGuidanceForcesSumEvent;
             if (handler != null)
             {
-                handler(this, new AxonGuidanceForcesSumEventArgs(this, AxonWayPoints.Last().Y, AxonWayPoints.Last().X, score));
+                handler(this, new AxonGuidanceForcesSumEventArgs(this, 
+                    AxonWayPoints.Last().Waypoint.Y, AxonWayPoints.Last().Waypoint.X, score));
             }
         }
 
@@ -440,7 +440,7 @@ namespace cnnnet.Lib.Neurons
                 if (HasAxonReachedFinalPosition
                     && AxonTerminal == null)
                 {
-                    AxonTerminal = new Point(AxonWayPoints.Last().X, AxonWayPoints.Last().Y);
+                    AxonTerminal = new Point(AxonWayPoints.Last().Waypoint.X, AxonWayPoints.Last().Waypoint.Y);
                 }
 
                 #endregion
@@ -468,9 +468,9 @@ namespace cnnnet.Lib.Neurons
 
             Id = id;
             Network = cnnNet;
-            AxonWayPoints = new List<Point>
+            AxonWayPoints = new List<NeuronAxonWaypoint>
             {
-                new Point(PosX, PosY)
+                new NeuronAxonWaypoint(1, this, new Point(PosX, PosY))
             };
             AxonGuidanceForces = new ReadOnlyCollection<AxonGuidanceForceBase>(axonGuidanceForces.ToList());
             SomaGuidanceForces = new ReadOnlyCollection<SomaGuidanceForceBase>(somaGuidanceForces.ToList());

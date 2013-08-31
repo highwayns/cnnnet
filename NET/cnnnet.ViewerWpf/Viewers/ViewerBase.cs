@@ -1,5 +1,6 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using cnnnet.Lib.Utils;
+using System;
+
 namespace cnnnet.ViewerWpf.Viewers
 {
     public abstract class ViewerBase
