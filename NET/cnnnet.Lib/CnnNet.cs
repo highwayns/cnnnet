@@ -179,13 +179,34 @@ namespace cnnnet.Lib
             #region Generate Random Neurons
 
             var neurons = new List<Neuron>();
-            for (int index = 0; index < NeuronCount + InputNeuronCount; index++)
+
+            // generate input neurons
+            for (int index = 0; index < InputNeuronCount; index++)
             {
-                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, index >= NeuronCount);
+                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, true);
+
+                //int y = (50 * (index + 1) + 30) % Height;
+                //int x = (50 * (index + 1) + 30) / Height;
+
+                int baseIndex = 50 * (index + 1);
+                int y = (baseIndex + 30) % Height;
+                int x = baseIndex / Height + 30;
+                
+
+                neuron.MoveTo(y, x);
+                neuron.ResetMovedDistance();
+                neurons.Add(neuron);
+                NeuronPositionMap[neuron.PosY, neuron.PosX] = neuron;
+            }
+
+            // generate other neurons
+            for (int index = 0; index < NeuronCount; index++)
+            {
+                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, false);
 
                 do
                 {
-                    neuron.MoveTo(_random.Next(Height), _random.Next(Width));
+                    neuron.MoveTo(_random.Next(Height), _random.Next(Width - 40) + 40);
                 }
                 while (neurons.Any(n => n.PosX == neuron.PosX && n.PosY == neuron.PosY)
                     || Extensions.GetDistanceToNearestNeuron(neuron.PosY, neuron.PosX, neuron, this) <= MinDistanceBetweenNeurons);
@@ -199,7 +220,7 @@ namespace cnnnet.Lib
 
             #endregion Generate Random Neurons
 
-            _neuronsInput = neurons.GetRange(NeuronCount, InputNeuronCount).ToArray();
+            _neuronsInput = neurons.GetRange(0, InputNeuronCount).ToArray();
 
             ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 4));
             _iteration = 0;

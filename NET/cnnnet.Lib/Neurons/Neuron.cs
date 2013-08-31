@@ -175,6 +175,11 @@ namespace cnnnet.Lib.Neurons
                 Debugger.Break();
             }
 
+            if (IsInputNeuron && Network.Iteration < Network.InputNeuronDelayIterationsBeforeExtendingAxon)
+            {
+                return;
+            }
+
             bool movedToHigherDesirability = false;
             if (HasSomaReachedFinalPosition)
             {

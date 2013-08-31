@@ -8,7 +8,6 @@ namespace cnnnet.Lib.ActiveNeuronGenerator
     {
         #region Fields
 
-        private bool _shouldReturnActive = true;
         private readonly List<Neuron> _availableInputNeuron;
         private readonly int _activeNeuronCount;
 
@@ -21,16 +20,12 @@ namespace cnnnet.Lib.ActiveNeuronGenerator
         public IEnumerable<Neuron> GetActiveNeurons()
         {
             var result = new List<Neuron>();
-            _shouldReturnActive = !_shouldReturnActive;
 
-            if (_shouldReturnActive)
+            for (int i = 0; i < _activeNeuronCount; i++)
             {
-                for (int i = 0; i < _activeNeuronCount; i++)
-                {
-                    result.Add(_availableInputNeuron[(_currentIndex + i) % _availableInputNeuron.Count]);
-                }
-                _currentIndex = (_currentIndex + _activeNeuronCount) % _availableInputNeuron.Count;
+                result.Add(_availableInputNeuron[(_currentIndex + i) % _availableInputNeuron.Count]);
             }
+            _currentIndex = (_currentIndex + _activeNeuronCount) % _availableInputNeuron.Count;
 
             return result;
         }

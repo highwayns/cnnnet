@@ -2,7 +2,7 @@
 {
     public partial class CnnNet
     {
-        public int NeuronCount = 80;
+        public int NeuronCount = 130;
 
         /// <summary>
         /// Desirability influence distance
@@ -32,7 +32,9 @@
         /// <summary>
         /// How many input neurons we should generate
         /// </summary>
-        public int InputNeuronCount = 20;
+        public int InputNeuronCount = 10;
+
+        public int InputNeuronDelayIterationsBeforeExtendingAxon = 2;
 
         /// <summary>
         /// What is the maximum distance that a neuron can move to higher desirability (should be NeuronHigherDesirabilitySearchPlainRange?)
@@ -74,7 +76,7 @@
         /// <summary>
         /// The minimum distance allowed between the current found waypoint and other neuron waypoints
         /// </summary>
-        public int AxonMinDistanceToOtherWayPoints = 15;
+        public int AxonMinDistanceToOtherWayPoints = 5;
         
         public int NeuronIsActiveMinimumActivityScore = 3;
 
