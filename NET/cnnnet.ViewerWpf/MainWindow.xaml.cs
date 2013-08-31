@@ -24,6 +24,8 @@ namespace cnnnet.ViewerWpf
     {
         #region Fields
 
+        private bool _currentNetworkIterationDisplayed;
+
         private Thread _networkProcessThread;
         private CnnNet _network;
         private Neuron _selectedNeuron;
@@ -159,6 +161,8 @@ namespace cnnnet.ViewerWpf
             while (_closeRequested == false)
             {
                 Network.Process();
+                _currentNetworkIterationDisplayed = false;
+                WaitFor(() => _currentNetworkIterationDisplayed == true);
             }
 
             _closeRequested = false;
@@ -166,6 +170,11 @@ namespace cnnnet.ViewerWpf
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
+            if (_currentNetworkIterationDisplayed == true)
+            {
+                return;
+            }
+
             var mousePosition = Mouse.GetPosition(ImageNetwork);
 
             // Wrap updates in a GetContext call, to prevent invalidation and nested locking/unlocking during this block
@@ -197,6 +206,8 @@ namespace cnnnet.ViewerWpf
             _lowestFrameTime = Math.Min(_lowestFrameTime, elapsedMilliseconds);
             FpsCounter.Text = string.Format("FPS: {0:0.0} / Max: {1:0.0}", 1000.0 / elapsedMilliseconds, 1000.0 / _lowestFrameTime);
             _lastTime = timeNow;
+
+            _currentNetworkIterationDisplayed = true;
         }
 
         private void OnButtonStartClick(object sender, RoutedEventArgs e)
@@ -321,6 +332,14 @@ namespace cnnnet.ViewerWpf
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void WaitFor(Func<bool> condition)
+        {
+            while (condition() == false)
+            {
+                Thread.Sleep(10);
             }
         }
 
