@@ -175,7 +175,8 @@ namespace cnnnet.Lib.Neurons
                 Debugger.Break();
             }
 
-            if (IsInputNeuron && Network.Iteration < Network.InputNeuronDelayIterationsBeforeExtendingAxon)
+            if (IsInputNeuron
+                && Network.Iteration < Network.InputNeuronDelayIterationsBeforeExtendingAxon)
             {
                 return;
             }
@@ -389,7 +390,7 @@ namespace cnnnet.Lib.Neurons
 
                 if (IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
                 {
-                    #region Increase ActivityScore with active synapses count
+                    #region Calculate ActivityScore based on active synapses count from the last 'NeuronActivityHistoryLength' iterations
 
                     // Filter only the connected synapses to previously active neurons
                     var prevConnectedActiveSynapses =
@@ -406,7 +407,9 @@ namespace cnnnet.Lib.Neurons
                     if (ActivityScore >= Network.NeuronIsActiveMinimumActivityScore)
                     {
                         SetIsActive(true);
-                        ActivityScore = 0;
+                        ActivityScore = 0; /* BUG - because activity score is recalculated on every iterations. 
+                                            * So this will have no efect on subsequent iterations
+                                            * (ActivityScore is not accumulated - it is recalculated from the last 'NeuronActivityHistoryLength' iterations). */
                         // increase the strength of every synapse that helped the neuron fire
                         prevConnectedActiveSynapses.ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
                     }
@@ -433,6 +436,12 @@ namespace cnnnet.Lib.Neurons
                 {
                     #region decrease the strength of synapses that fire after the spike (during NeuronActivityIdleIterations)
 
+                    /*
+                     * BUG - because the strength of the synapses that fire are decreased multiple times.
+                     * Also, the increase in strength from activation is undone here because this code doesn't 
+                     * take into account the fact that some of those neurons that fires just helped the current 
+                     * neuron to fire just 1 iteration back
+                     */
                     for (int iterationBack = 0; iterationBack < Network.NeuronActivityIdleIterations - IterationsSinceLastActivation; iterationBack++)
                     {
                         _synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(iterationBack, this)).ToList().

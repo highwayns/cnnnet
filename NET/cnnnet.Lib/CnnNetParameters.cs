@@ -82,7 +82,8 @@
 
         /// <summary>
         /// For how many iterations do we hold the neuronal activity.
-        /// This also means that only the last 10 iterations are going to be used for neuronal plasticity
+        /// This also means that only the last 'NeuronActivityHistoryLength' iterations are going to be used 
+        /// for neuronal plasticity
         /// </summary>
         public int NeuronActivityHistoryLength = 5;
 
