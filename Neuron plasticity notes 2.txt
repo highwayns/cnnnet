@@ -18,13 +18,14 @@ In order to perform the synapse plasticity operation we need the following param
 Implementation steps:
 
  1. Add synapses to new neurons within the dendric tree range (parameter 'NeuronDendricTreeRange').
- 2. If IterationsSinceLastActivation >= NeuronActivityIdleIterations (the neuron is capable of activation)
-	- True - Calculate ActivityScore based on active synapses count from the last 'NeuronActivityHistoryLength' iterations
-		IF ActivityScore >= NeuronIsActiveMinimumActivityScore
-			- True - Set neuron active
-				   - Increase the strength of the synapses that helped the neuron activate
-				   - clean the activation history
-			- 
+ 2. Calculate ActivityScore based on active synapses count from the last 'NeuronActivityHistoryLength' iterations
+ 3. If IterationsSinceLastActivation >= NeuronActivityIdleIterations (the neuron is capable of activation)
+	- True - IF ActivityScore >= NeuronIsActiveMinimumActivityScore
+				- True - Set neuron active
+					- Increase the strength of the synapses that helped the neuron activate
+					- clean the activation history
+				- False - Do nothing
+	- False - Decrease synaptic strength to all synapses that fire
 
 
 
