@@ -113,8 +113,8 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                 #region Draw Soma
 
                 var neuronIcon = neuron.IsActive
-                                      ? neuron.IsInputNeuron ? Resources.NeuronInputActive : Resources.NeuronActive
-                                      : neuron.IsInputNeuron ? Resources.NeuronInputIdle : Resources.NeuronIdle;
+                                      ? neuron.Type == NeuronType.Input ? Resources.NeuronInputActive : Resources.NeuronActive
+                                      : neuron.Type == NeuronType.Input ? Resources.NeuronInputIdle : Resources.NeuronIdle;
 
                 _neuronIconDestRect.X = neuron.PosX - neuronIcon.PixelWidth / 2;
                 _neuronIconDestRect.Y = neuron.PosY - neuronIcon.PixelHeight / 2;

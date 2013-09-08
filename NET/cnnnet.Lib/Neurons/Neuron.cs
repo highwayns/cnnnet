@@ -116,7 +116,7 @@ namespace cnnnet.Lib.Neurons
 			private set;
 		}
 
-		public bool IsInputNeuron
+		public NeuronType Type
 		{
 			get;
 			private set;
@@ -163,7 +163,7 @@ namespace cnnnet.Lib.Neurons
 				Debugger.Break();
 			}
 
-			if (IsInputNeuron
+			if (Type == NeuronType.Input
 				&& Network.Iteration < Network.InputNeuronDelayIterationsBeforeExtendingAxon)
 			{
 				return;
@@ -189,26 +189,31 @@ namespace cnnnet.Lib.Neurons
 				#endregion Neuron searches for better position
 			}
 
-			if (movedToHigherDesirability == false)
-			{
-				if (HasSomaReachedFinalPosition == false
-					||
-					(HasAxonReachedFinalPosition
-					&& IsActive == false))
-				{
-					IterationsSinceLastActivation++;
-					AddUndesirability();
+            IterationsSinceLastActivation++;
 
-				}
-
-				if (HasAxonReachedFinalPosition
-					&& IsActive)
-				{
-					IterationsSinceLastActivation = 0;
-					AddDesirability();
-				}
-			}
+            if (movedToHigherDesirability == false)
+            {
+                if (HasSomaReachedFinalPosition == false
+                    ||
+                    (HasAxonReachedFinalPosition
+                    && IsActive == false
+                    && IsNeuronCapableOfActivating()))
+                {
+                    AddUndesirability();
+                }
+                else if (HasAxonReachedFinalPosition
+                    && IsActive)
+                {
+                    IterationsSinceLastActivation = 0;
+                    AddDesirability();
+                }
+            }
 		}
+
+        private bool IsNeuronCapableOfActivating()
+        {
+            return IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations;
+        }
 
 		public void SetIsActive(bool isActive)
 		{
@@ -353,7 +358,7 @@ namespace cnnnet.Lib.Neurons
 		{
 			if (HasAxonReachedFinalPosition)
 			{
-				if (IsInputNeuron)
+				if (Type == NeuronType.Input)
 				{
 					return;
 				}
@@ -440,84 +445,6 @@ namespace cnnnet.Lib.Neurons
 			}
 		}
 
-		private void ProcessNeuronIsActive2()
-		{
-			SetIsActive(false);
-
-			#region Add new neurons to synapses
-
-			_synapses.AddRange
-				(Extensions.GetNeuronsWithAxonTerminalWithinRange(PosX, PosY, Network, Network.NeuronDendricTreeRange).
-				Where(neuron => _synapses.Any(synapse => synapse.PreSynapticNeuron == neuron) == false).
-				Select(neuron => new DendricSynapse
-				{
-					PreSynapticNeuron = neuron,
-					Strength = 0.0f
-				}));
-
-			#endregion
-
-			if (IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
-			{
-				#region Calculate ActivityScore based on active synapses count from the last 'NeuronActivityHistoryLength' iterations
-
-				// Filter only the connected synapses to previously active neurons
-				var prevConnectedActiveSynapses =
-					_synapses.Where(synapse => synapse.Strength >= Network.NeuronSynapseConnectedMinimumStrength
-											   && synapse.PreSynapticNeuron.GetWasActive(this)).ToList();
-
-				// increase neuron activity by the amount of active synapses
-				var activityScore = prevConnectedActiveSynapses.Count();
-
-				#endregion
-
-				#region Determine if neuron is active
-
-				if (activityScore >= Network.NeuronIsActiveMinimumActivityScore)
-				{
-					SetIsActive(true);
-					// increase the strength of every synapse that helped the neuron fire
-					prevConnectedActiveSynapses.ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
-				}
-				else
-				{
-					#region increase the strength of every synapse that fires
-
-					/*
-						 * If the neuron doesn't fire often enough we need to do something.
-						 * So the neuron will increase the strength of every synapse that was just active (in the previous iteration).
-						 * TODO: this needs more work so we have a parameter or something similar that will
-						 * determine if a neuron fires often enough or not.
-						 */
-
-					_synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(0)).ToList().
-						ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
-
-					#endregion
-				}
-
-				#endregion
-			}
-			else
-			{
-				#region decrease the strength of synapses that fire after the spike (during NeuronActivityIdleIterations)
-
-				/*
-					 * BUG - because the strength of the synapses that fire are decreased multiple times.
-					 * Also, the increase in strength from activation is undone here because this code doesn't 
-					 * take into account the fact that some of those neurons that fires just helped the current 
-					 * neuron to fire just 1 iteration back
-					 */
-				for (int iterationBack = 0; iterationBack < Network.NeuronActivityIdleIterations - IterationsSinceLastActivation; iterationBack++)
-				{
-					_synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(iterationBack)).ToList().
-						ForEach(synapse => synapse.Strength = Math.Max(synapse.Strength - Network.NeuronSynapseStrengthChangeAmount, 0));
-				}
-
-				#endregion
-			}
-		}
-
 		public void ResetMovedDistance()
 		{
 			MovedDistance = 0;
@@ -530,7 +457,7 @@ namespace cnnnet.Lib.Neurons
 		public Neuron(int id, CnnNet cnnNet, 
 			IEnumerable<AxonGuidanceForceBase> axonGuidanceForces, 
 			IEnumerable<SomaGuidanceForceBase> somaGuidanceForces,
-			bool isInputNeuron = false)
+			NeuronType type)
 		{
 			Contract.Requires<ArgumentException>(id >= 0);
 			Contract.Requires<ArgumentNullException>(cnnNet != null);
@@ -546,8 +473,8 @@ namespace cnnnet.Lib.Neurons
 			AxonGuidanceForces = new ReadOnlyCollection<AxonGuidanceForceBase>(axonGuidanceForces.ToList());
 			SomaGuidanceForces = new ReadOnlyCollection<SomaGuidanceForceBase>(somaGuidanceForces.ToList());
 
-			HasSomaReachedFinalPosition = isInputNeuron;
-			IsInputNeuron = isInputNeuron;
+            Type = type;
+			HasSomaReachedFinalPosition = Type == NeuronType.Input;
 
 			_synapses = new List<DendricSynapse>();
 			_synapsesActivationHistory = new FixedSizedQueue<DendricSynapse[]>(cnnNet.NeuronActivityHistoryLength);
