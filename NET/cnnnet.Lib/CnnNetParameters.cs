@@ -2,6 +2,23 @@
 {
     public partial class CnnNet
     {
+        /// <summary>
+        /// The minimum distance to any margin from a generated neuron
+        /// </summary>
+        public int NeuronGenerationMargin = 40;
+
+        /// <summary>
+        /// The minimum distance between a processing neuron and any input /output neuron
+        /// </summary>
+        public int NeuronProcessMarginFromInputAndOutputNeurons = 10;
+
+        /// <summary>
+        /// The minimum distance between input neurons
+        /// </summary>
+        public int NeuronInputMarginBetween = 50;
+
+
+
         public int NeuronCount = 130;
 
         /// <summary>

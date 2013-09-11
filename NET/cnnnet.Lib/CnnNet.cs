@@ -185,13 +185,9 @@ namespace cnnnet.Lib
             {
                 var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Input);
 
-                //int y = (50 * (index + 1) + 30) % Height;
-                //int x = (50 * (index + 1) + 30) / Height;
-
-                int baseIndex = 50 * (index + 1);
-                int y = (baseIndex + 30) % Height;
-                int x = baseIndex / Height + 30;
-                
+                int baseIndex = NeuronInputMarginBetween * (index + 1);
+                int y = (baseIndex + NeuronGenerationMargin) % Height;
+                int x = baseIndex / Height + NeuronGenerationMargin;
 
                 neuron.MoveTo(y, x);
                 neuron.ResetMovedDistance();
@@ -206,7 +202,8 @@ namespace cnnnet.Lib
 
                 do
                 {
-                    neuron.MoveTo(_random.Next(Height), _random.Next(Width - 40) + 40);
+                    neuron.MoveTo(_random.Next(Height - 2 * NeuronGenerationMargin) + NeuronGenerationMargin,
+                        _random.Next(Width - 2 * (NeuronGenerationMargin + NeuronProcessMarginFromInputAndOutputNeurons)) + NeuronGenerationMargin + NeuronProcessMarginFromInputAndOutputNeurons);
                 }
                 while (neurons.Any(n => n.PosX == neuron.PosX && n.PosY == neuron.PosY)
                     || Extensions.GetDistanceToNearestNeuron(neuron.PosY, neuron.PosX, neuron, this) <= MinDistanceBetweenNeurons);
