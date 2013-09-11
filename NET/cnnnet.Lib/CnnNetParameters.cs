@@ -22,6 +22,16 @@
         public int NeuronCount = 130;
 
         /// <summary>
+        /// How many input neurons we should generate
+        /// </summary>
+        public int InputNeuronCount = 6;
+
+        /// <summary>
+        /// How many output neurons we should generate
+        /// </summary>
+        public int OutputNeuronCount = 6;
+
+        /// <summary>
         /// Desirability influence distance
         /// </summary>
         public int NeuronDesirabilityInfluenceRange = 40;
@@ -45,11 +55,6 @@
         /// The minimum distance allowed between neurons
         /// </summary>
         public int MinDistanceBetweenNeurons = 15;
-
-        /// <summary>
-        /// How many input neurons we should generate
-        /// </summary>
-        public int InputNeuronCount = 6;
 
         public int InputNeuronDelayIterationsBeforeExtendingAxon = 2;
 

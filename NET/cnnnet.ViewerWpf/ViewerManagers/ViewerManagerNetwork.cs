@@ -113,8 +113,12 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                 #region Draw Soma
 
                 var neuronIcon = neuron.IsActive
-                                      ? neuron.Type == NeuronType.Input ? Resources.NeuronInputActive : Resources.NeuronActive
-                                      : neuron.Type == NeuronType.Input ? Resources.NeuronInputIdle : Resources.NeuronIdle;
+                                      ? neuron.Type == NeuronType.Input || neuron.Type == NeuronType.Output
+                                        ? Resources.NeuronInputActive
+                                        : Resources.NeuronActive
+                                      : neuron.Type == NeuronType.Input || neuron.Type == NeuronType.Output
+                                        ? Resources.NeuronInputIdle
+                                        : Resources.NeuronIdle;
 
                 _neuronIconDestRect.X = neuron.PosX - neuronIcon.PixelWidth / 2;
                 _neuronIconDestRect.Y = neuron.PosY - neuronIcon.PixelHeight / 2;
@@ -129,7 +133,6 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                 {
                     WriteableBitmap.Blit(_neuronIconDestRect, Resources.NeuronHover, _neuronIconSourceRect);
                 }
-
 
                 #endregion
 

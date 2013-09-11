@@ -180,7 +180,8 @@ namespace cnnnet.Lib
 
             var neurons = new List<Neuron>();
 
-            // generate input neurons
+            #region generate input neurons
+
             for (int index = 0; index < InputNeuronCount; index++)
             {
                 var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Input);
@@ -195,7 +196,28 @@ namespace cnnnet.Lib
                 NeuronPositionMap[neuron.PosY, neuron.PosX] = neuron;
             }
 
-            // generate other neurons
+            #endregion
+
+            #region generate output neurons
+
+            for (int index = 0; index < OutputNeuronCount; index++)
+            {
+                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Output);
+
+                int baseIndex = NeuronInputMarginBetween * (index + 1);
+                int y = (baseIndex + NeuronGenerationMargin) % Height;
+                int x = Width - (baseIndex / Height + NeuronGenerationMargin);
+
+                neuron.MoveTo(y, x);
+                neuron.ResetMovedDistance();
+                neurons.Add(neuron);
+                NeuronPositionMap[neuron.PosY, neuron.PosX] = neuron;
+            }
+
+            #endregion
+
+            #region generate other neurons
+
             for (int index = 0; index < NeuronCount; index++)
             {
                 var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Process);
@@ -212,6 +234,8 @@ namespace cnnnet.Lib
                 neurons.Add(neuron);
                 NeuronPositionMap[neuron.PosY, neuron.PosX] = neuron;
             }
+
+            #endregion
 
             _neurons = neurons.ToArray();
 
