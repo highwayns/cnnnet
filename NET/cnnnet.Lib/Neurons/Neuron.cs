@@ -154,6 +154,10 @@ namespace cnnnet.Lib.Neurons
 		public void OnMoveTo(int newPosY, int newPosX)
 		{
 			AxonWayPoints[0] = new NeuronAxonWaypoint(1, this, new Point(newPosX, newPosY));
+			if (Type == NeuronType.Output)
+			{
+				AxonTerminal = AxonWayPoints[0].Waypoint;
+			}
 		}
 
 		public void Process()
@@ -189,31 +193,31 @@ namespace cnnnet.Lib.Neurons
 				#endregion Neuron searches for better position
 			}
 
-            IterationsSinceLastActivation++;
+			IterationsSinceLastActivation++;
 
-            if (movedToHigherDesirability == false)
-            {
-                if (HasSomaReachedFinalPosition == false
-                    ||
-                    (HasAxonReachedFinalPosition
-                    && IsActive == false
-                    && IsNeuronCapableOfActivating()))
-                {
-                    AddUndesirability();
-                }
-                else if (HasAxonReachedFinalPosition
-                    && IsActive)
-                {
-                    IterationsSinceLastActivation = 0;
-                    AddDesirability();
-                }
-            }
+			if (movedToHigherDesirability == false)
+			{
+				if (HasSomaReachedFinalPosition == false
+					||
+					(HasAxonReachedFinalPosition
+					&& IsActive == false
+					&& IsNeuronCapableOfActivating()))
+				{
+					AddUndesirability();
+				}
+				else if (HasAxonReachedFinalPosition
+					&& IsActive)
+				{
+					IterationsSinceLastActivation = 0;
+					AddDesirability();
+				}
+			}
 		}
 
-        private bool IsNeuronCapableOfActivating()
-        {
-            return IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations;
-        }
+		private bool IsNeuronCapableOfActivating()
+		{
+			return IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations;
+		}
 
 		public void SetIsActive(bool isActive)
 		{
@@ -401,7 +405,7 @@ namespace cnnnet.Lib.Neurons
 
 			#region 2. Add activated neurons to activation history
 			
-            var lastIterationActiveSynapses = _synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(0)).ToArray();
+			var lastIterationActiveSynapses = _synapses.Where(synapse => synapse.PreSynapticNeuron.GetWasActive(0)).ToArray();
 			_synapsesActivationHistory.Enqueue(lastIterationActiveSynapses);
 
 			#endregion
@@ -434,14 +438,14 @@ namespace cnnnet.Lib.Neurons
 				}
 				else
 				{
-                    // increase the strength of every synapse that fired in the last iteration
-                    lastIterationActiveSynapses.ToList().ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
+					// increase the strength of every synapse that fired in the last iteration
+					lastIterationActiveSynapses.ToList().ForEach(synapse => synapse.Strength = Math.Min(synapse.Strength + Network.NeuronSynapseStrengthChangeAmount, 1));
 				}
 			}
 			else
 			{
-                // Decrease synaptic strength to all synapses that fired in the last iteration
-                lastIterationActiveSynapses.ToList().ForEach(synapse => synapse.Strength = Math.Max(synapse.Strength - Network.NeuronSynapseStrengthChangeAmount, 0));
+				// Decrease synaptic strength to all synapses that fired in the last iteration
+				lastIterationActiveSynapses.ToList().ForEach(synapse => synapse.Strength = Math.Max(synapse.Strength - Network.NeuronSynapseStrengthChangeAmount, 0));
 			}
 		}
 
@@ -473,8 +477,9 @@ namespace cnnnet.Lib.Neurons
 			AxonGuidanceForces = new ReadOnlyCollection<AxonGuidanceForceBase>(axonGuidanceForces.ToList());
 			SomaGuidanceForces = new ReadOnlyCollection<SomaGuidanceForceBase>(somaGuidanceForces.ToList());
 
-            Type = type;
-			HasSomaReachedFinalPosition = Type == NeuronType.Input;
+			Type = type;
+			HasSomaReachedFinalPosition = Type == NeuronType.Input || Type == NeuronType.Output;
+			HasAxonReachedFinalPosition = Type == NeuronType.Output;
 
 			_synapses = new List<DendricSynapse>();
 			_synapsesActivationHistory = new FixedSizedQueue<DendricSynapse[]>(cnnNet.NeuronActivityHistoryLength);

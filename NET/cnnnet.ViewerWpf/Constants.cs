@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public const int NetworkWidth = 500;
+        public const int NetworkWidth = 200;
         public const int NetworkHeight = 400;
 
         public const int AxonGuidanceForcesImageWidth = 100;

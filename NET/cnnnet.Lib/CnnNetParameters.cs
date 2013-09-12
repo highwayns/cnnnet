@@ -19,7 +19,7 @@
 
 
 
-        public int NeuronCount = 130;
+        public int NeuronCount = 60;
 
         /// <summary>
         /// How many input neurons we should generate
