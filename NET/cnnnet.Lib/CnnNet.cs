@@ -19,6 +19,7 @@ namespace cnnnet.Lib
 
         private Neuron[] _neurons;
         private Neuron[] _neuronsInput;
+        private Neuron[] _neuronsOutput;
 
         public readonly int Width;
         public readonly int Height;
@@ -44,6 +45,18 @@ namespace cnnnet.Lib
         {
             get;
             set;
+        }
+
+        public IActiveNeuronGenerator NormalActiveNeuronGenerator
+        {
+            get;
+            private set;
+        }
+
+        public IActiveNeuronGenerator BindedActiveNeuronGenerator
+        {
+            get;
+            private set;
         }
 
         public Neuron[] Neurons
@@ -241,9 +254,20 @@ namespace cnnnet.Lib
 
             #endregion Generate Random Neurons
 
-            _neuronsInput = neurons.GetRange(0, InputNeuronCount).ToArray();
+            _neuronsInput = neurons.Take(InputNeuronCount).ToArray();
+            _neuronsOutput = neurons.Skip(InputNeuronCount).Take(OutputNeuronCount).ToArray();
 
-            ActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 3));
+            var inputOutputNeuronBindings = new List<Tuple<Neuron, Neuron>>();
+            for (int index = 0; index < InputNeuronCount; index++)
+            {
+                inputOutputNeuronBindings.Add(new Tuple<Neuron,Neuron>(_neuronsInput.ElementAt(index), _neuronsOutput.ElementAt(index)));
+            }
+            
+            BindedActiveNeuronGenerator = new InputOuputBindedActivityGenerator(inputOutputNeuronBindings.ToArray());
+            NormalActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 3));
+
+            ActiveNeuronGenerator = NormalActiveNeuronGenerator;
+
             _iteration = 0;
         }
 

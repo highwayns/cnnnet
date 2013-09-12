@@ -343,6 +343,13 @@ namespace cnnnet.ViewerWpf
             }
         }
 
+        private void OnCboxGenerateInputClick(object sender, RoutedEventArgs e)
+        {
+            Network.ActiveNeuronGenerator = cboxGenerateInput.IsChecked.Value
+                ? Network.NormalActiveNeuronGenerator
+                : Network.BindedActiveNeuronGenerator;
+        }
+
         #endregion
 
         #region Instance
