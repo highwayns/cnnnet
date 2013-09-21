@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveNeuronGenerator\InputOuputBindedActivityGenerator.cs" />
+    <Compile Include="ActiveNeuronGenerator\PushPullBoxActivityGenerator.cs" />
     <Compile Include="FixedSizedQueue.cs" />
     <Compile Include="GuidanceForces\Axon\AxonDesirabilityMapGuidanceForce.cs" />
     <Compile Include="GuidanceForces\Axon\AxonFollowExistingGuidanceForce.cs" />

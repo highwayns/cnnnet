@@ -15,11 +15,11 @@
         /// <summary>
         /// The minimum distance between input neurons
         /// </summary>
-        public int NeuronInputMarginBetween = 50;
+        public int NeuronInputMarginBetween = 30;
 
 
 
-        public int NeuronCount = 160;
+        public int NeuronCount = 100;
 
         /// <summary>
         /// How many input neurons we should generate

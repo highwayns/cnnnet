@@ -262,8 +262,8 @@ namespace cnnnet.Lib
             {
                 inputOutputNeuronBindings.Add(new Tuple<Neuron,Neuron>(_neuronsInput.ElementAt(index), _neuronsOutput.ElementAt(index)));
             }
-            
-            BindedActiveNeuronGenerator = new InputOuputBindedActivityGenerator(inputOutputNeuronBindings.ToArray());
+
+            BindedActiveNeuronGenerator = new PushPullBoxActivityGenerator(inputOutputNeuronBindings.ToArray());
             NormalActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 3));
 
             ActiveNeuronGenerator = NormalActiveNeuronGenerator;
