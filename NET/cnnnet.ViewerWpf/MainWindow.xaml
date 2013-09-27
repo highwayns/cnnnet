@@ -103,7 +103,7 @@
                     </Border>
                 </Grid>
             </GroupBox>
-            <CheckBox x:Name="cboxGenerateInput" Content="Generate Input" HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="5" VerticalAlignment="Top" IsChecked="True" Click="OnCboxGenerateInputClick"/>
+            <CheckBox x:Name="cboxGenerateInput" Content="Generate Input" HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="5" VerticalAlignment="Top" IsChecked="False" Click="OnCboxGenerateInputClick"/>
 
         </Grid>
 

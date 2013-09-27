@@ -21,7 +21,6 @@ namespace cnnnet.Lib.Neurons
 		public readonly List<NeuronAxonWaypoint> AxonWayPoints;
 		public Point AxonTerminal;
 		private CnnNet Network;
-		private int IterationsSinceLastActivation;
 		private bool _hasAxonReachedFinalPosition;
 		
 		private List<DendricSynapse> _synapses;
@@ -129,6 +128,12 @@ namespace cnnnet.Lib.Neurons
 		}
 
 		public double MovedDistance
+		{
+			get;
+			private set;
+		}
+
+		public int IterationsSinceLastActivation
 		{
 			get;
 			private set;

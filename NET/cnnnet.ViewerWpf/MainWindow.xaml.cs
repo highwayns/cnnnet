@@ -134,6 +134,10 @@ namespace cnnnet.ViewerWpf
 
             #endregion
 
+            Network.ActiveNeuronGenerator = cboxGenerateInput.IsChecked.Value
+                ? Network.NormalActiveNeuronGenerator
+                : Network.BindedActiveNeuronGenerator;
+
             CompositionTarget.Rendering += OnCompositionTargetRendering;
         }
 

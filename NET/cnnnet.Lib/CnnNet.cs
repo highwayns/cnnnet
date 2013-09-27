@@ -128,7 +128,7 @@ namespace cnnnet.Lib
 
         private void RecordNeuronalActivity()
         {
-            if (NeuronActivityHistory.Count == NeuronActivityHistoryLength)
+            while (NeuronActivityHistory.Count >= NeuronActivityHistoryLength)
             {
                 NeuronActivityHistory.RemoveAt(0);
             }
@@ -263,7 +263,7 @@ namespace cnnnet.Lib
                 inputOutputNeuronBindings.Add(new Tuple<Neuron,Neuron>(_neuronsInput.ElementAt(index), _neuronsOutput.ElementAt(index)));
             }
 
-            BindedActiveNeuronGenerator = new PushPullBoxActivityGenerator(inputOutputNeuronBindings.ToArray());
+            BindedActiveNeuronGenerator = new PushPullBoxActivityGenerator(this, inputOutputNeuronBindings.ToArray());
             NormalActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 3));
 
             ActiveNeuronGenerator = NormalActiveNeuronGenerator;
