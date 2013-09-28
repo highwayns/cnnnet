@@ -212,6 +212,7 @@ namespace cnnnet.ViewerWpf
             _lastTime = timeNow;
 
             _currentNetworkIterationDisplayed = true;
+            labelIteration.Content = string.Format("Iteration: {0}", _network.Iteration);
         }
 
         private void OnButtonStartClick(object sender, RoutedEventArgs e)
@@ -276,6 +277,7 @@ namespace cnnnet.ViewerWpf
             ButtonReset.IsEnabled = false;
 
             Network.Process();
+            _currentNetworkIterationDisplayed = false;
 
             ButtonStart.IsEnabled = true;
             ButtonStop.IsEnabled = false;

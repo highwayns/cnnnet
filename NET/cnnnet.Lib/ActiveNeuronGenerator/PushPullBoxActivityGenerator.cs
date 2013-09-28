@@ -13,8 +13,9 @@ namespace cnnnet.Lib.ActiveNeuronGenerator
 
         private CnnNet _network;
         private bool _boxPosition;
-        private IEnumerable<Tuple<Neuron, Neuron>> _inputOutputNeuronBindings;
         private int _remainingActivations;
+        private IEnumerable<Neuron> _inputNeurons;
+        private IEnumerable<Neuron> _outputNeurons;
 
         #endregion
 
@@ -26,42 +27,47 @@ namespace cnnnet.Lib.ActiveNeuronGenerator
 
             if (_remainingActivations > 0)
             {
-                var activeNeuronBindings = _boxPosition == false
-                    ? _inputOutputNeuronBindings.Skip(3).Take(3).ToArray()
-                    : _inputOutputNeuronBindings.Take(3).ToArray();
+                var retValueList = _boxPosition == false
+                    ? _inputNeurons.Skip(3).Take(3).ToList()
+                    : _inputNeurons.Take(3).ToList();
 
-                var retValueList = activeNeuronBindings.Select(activeNeuronBinding => activeNeuronBinding.Item1).ToList();
-
-                retValueList.AddRange(_inputOutputNeuronBindings
-                    .Except(activeNeuronBindings)
-                    .Select(inactiveNeuronBinding => inactiveNeuronBinding.Item1)
-                    .Where(neuron => neuron.IterationsSinceLastActivation >= _network.NeuronInputBaseLineActivation));
+                retValueList.AddRange(_inputNeurons
+                    .Except(retValueList)
+                    .Where(neuron => neuron.IterationsSinceLastActivation + 1 /*Add 1 because the neuron isn't active in this iteration also*/
+                        >= _network.NeuronInputBaseLineActivation));
 
                 retValue = retValueList.Distinct().ToArray();
             }
             else
             {
-                retValue =  _inputOutputNeuronBindings
-                    .Select(inputOutputNeuronBinding => inputOutputNeuronBinding.Item1)
-                    .Where(neuron => neuron.IterationsSinceLastActivation >= _network.NeuronInputBaseLineActivation).ToArray();
+                retValue =  _inputNeurons
+                    .Where(neuron => neuron.IterationsSinceLastActivation + 1  /*Add 1 because the neuron isn't active in this iteration also*/
+                        >= _network.NeuronInputBaseLineActivation).ToArray();
             }
 
             // update box position
             var newBoxPosition = _boxPosition;
-            if (_inputOutputNeuronBindings.Take(3).All(binding => retValue.Contains(binding.Item2)))
+            var shouldMoveToPos1 = _outputNeurons.Take(3).Count(neuron => neuron.IsActive) >= 2;
+            var shouldMoveToPos2 = _outputNeurons.Skip(3).Take(3).Count(neuron => neuron.IsActive) >= 2;
+
+            if (shouldMoveToPos1 != shouldMoveToPos2)
             {
-                newBoxPosition = false;
-            }
-            else if (_inputOutputNeuronBindings.Skip(3).Take(3).All(binding => retValue.Contains(binding.Item2)))
-            {
-                newBoxPosition = true;
+                if (shouldMoveToPos1)
+                {
+                    newBoxPosition = false;
+                }
+                else if (shouldMoveToPos2)
+                {
+                    newBoxPosition = true;
+                }
             }
 
-            if (newBoxPosition != _boxPosition)
+            if (_boxPosition != newBoxPosition)
             {
                 _remainingActivations = _network.NeuronInputMaxConsecutiveActivations;
+                _boxPosition = newBoxPosition;
             }
-            else
+            else if (_remainingActivations > 0)
             {
                 _remainingActivations--;
             }
@@ -73,13 +79,16 @@ namespace cnnnet.Lib.ActiveNeuronGenerator
 
         #region Instance
 
-        public PushPullBoxActivityGenerator(CnnNet network, IEnumerable<Tuple<Neuron, Neuron>> inputOutputNeuronBindings)
+        public PushPullBoxActivityGenerator(CnnNet network, 
+            IEnumerable<Neuron> inputNeurons, IEnumerable<Neuron> outputNeurons)
         {
             Contract.Requires<ArgumentNullException>(network != null);
-            Contract.Requires<ArgumentNullException>(inputOutputNeuronBindings != null);
+            Contract.Requires<ArgumentNullException>(inputNeurons != null);
+            Contract.Requires<ArgumentNullException>(outputNeurons != null);
 
             _network = network;
-            _inputOutputNeuronBindings = inputOutputNeuronBindings;
+            _inputNeurons = inputNeurons;
+            _outputNeurons = outputNeurons;
 
             _remainingActivations = _network.NeuronInputMaxConsecutiveActivations;
         }

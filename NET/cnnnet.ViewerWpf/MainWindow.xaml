@@ -30,11 +30,20 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0">
-                        <Button x:Name="ButtonStart" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonStartClick" />
-                        <Button x:Name="ButtonStop" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonStopClick" IsEnabled="False"/>
-                        <Button x:Name="ButtonNext" Content="Next" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonNextClick"/>
-                    </StackPanel>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Button x:Name="ButtonStart" Content="Start" Grid.Column="0" Width="75" Margin="5" Click="OnButtonStartClick" />
+                        <Button x:Name="ButtonStop" Content="Stop" Grid.Column="1" Width="75" Margin="5" Click="OnButtonStopClick" IsEnabled="False"/>
+                        <Button x:Name="ButtonNext" Content="Next" Grid.Column="2" Width="75" Margin="5" Click="OnButtonNextClick"/>
+                        <Label x:Name="labelIteration" Grid.Column="4" />
+                    </Grid>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="1">
                         <Button x:Name="ButtonRestart" Content="Restart" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5" Click="OnButtonRestartClick"/>

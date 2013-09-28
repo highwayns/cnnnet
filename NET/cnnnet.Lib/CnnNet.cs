@@ -195,11 +195,13 @@ namespace cnnnet.Lib
 
             #region generate input neurons
 
+            int generatedNeuronId = 0;
+
             for (int index = 0; index < InputNeuronCount; index++)
             {
-                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Input);
+                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Input);
 
-                int baseIndex = NeuronInputMarginBetween * (index + 1);
+                int baseIndex = NeuronInputMarginBetween * (index + 1) + 60;
                 int y = (baseIndex + NeuronGenerationMargin) % Height;
                 int x = baseIndex / Height + NeuronGenerationMargin;
 
@@ -215,9 +217,9 @@ namespace cnnnet.Lib
 
             for (int index = 0; index < OutputNeuronCount; index++)
             {
-                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Output);
+                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Output);
 
-                int baseIndex = NeuronInputMarginBetween * (index + 1);
+                int baseIndex = NeuronInputMarginBetween * (index + 1) + 60;
                 int y = (baseIndex + NeuronGenerationMargin) % Height;
                 int x = Width - (baseIndex / Height + NeuronGenerationMargin);
 
@@ -233,7 +235,7 @@ namespace cnnnet.Lib
 
             for (int index = 0; index < NeuronCount; index++)
             {
-                var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Process);
+                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Process);
 
                 do
                 {
@@ -257,13 +259,13 @@ namespace cnnnet.Lib
             _neuronsInput = neurons.Take(InputNeuronCount).ToArray();
             _neuronsOutput = neurons.Skip(InputNeuronCount).Take(OutputNeuronCount).ToArray();
 
-            var inputOutputNeuronBindings = new List<Tuple<Neuron, Neuron>>();
-            for (int index = 0; index < InputNeuronCount; index++)
-            {
-                inputOutputNeuronBindings.Add(new Tuple<Neuron,Neuron>(_neuronsInput.ElementAt(index), _neuronsOutput.ElementAt(index)));
-            }
+            //var inputOutputNeuronBindings = new List<Tuple<Neuron, Neuron>>();
+            //for (int index = 0; index < InputNeuronCount; index++)
+            //{
+            //    inputOutputNeuronBindings.Add(new Tuple<Neuron,Neuron>(_neuronsInput.ElementAt(index), _neuronsOutput.ElementAt(index)));
+            //}
 
-            BindedActiveNeuronGenerator = new PushPullBoxActivityGenerator(this, inputOutputNeuronBindings.ToArray());
+            BindedActiveNeuronGenerator = new PushPullBoxActivityGenerator(this, _neuronsInput, _neuronsOutput);
             NormalActiveNeuronGenerator = new SequentialActiveInputNeuronGenerator(_neuronsInput, Math.Min(_neuronsInput.Length, 3));
 
             ActiveNeuronGenerator = NormalActiveNeuronGenerator;

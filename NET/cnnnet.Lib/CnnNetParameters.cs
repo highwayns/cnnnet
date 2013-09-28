@@ -20,11 +20,11 @@
         /// <summary>
         /// After how many iterations we force an input neuron to fire
         /// </summary>
-        public int NeuronInputBaseLineActivation = 4;
+        public int NeuronInputBaseLineActivation = 6;
 
-        public int NeuronInputMaxConsecutiveActivations = 6;
+        public int NeuronInputMaxConsecutiveActivations = 3;
 
-        public int NeuronCount = 70;
+        public int NeuronCount = 100;
 
         /// <summary>
         /// How many input neurons we should generate

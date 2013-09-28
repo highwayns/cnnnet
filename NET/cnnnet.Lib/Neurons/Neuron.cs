@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace cnnnet.Lib.Neurons
 {
-	[DebuggerDisplay("Id={Id} PosX={PosX} PosY={PosY}")]
+	[DebuggerDisplay("Id={Id} PosX={PosX} PosY={PosY} Type={Type}")]
 	public class Neuron
 	{
 		#region Fields
@@ -22,6 +22,7 @@ namespace cnnnet.Lib.Neurons
 		public Point AxonTerminal;
 		private CnnNet Network;
 		private bool _hasAxonReachedFinalPosition;
+		private int _lastActivationNetworkIteration;
 		
 		private List<DendricSynapse> _synapses;
 		private FixedSizedQueue<DendricSynapse[]> _synapsesActivationHistory;
@@ -135,8 +136,10 @@ namespace cnnnet.Lib.Neurons
 
 		public int IterationsSinceLastActivation
 		{
-			get;
-			private set;
+			get
+			{
+				return Network.Iteration - _lastActivationNetworkIteration;
+			}
 		}
 
 		#endregion Properties
@@ -198,8 +201,6 @@ namespace cnnnet.Lib.Neurons
 				#endregion Neuron searches for better position
 			}
 
-			IterationsSinceLastActivation++;
-
 			if (movedToHigherDesirability == false)
 			{
 				if (HasSomaReachedFinalPosition == false
@@ -213,7 +214,6 @@ namespace cnnnet.Lib.Neurons
 				else if (HasAxonReachedFinalPosition
 					&& IsActive)
 				{
-					IterationsSinceLastActivation = 0;
 					AddDesirability();
 				}
 			}
@@ -229,7 +229,7 @@ namespace cnnnet.Lib.Neurons
 			IsActive = isActive;
 			if (isActive)
 			{
-				IterationsSinceLastActivation = 0;
+				_lastActivationNetworkIteration = Network.Iteration;
 			}
 		}
 
