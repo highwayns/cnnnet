@@ -22,6 +22,9 @@
         /// </summary>
         public int NeuronInputBaseLineActivation = 6;
 
+        /// <summary>
+        /// How many times can an input neuron activate consecutively
+        /// </summary>
         public int NeuronInputMaxConsecutiveActivations = 3;
 
         public int NeuronCount = 100;
@@ -105,6 +108,9 @@
         /// </summary>
         public int AxonMinDistanceToOtherWayPoints = 5;
         
+        /// <summary>
+        /// How many neurons activations are needed in order to activate a neuron
+        /// </summary>
         public int NeuronIsActiveMinimumActivityScore = 3;
 
         /// <summary>

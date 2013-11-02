@@ -424,7 +424,7 @@ namespace cnnnet.Lib.Neurons
 				.Sum();
 
 			// 4. If IterationsSinceLastActivation >= NeuronActivityIdleIterations (the neuron is capable of activation)
-			if (IterationsSinceLastActivation >= Network.NeuronActivityIdleIterations)
+			if (IsNeuronCapableOfActivating())
 			{
 				// IF ActivityScore >= NeuronIsActiveMinimumActivityScore
 				if (activityScore >= Network.NeuronIsActiveMinimumActivityScore)
