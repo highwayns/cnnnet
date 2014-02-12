@@ -113,10 +113,10 @@ namespace cnnnet.ViewerWpf.ViewerManagers
                 #region Draw Soma
 
                 var neuronIcon = neuron.IsActive
-                                      ? neuron.Type == NeuronType.Input || neuron.Type == NeuronType.Output
+                                      ? neuron.Type == NeuronTypes.Input || neuron.Type == NeuronTypes.Output
                                         ? Resources.NeuronInputActive
                                         : Resources.NeuronActive
-                                      : neuron.Type == NeuronType.Input || neuron.Type == NeuronType.Output
+                                      : neuron.Type == NeuronTypes.Input || neuron.Type == NeuronTypes.Output
                                         ? Resources.NeuronInputIdle
                                         : Resources.NeuronIdle;
 

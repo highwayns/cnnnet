@@ -116,7 +116,7 @@ namespace cnnnet.Lib.Neurons
 			private set;
 		}
 
-		public NeuronType Type
+		public NeuronTypes Type
 		{
 			get;
 			private set;
@@ -162,7 +162,7 @@ namespace cnnnet.Lib.Neurons
 		public void OnMoveTo(int newPosY, int newPosX)
 		{
 			AxonWayPoints[0] = new NeuronAxonWaypoint(1, this, new Point(newPosX, newPosY));
-			if (Type == NeuronType.Output)
+			if (Type == NeuronTypes.Output)
 			{
 				AxonTerminal = AxonWayPoints[0].Waypoint;
 			}
@@ -175,7 +175,7 @@ namespace cnnnet.Lib.Neurons
 				Debugger.Break();
 			}
 
-			if (Type == NeuronType.Input
+			if (Type == NeuronTypes.Input
 				&& Network.Iteration < Network.InputNeuronDelayIterationsBeforeExtendingAxon)
 			{
 				return;
@@ -367,7 +367,7 @@ namespace cnnnet.Lib.Neurons
 		{
 			if (HasAxonReachedFinalPosition)
 			{
-				if (Type == NeuronType.Input)
+				if (Type == NeuronTypes.Input)
 				{
 					return;
 				}
@@ -466,7 +466,7 @@ namespace cnnnet.Lib.Neurons
 		public Neuron(int id, CnnNet cnnNet, 
 			IEnumerable<AxonGuidanceForceBase> axonGuidanceForces, 
 			IEnumerable<SomaGuidanceForceBase> somaGuidanceForces,
-			NeuronType type)
+			NeuronTypes type)
 		{
 			Contract.Requires<ArgumentException>(id >= 0);
 			Contract.Requires<ArgumentNullException>(cnnNet != null);
@@ -483,8 +483,8 @@ namespace cnnnet.Lib.Neurons
 			SomaGuidanceForces = new ReadOnlyCollection<SomaGuidanceForceBase>(somaGuidanceForces.ToList());
 
 			Type = type;
-			HasSomaReachedFinalPosition = Type == NeuronType.Input || Type == NeuronType.Output;
-			HasAxonReachedFinalPosition = Type == NeuronType.Output;
+			HasSomaReachedFinalPosition = Type == NeuronTypes.Input || Type == NeuronTypes.Output;
+			HasAxonReachedFinalPosition = Type == NeuronTypes.Output;
 
 			_synapses = new List<DendricSynapse>();
 			_synapsesActivationHistory = new FixedSizedQueue<DendricSynapse[]>(cnnNet.NeuronActivityHistoryLength);

@@ -199,7 +199,7 @@ namespace cnnnet.Lib
 
             for (int index = 0; index < InputNeuronCount; index++)
             {
-                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Input);
+                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronTypes.Input);
 
                 int baseIndex = NeuronInputMarginBetween * (index + 1) + 60;
                 int y = (baseIndex + NeuronGenerationMargin) % Height;
@@ -217,7 +217,7 @@ namespace cnnnet.Lib
 
             for (int index = 0; index < OutputNeuronCount; index++)
             {
-                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Output);
+                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronTypes.Output);
 
                 int baseIndex = NeuronInputMarginBetween * (index + 1) + 60;
                 int y = (baseIndex + NeuronGenerationMargin) % Height;
@@ -235,7 +235,7 @@ namespace cnnnet.Lib
 
             for (int index = 0; index < NeuronCount; index++)
             {
-                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronType.Process);
+                var neuron = new Neuron(generatedNeuronId++, this, AxonGuidanceForces, SomaGuidanceForces, NeuronTypes.Process);
 
                 do
                 {
@@ -288,7 +288,7 @@ namespace cnnnet.Lib
             for (int index = 0; index < oldNeurons.Count; index++)
             {
                 var neuron = new Neuron(index, this, AxonGuidanceForces, SomaGuidanceForces, 
-                    index >= NeuronCount ? NeuronType.Input : NeuronType.Process);
+                    index >= NeuronCount ? NeuronTypes.Input : NeuronTypes.Process);
 
                 neuron.MoveTo(oldNeurons[index].PosY, oldNeurons[index].PosX);
 

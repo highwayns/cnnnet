@@ -1,6 +1,7 @@
 ﻿<Window x:Class="cnnnet.ViewerWpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ViewerWpf="clr-namespace:cnnnet.ViewerWpf"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ViewerWpf="clr-namespace:cnnnet.ViewerWpf"
         Title="MainWindow"
         Loaded="OnWindowLoaded"
         Closing="OnWindowClosing" 

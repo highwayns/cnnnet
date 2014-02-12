@@ -94,7 +94,9 @@
     <Compile Include="Neurons\DendricSynapse.cs" />
     <Compile Include="Neurons\NeuronAxonGuidanceForcesScoreEventArgs.cs" />
     <Compile Include="Neurons\NeuronAxonWaypoint.cs" />
-    <Compile Include="Neurons\NeuronType.cs" />
+    <Compile Include="Neurons\NeuronBase.cs" />
+    <Compile Include="Neurons\NeuronStates.cs" />
+    <Compile Include="Neurons\NeuronTypes.cs" />
     <Compile Include="Utils\Contract.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="ActiveNeuronGenerator\IActiveNeuronGenerator.cs" />
